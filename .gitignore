@@ -1,0 +1,19 @@
+node_modules/
+
+# Byggfiler
+dist/
+build/
+
+# Miljöfiler
+.env
+.env.local
+.env.*.local
+
+# Editor-specifika filer
+.vscode/
+.idea/
+
+# Loggfiler
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
