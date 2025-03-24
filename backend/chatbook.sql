@@ -84,6 +84,19 @@ CREATE TABLE IF NOT EXISTS `posts` (
 -- Dumpar data för tabell chatbook.posts: ~0 rows (ungefär)
 DELETE FROM `posts`;
 
+-- Dumpar struktur för tabell chatbook.scoreboard
+CREATE TABLE IF NOT EXISTS `scoreboard` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `user_id` int(11) NOT NULL,
+  `score` int(11) NOT NULL,
+  PRIMARY KEY (`id`),
+  KEY `user_id` (`user_id`),
+  CONSTRAINT `scoreboard_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_uca1400_ai_ci;
+
+-- Dumpar data för tabell chatbook.scoreboard: ~0 rows (ungefär)
+DELETE FROM `scoreboard`;
+
 -- Dumpar struktur för tabell chatbook.users
 CREATE TABLE IF NOT EXISTS `users` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
