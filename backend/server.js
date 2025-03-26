@@ -1,5 +1,5 @@
 import express from "express";
-import userRoutes from "./routes/userRoutes.js";
+import authRoutes from "./routes/authRoutes.js";
 
 import dotenv from 'dotenv';
 dotenv.config({ path: "../.env" });
@@ -11,7 +11,7 @@ const app = express();
 
 // För att kunna tolka json-data så att req.body fungerar
 app.use(express.json());
-app.use('/api/user', userRoutes);
+app.use('/api/auth', authRoutes);
 
 app.listen(port, () => {
     console.log(`Server is running on port ${port}`);
