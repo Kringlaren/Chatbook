@@ -1,13 +1,6 @@
 import bcrypt from 'bcryptjs';
 import db from '../db.js';
-
-const codes = {
-    OK: 200,
-    CREATED: 201,
-    BAD_REQUEST: 400,
-    UNAUTHORIZED: 401,
-    SERVER_ERROR: 500
-}
+import codes from '../httpCodes.js';
 
 // Antal omgångar av Bcrypts kryptering
 const bcryptComputations = 10;
