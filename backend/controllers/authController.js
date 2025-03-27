@@ -43,6 +43,10 @@ export const logInUser = async (req, res) => {
    
 };
 
+
+// Hjälpfunktioner //
+/////////////////////
+
 // Kontrollerar att användaren skrivit in både användarnamn och lösenord
 const checkUserInput = (req, res) => {
     const { username, password } = req.body;

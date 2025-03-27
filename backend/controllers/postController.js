@@ -15,7 +15,6 @@ export const getAllPosts = async (req, res) => {
 // Skapar ett inlägg med eller utan bild
 export const createPost = async (req, res) => {
     const { userId, textContent } = req.body;
-    console.log(req.body);
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     if (!textContent) return res.status(codes.BAD_REQUEST).json({ message: "Inlägget måste innehålla text!" })
@@ -27,3 +26,14 @@ export const createPost = async (req, res) => {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error});
     } 
 };
+
+
+// Kommentarer  //
+//////////////////
+
+export const createComment = async (req, res) => {
+    const { userId, postId, textContent } = req.body;
+    const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
+
+    
+}
