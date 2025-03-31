@@ -12,6 +12,17 @@ export const getAllPosts = async (req, res) => {
     } 
 };
 
+// Hämtar ett inlägg med id
+export const getPost = async (req, res) => {
+    const id = req.params.id;
+    try {
+        const row = await db.query("SELECT * FROM posts WHERE id=?", [id]);
+        res.status(codes.OK).json(row);
+    } catch (error) {
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error});
+    } 
+};
+
 // Skapar ett inlägg med eller utan bild
 export const createPost = async (req, res) => {
     const userId = req.body;

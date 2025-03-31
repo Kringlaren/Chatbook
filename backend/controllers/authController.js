@@ -11,9 +11,10 @@ export const regUser = async (req, res) => {
     if (!userInput) return;
 
     const hashedPw = await hashPassword(userInput.password);
+    const username = removeSpace(userInput.username);
 
     try {
-        await db.query("INSERT INTO users (username, password) VALUES (?, ?)", [userInput.username, hashedPw]);
+        await db.query("INSERT INTO users (username, password) VALUES (?, ?)", [username, hashedPw]);
         res.status(codes.CREATED).json({ message: "Användare registrerad!" });
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
@@ -25,7 +26,9 @@ export const logInUser = async (req, res) => {
     const userInput = checkUserInput(req, res);
     if (!userInput) return;
 
-    const [rows] = await db.query('SELECT password FROM users WHERE username = ?', [userInput.username]);
+    const username = removeSpace(userInput.username);
+
+    const [rows] = await db.query('SELECT password FROM users WHERE username = ?', [username]);
     if (rows.length === 0) {
         return res.status(codes.UNAUTHORIZED).json({ message: "Fel användarnamn eller lösenord" });
     }
@@ -61,3 +64,8 @@ const checkUserInput = (req, res) => {
 const hashPassword = async (password) => {
     return await bcrypt.hash(password, bcryptComputations)
 };
+
+// Ersätter alla blanksteg med "_"
+const removeSpace = (name) => {
+    return name.replace(/\s+/g, "_");
+}
