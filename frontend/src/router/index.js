@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from "vue-router";
-import Feed from "../views/Feed.vue";
+import Home from "../views/Home.vue";
 
 const routes = [
-    { path: "/", component: Feed }
+    { path: "/", component: Home },
 ];
 
 const router = createRouter({
