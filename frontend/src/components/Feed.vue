@@ -20,7 +20,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <h1>Flöde</h1>
+    <h1>Chatbook</h1>
     <p v-if="errorMessage">{{ errorMessage }}</p>
     <div v-for="post in posts" :key="post.id">
         <Post :post="post"></Post>

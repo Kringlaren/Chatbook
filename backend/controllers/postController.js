@@ -7,14 +7,20 @@ import codes from '../httpCodes.js';
 // GET //
 /////////
 
-// Hämtar alla inlägg från databasen
+// Hämtar alla inlägg från databasen med användarnamn och likes
 export const getAllPosts = async (req, res) => {
     try {
         const [rows] = await db.query(`
-        SELECT posts.*, COUNT(likes.id) AS like_count FROM posts 
+        SELECT posts.*, COUNT(likes.id) AS like_count, users.username, users.profile_pic FROM posts 
         LEFT JOIN likes ON posts.id = likes.post_id 
+        LEFT JOIN users ON posts.user_id = users.id
         GROUP BY posts.id
         `);
+
+        rows.forEach(row => {
+            row.username = row.username.replace(/_/g, " "); 
+        });
+
         res.status(codes.OK).json(rows);
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
