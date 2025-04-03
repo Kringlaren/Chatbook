@@ -10,6 +10,8 @@ const urlBase = import.meta.env.VITE_URL_BASE;
         <div class="profile">
             <img :src="urlBase + post.profile_pic" alt="Profilbild" class="profileimg">
             <h3>{{ post.username }}</h3>
+            <p>-</p>
+            <p>{{ post.created_at }}</p>
         </div>
         
         <p>{{ post.content }}</p>
