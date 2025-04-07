@@ -26,7 +26,7 @@ const urlBase = import.meta.env.VITE_URL_BASE;
   padding: 1.5vw;
   margin-bottom: 2vw;
   text-align: left;
-  max-width: 50vw;
+  width: 45vw;
   border-radius: 10px;
 }
 
