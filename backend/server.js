@@ -13,7 +13,10 @@ const port = process.env.PORT;
 
 const app = express();
 
-app.use(cors());
+app.use(cors({
+    origin: process.env.CLIENT_ORIGIN,
+    credentials: true
+}));
 
 // För att kunna tolka json-data så att req.body fungerar
 app.use(express.json());

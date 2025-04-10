@@ -17,7 +17,7 @@ export const regUser = async (req, res) => {
         await db.query("INSERT INTO users (username, password) VALUES (?, ?)", [username, hashedPw]);
         res.status(codes.CREATED).json({ message: "Användare registrerad!" });
     } catch (error) {
-        res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
+        res.status(codes.SERVER_ERROR).json({ message: "Användare finns redan", error });
     }
 };
 
@@ -65,7 +65,7 @@ const hashPassword = async (password) => {
     return await bcrypt.hash(password, bcryptComputations)
 };
 
-// Ersätter alla blanksteg med "_"
+// Ersätter alla blanksteg med punkter
 const removeSpace = (name) => {
-    return name.replace(/\s+/g, "_");
+    return name.replace(/\s+/g, ".");
 }

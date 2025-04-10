@@ -4,6 +4,7 @@ import { useRouter } from "vue-router";
 import { logInUser } from "../services/authService.js";
 
 const router = useRouter();
+
 const errorMessage = ref("");
 const username = ref("");
 const password = ref("");
@@ -33,11 +34,11 @@ const logIn = async () => {
         <form @submit.prevent="logIn">
             <div>
                 <label for="username">Användarnamn</label>
-                <input v-model="username" type="text" id="username" required />
+                <input v-model="username" type="text" id="username" maxlength="50" required />
             </div>
             <div>
                 <label for="password">Lösenord</label>
-                <input v-model="password" type="password" id="password" required />
+                <input v-model="password" type="password" id="password" maxlength="255" required />
             </div>
             <button type="submit">Logga in</button>
             <p v-if="errorMessage" class="error">{{ errorMessage }}</p>

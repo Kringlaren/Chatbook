@@ -18,9 +18,9 @@ export const getAllPosts = async (req, res) => {
         `);
 
         rows.forEach(row => {
-            row.username = row.username.replace(/_/g, " "); 
+            row.username = row.username.replace(/\./g, " "); 
         });
-
+        
         res.status(codes.OK).json(rows);
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
