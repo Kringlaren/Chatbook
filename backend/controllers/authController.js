@@ -28,7 +28,7 @@ export const logInUser = async (req, res) => {
 
     const username = removeSpace(userInput.username);
 
-    const [rows] = await db.query('SELECT password FROM users WHERE username = ?', [username]);
+    const [rows] = await db.query('SELECT username, password, profile_pic FROM users WHERE username = ?', [username]);
     if (rows.length === 0) {
         return res.status(codes.UNAUTHORIZED).json({ message: "Fel användarnamn eller lösenord" });
     }
@@ -39,11 +39,38 @@ export const logInUser = async (req, res) => {
         if (!correctPassword) {
             return res.status(codes.UNAUTHORIZED).json({ message: "Fel användarnamn eller lösenord" });
         }
-        res.status(codes.OK).json({ message: "Inloggning lyckades!" });
+        
+        req.session.userId = rows[0].user_id;
+
+        res.status(codes.OK).json({
+            username: rows[0].username,
+            profilePic: rows[0].profile_pic
+        });
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
     }
    
+};
+
+// Hämtar användarinfo för en inloggad användare
+export const getLoggedInUser = async (req, res) => {
+    if (!req.session.userId) {
+        return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
+    }
+
+    try {
+        const [rows] = await db.query('SELECT username, profile_pic FROM users WHERE user_id = ?', [req.session.userId]);
+
+        return res.status(codes.OK).json({
+            loggedIn: true,
+            username: rows[0].username,
+            profilePic: rows[0].profile_pic
+        });
+    } catch (error) {
+        return res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
+    }
+
+    
 };
 
 

@@ -22,7 +22,15 @@ onMounted(async () => {
 <template>
     <h1>Chatbook</h1>
     <p v-if="errorMessage">{{ errorMessage }}</p>
-    <div v-for="post in posts" :key="post.id">
+    <div class="feed" v-for="post in posts" :key="post.id">
         <Post :post="post"></Post>
     </div>
 </template>
+
+<style scoped>
+    .feed{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+</style>

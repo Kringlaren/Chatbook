@@ -1,7 +1,8 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { logInUser } from "../services/authService.js";
+import { useAuthStore } from "../stores/authStore.js";
+const auth = useAuthStore();
 
 const router = useRouter();
 
@@ -13,9 +14,9 @@ const OK = 200;
 const UNAUTHORIZED = 401;
 
 const logIn = async () => {
-    const res = await logInUser(username.value, password.value);
+    const res = await auth.logInUser(username.value, password.value);
 
-    if (res.status === OK) {
+    if (auth.isLoggedIn) {
         router.push("/");
     } else {
         if (res.status === UNAUTHORIZED) {
@@ -23,7 +24,6 @@ const logIn = async () => {
         } else {
             errorMessage.value = "Nätverksfel!";
         }
-        
     }
 };
 </script>

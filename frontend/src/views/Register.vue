@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { registerUser, checkUserName, checkUserPassword } from "../services/authService.js";
+import { checkUserName, checkUserPassword } from "../services/validationService.js";
+import { useAuthStore } from '../stores/authStore.js';
+const auth = useAuthStore();
 
 const router = useRouter();
 
@@ -19,7 +21,7 @@ const register = async () => {
         errorMessage.value = "Kontrollera dina uppgifter";
         return;
     }
-    const res = await registerUser(username.value, password.value);
+    const res = await auth.registerUser(username.value, password.value);
     if (res.status === CREATED) {
         router.push("/");
     } else {
@@ -30,6 +32,7 @@ const register = async () => {
 
 const checkName = () => {
     if (!username.value) {
+        usernameError.value = "";
         return;
     }
 

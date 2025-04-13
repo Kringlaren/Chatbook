@@ -1,15 +1,18 @@
 <script setup>
-defineProps({
+const props = defineProps({
     post: Object
 });
+
 const urlBase = import.meta.env.VITE_URL_BASE;
+
+const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
 </script>
 
 <template>
     <div class="post">
         <div class="profile">
             <img :src="urlBase + post.profile_pic" alt="Profilbild" class="profileimg">
-            <h3>{{ post.username }}</h3>
+            <h3><a :href="usernameNoSpace">{{ post.username }}</a></h3>
             <p>-</p>
             <p>{{ post.created_at }}</p>
         </div>
@@ -22,7 +25,7 @@ const urlBase = import.meta.env.VITE_URL_BASE;
 
 <style scoped>
 .post {
-  border: 1px solid #ddd;
+  border: 1px solid var(--border-color);
   padding: 1.5vw;
   margin-bottom: 2vw;
   text-align: left;

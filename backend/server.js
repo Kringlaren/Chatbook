@@ -1,4 +1,5 @@
 import express from "express";
+import session from "express-session";
 import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
@@ -16,6 +17,15 @@ const app = express();
 app.use(cors({
     origin: process.env.CLIENT_ORIGIN,
     credentials: true
+}));
+
+app.use(session({
+    secret: process.env.SESSION_SECRET,
+    resave: false,              
+    saveUninitialized: true,
+    cookie: {
+        httpOnly: true,         // Skydda mot XSS-attacker
+    }
 }));
 
 // För att kunna tolka json-data så att req.body fungerar
