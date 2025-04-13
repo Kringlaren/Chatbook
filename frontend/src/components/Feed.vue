@@ -3,24 +3,25 @@ import { ref, onMounted } from "vue";
 import Post from "./Post.vue";
 import api from "../services/api.js";
 
-import {fetchPosts} from "../services/postService.js";
+import { usePostStore } from "../stores/postStore.js";
+const postStore = usePostStore();
+
 
 const posts = ref([]);
 const errorMessage = ref("");
 
 onMounted(async () => {
-    const res = await fetchPosts();
+    const res = await postStore.fetchAllPosts();
 
     if (res.error) {
         errorMessage.value = res.error;
     } else {
-        posts.value = res;
+        posts.value = res.data;
     }
 });
 </script>
 
 <template>
-    <h1>Chatbook</h1>
     <p v-if="errorMessage">{{ errorMessage }}</p>
     <div class="feed" v-for="post in posts" :key="post.id">
         <Post :post="post"></Post>

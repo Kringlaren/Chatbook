@@ -10,19 +10,19 @@ import codes from '../httpCodes.js';
 // Hämtar alla inlägg från databasen med användarnamn och likes
 export const getAllPosts = async (req, res) => {
     try {
-        const [rows] = await db.query(`
+        let [rows] = await db.query(`
         SELECT posts.*, COUNT(likes.id) AS like_count, users.username, users.profile_pic FROM posts 
         LEFT JOIN likes ON posts.id = likes.post_id 
         LEFT JOIN users ON posts.user_id = users.id
         GROUP BY posts.id
+        ORDER BY created_at DESC
         `);
 
-        rows.forEach(row => {
-            row.username = row.username.replace(/\./g, " "); 
-        });
-        
+        rows = formatUserValues(rows);
+
         res.status(codes.OK).json(rows);
     } catch (error) {
+        console.log(error);
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
     }
 };
@@ -35,6 +35,9 @@ export const getPostById = async (req, res) => {
         SELECT posts.*, COUNT(likes.id) AS like_count FROM posts 
         LEFT JOIN likes ON posts.id = likes.post_id AND posts.id = ?
         `, [id]);
+
+        row = formatUserValues(row);
+
         res.status(codes.OK).json(row);
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
@@ -52,6 +55,9 @@ export const getPostsByUsername = async (req, res) => {
         LEFT JOIN likes ON posts.id = likes.post_id
         GROUP BY posts.id;
         `, [username]);
+
+        rows = formatUserValues(rows);
+
         res.status(codes.OK).json(rows);
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
@@ -137,5 +143,25 @@ const checkTextContent = (req, res) => {
         return null;
     }
     return textContent;
+}
+
+const formatUserValues = (rows) => {
+    const posts = Array.isArray(rows) ? rows : [rows];
+    posts.forEach(row => {
+        row.username = formatName(row.username);
+        row.created_at = formatTime(row.created_at);
+    });
+    return posts;
+}
+
+const formatName = (name) => {
+    return name.replace(/\./g, " ");
+}
+
+const formatTime = (time) => {
+    return new Date(String(time)).toLocaleString("sv-SE", {
+        dateStyle: "short",   // Kort datumformat
+        timeStyle: "short"    // Kort tidsformat
+    });
 }
 

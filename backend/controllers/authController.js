@@ -42,6 +42,7 @@ export const logInUser = async (req, res) => {
         req.session.userId = rows[0].id;
 
         res.status(codes.OK).json({
+            id: rows[0].id,
             username: rows[0].username,
             profilePic: rows[0].profile_pic
         });
@@ -63,6 +64,7 @@ export const getLoggedInUser = async (req, res) => {
         
         return res.status(codes.OK).json({
             loggedIn: true,
+            id: rows[0].id,
             username: rows[0].username,
             profilePic: rows[0].profile_pic
         });

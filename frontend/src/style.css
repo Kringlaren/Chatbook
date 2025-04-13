@@ -3,6 +3,13 @@
   --text-color: #ffffffde;
   --border-color: #ddd;
 
+  --default-border: 1px solid var(--border-color);
+  --default-border-radius: 1.5vw;
+
+  --default-padding: 1vw;
+
+  --navbar-height: 4vw;
+
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
   font-weight: 400;

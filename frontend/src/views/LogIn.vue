@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores/authStore.js";
-const auth = useAuthStore();
+const authStore = useAuthStore();
 
 const router = useRouter();
 
@@ -14,9 +14,9 @@ const OK = 200;
 const UNAUTHORIZED = 401;
 
 const logIn = async () => {
-    const res = await auth.logInUser(username.value, password.value);
+    const res = await authStore.logInUser(username.value, password.value);
 
-    if (auth.isLoggedIn) {
+    if (authStore.isLoggedIn) {
         router.push("/");
     } else {
         if (res.status === UNAUTHORIZED) {

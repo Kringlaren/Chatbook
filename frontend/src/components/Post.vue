@@ -10,27 +10,32 @@ const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
 
 <template>
     <div class="post">
-        <div class="profile">
-            <img :src="urlBase + post.profile_pic" alt="Profilbild" class="profileimg">
-            <h3><a :href="usernameNoSpace">{{ post.username }}</a></h3>
-            <p>-</p>
-            <p>{{ post.created_at }}</p>
+        <div class="padding">
+            <div class="profile">
+                <img :src="urlBase + post.profile_pic" alt="Profilbild" class="profileimg">
+                <h3><a :href="usernameNoSpace">{{ post.username }}</a></h3>
+                <p>-</p>
+                <p>{{ post.created_at }}</p>
+            </div>
+        
+            <p>{{ post.content }}</p>
         </div>
         
-        <p>{{ post.content }}</p>
         <img v-if="post.image" :src="urlBase + post.image" alt="Inläggsbild" class="postimg">
-        <p>Likes: {{ post.like_count }}</p>
+        <div class="padding">
+            <p>Likes: {{ post.like_count }}</p>
+        </div>
+        
     </div>
 </template>
 
 <style scoped>
 .post {
-  border: 1px solid var(--border-color);
-  padding: 1.5vw;
-  margin-bottom: 2vw;
+  border: var(--default-border);
   text-align: left;
-  width: 45vw;
-  border-radius: 10px;
+  width: 100%;
+  border-radius: var(--default-border-radius);
+  
 }
 
 .profile {
@@ -46,6 +51,10 @@ const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
 .profileimg {
     max-width: 4vw;
     max-height: 4vw;
-    border-radius: 100px;
+    border-radius: 100%;
+}
+
+.padding {
+    padding: var(--default-padding);
 }
 </style>

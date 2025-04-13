@@ -3,7 +3,7 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { checkUserName, checkUserPassword } from "../services/validationService.js";
 import { useAuthStore } from '../stores/authStore.js';
-const auth = useAuthStore();
+const authStore = useAuthStore();
 
 const router = useRouter();
 
@@ -21,7 +21,7 @@ const register = async () => {
         errorMessage.value = "Kontrollera dina uppgifter";
         return;
     }
-    const res = await auth.registerUser(username.value, password.value);
+    const res = await authStore.registerUser(username.value, password.value);
     if (res.status === CREATED) {
         router.push("/");
     } else {
