@@ -1,9 +1,6 @@
 import { defineStore } from 'pinia';
 import api from '../services/api.js';
 
-const nameReg = /^[a-zA-Z][a-zA-Z0-9 _-]*$/;
-const passwordReg = /^(?=.*[a-zA-Z])(?=.*\d)(?=.*[!@#$%^&*()_+={}\[\]:;"'<>,.?/\\|`~-]).{8,}$/;
-
 export const useAuthStore = defineStore('auth', {
     state: () => ({
       user: JSON.parse(localStorage.getItem("user")) || null,
