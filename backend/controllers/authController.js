@@ -28,7 +28,7 @@ export const logInUser = async (req, res) => {
 
     const username = removeSpace(userInput.username);
 
-    const [rows] = await db.query('SELECT username, password, profile_pic FROM users WHERE username = ?', [username]);
+    const [rows] = await db.query('SELECT id, username, password, profile_pic FROM users WHERE username = ?', [username]);
     if (rows.length === 0) {
         return res.status(codes.UNAUTHORIZED).json({ message: "Fel användarnamn eller lösenord" });
     }
@@ -39,14 +39,14 @@ export const logInUser = async (req, res) => {
         if (!correctPassword) {
             return res.status(codes.UNAUTHORIZED).json({ message: "Fel användarnamn eller lösenord" });
         }
-        
-        req.session.userId = rows[0].user_id;
+        req.session.userId = rows[0].id;
 
         res.status(codes.OK).json({
             username: rows[0].username,
             profilePic: rows[0].profile_pic
         });
     } catch (error) {
+        console.log("fel vid inloggning")
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
     }
    
@@ -59,8 +59,8 @@ export const getLoggedInUser = async (req, res) => {
     }
 
     try {
-        const [rows] = await db.query('SELECT username, profile_pic FROM users WHERE user_id = ?', [req.session.userId]);
-
+        const [rows] = await db.query('SELECT username, profile_pic FROM users WHERE id = ?', [req.session.userId]);
+        
         return res.status(codes.OK).json({
             loggedIn: true,
             username: rows[0].username,

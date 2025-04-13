@@ -46,6 +46,6 @@ const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
 .profileimg {
     max-width: 4vw;
     max-height: 4vw;
-    border-radius: 30px;
+    border-radius: 100px;
 }
 </style>

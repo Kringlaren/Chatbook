@@ -44,4 +44,8 @@ const logIn = async () => {
             <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
         </form>
     </div>
+    <div>
+        <p>Hur du inte ett konto?</p>
+        <a href="register">Registrera dig här</a>
+    </div>
 </template>

@@ -44,6 +44,7 @@ const checkName = () => {
 };
 const checkPassword = () => {
     if (!password.value) {
+        passwordError.value = "";
         return;
     }
 
@@ -76,5 +77,9 @@ const checkPassword = () => {
             <button type="submit">Skapa konto</button>
             <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
         </form>
+    </div>
+    <div>
+        <p>Hur du redan ett konto?</p>
+        <a href="login">Logga in här</a>
     </div>
 </template>
