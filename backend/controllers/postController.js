@@ -1,5 +1,6 @@
 import db from '../db.js';
 import codes from '../httpCodes.js';
+import format from '../utils/format.js';
 
 ///////////// Inlägg  /////////////
 ///////////////////////////////////
@@ -18,7 +19,7 @@ export const getAllPosts = async (req, res) => {
         ORDER BY created_at DESC
         `);
 
-        rows = formatUserValues(rows);
+        rows = format.formatValuesForFrontEnd(rows);
 
         res.status(codes.OK).json(rows);
     } catch (error) {
@@ -36,7 +37,7 @@ export const getPostById = async (req, res) => {
         LEFT JOIN likes ON posts.id = likes.post_id AND posts.id = ?
         `, [id]);
 
-        row = formatUserValues(row);
+        row = format.formatValuesForFrontEnd(row);
 
         res.status(codes.OK).json(row);
     } catch (error) {
@@ -56,7 +57,7 @@ export const getPostsByUsername = async (req, res) => {
         GROUP BY posts.id;
         `, [username]);
 
-        rows = formatUserValues(rows);
+        rows = format.formatValuesForFrontEnd(rows);
 
         res.status(codes.OK).json(rows);
     } catch (error) {
@@ -144,24 +145,3 @@ const checkTextContent = (req, res) => {
     }
     return textContent;
 }
-
-const formatUserValues = (rows) => {
-    const posts = Array.isArray(rows) ? rows : [rows];
-    posts.forEach(row => {
-        row.username = formatName(row.username);
-        row.created_at = formatTime(row.created_at);
-    });
-    return posts;
-}
-
-const formatName = (name) => {
-    return name.replace(/\./g, " ");
-}
-
-const formatTime = (time) => {
-    return new Date(String(time)).toLocaleString("sv-SE", {
-        dateStyle: "short",   // Kort datumformat
-        timeStyle: "short"    // Kort tidsformat
-    });
-}
-

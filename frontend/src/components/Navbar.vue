@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps } from "vue";
+import { ref, defineProps, watch } from "vue";
 const props = defineProps({
     user: Object
 });
@@ -10,11 +10,16 @@ const name = ref("");
 
 const urlBase = import.meta.env.VITE_URL_BASE;
 
-if (props.user) {
-    pp.value = props.user.profilePic;
-    name.value = props.user.username;
-}
-
+watch(
+    () => props.user,
+    (user) => {
+        if (user) {
+            pp.value = user.profilePic;
+            name.value = user.username;
+        }
+    },
+    { immediate: true }
+);
 </script>
 
 <template>

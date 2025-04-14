@@ -1,6 +1,7 @@
 import bcrypt from 'bcryptjs';
 import db from '../db.js';
 import codes from '../httpCodes.js';
+import format from '../utils/format.js';
 
 // Antal omgångar av Bcrypts kryptering
 const bcryptComputations = 10;
@@ -11,7 +12,7 @@ export const regUser = async (req, res) => {
     if (!userInput) return;
 
     const hashedPw = await hashPassword(userInput.password);
-    const username = removeSpace(userInput.username);
+    const username = format.formatNameForBackEnd(userInput.username);
 
     try {
         await db.query("INSERT INTO users (username, password) VALUES (?, ?)", [username, hashedPw]);
@@ -26,7 +27,7 @@ export const logInUser = async (req, res) => {
     const userInput = checkUserInput(req, res);
     if (!userInput) return;
 
-    const username = removeSpace(userInput.username);
+    const username = format.formatNameForBackEnd(userInput.username);
 
     const [rows] = await db.query('SELECT id, username, password, profile_pic FROM users WHERE username = ?', [username]);
     if (rows.length === 0) {
@@ -43,7 +44,7 @@ export const logInUser = async (req, res) => {
 
         res.status(codes.OK).json({
             id: rows[0].id,
-            username: rows[0].username,
+            username: format.formatNameForFrontEnd(rows[0].username),
             profilePic: rows[0].profile_pic
         });
     } catch (error) {
@@ -60,12 +61,12 @@ export const getLoggedInUser = async (req, res) => {
     }
 
     try {
-        const [rows] = await db.query('SELECT username, profile_pic FROM users WHERE id = ?', [req.session.userId]);
+        const [rows] = await db.query('SELECT id, username, profile_pic FROM users WHERE id = ?', [req.session.userId]);
         
         return res.status(codes.OK).json({
             loggedIn: true,
             id: rows[0].id,
-            username: rows[0].username,
+            username: format.formatNameForFrontEnd(rows[0].username),
             profilePic: rows[0].profile_pic
         });
     } catch (error) {
@@ -93,8 +94,3 @@ const checkUserInput = (req, res) => {
 const hashPassword = async (password) => {
     return await bcrypt.hash(password, bcryptComputations)
 };
-
-// Ersätter alla blanksteg med punkter
-const removeSpace = (name) => {
-    return name.replace(/\s+/g, ".");
-}

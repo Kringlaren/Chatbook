@@ -1,7 +1,6 @@
 <script setup>
 import { ref, onMounted } from "vue";
 import Post from "./Post.vue";
-import api from "../services/api.js";
 
 import { usePostStore } from "../stores/postStore.js";
 const postStore = usePostStore();

@@ -1,5 +1,5 @@
 <script setup>
-import { ref, defineProps } from "vue";
+import { ref, defineProps, watch } from "vue";
 import { usePostStore } from "../stores/PostStore.js";
 
 const props = defineProps({
@@ -12,9 +12,15 @@ const userId = ref(0);
 const content = ref("");
 const img = ref(null);
 
-if (props.user) {
-    userId.value = props.user.id;
-}
+watch(
+    () => props.user,
+    (user) => {
+        if (user) {
+            userId.value = user.id;
+        }
+    },
+    { immediate: true }
+);
 
 const createPost = () => {
     postStore.createPost(userId.value, content.value, img);

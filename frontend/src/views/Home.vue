@@ -10,6 +10,7 @@ const user = ref(null);
 
 onMounted(async () => {
     const res = await auth.fetchUser();
+    console.log("HomeUser: ", res.data);
     if (!res.error) {
         user.value = res.data;
     }
