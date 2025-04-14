@@ -1,31 +1,30 @@
 <script setup>
-import { ref, defineProps, watch } from "vue";
-const props = defineProps({
-    user: Object
-});
+import { computed } from "vue";
+import { useAuthStore } from "../stores/authStore.js";
+const authStore = useAuthStore();
 
-
-const pp = ref("");
-const name = ref("");
+// Computed uppdaterar variabler när de ändras
+const pp = computed(() => authStore.user?.profilePic || "");
+const name = computed(() => authStore.user?.username || "");
 
 const urlBase = import.meta.env.VITE_URL_BASE;
 
-watch(
-    () => props.user,
-    (user) => {
-        if (user) {
-            pp.value = user.profilePic;
-            name.value = user.username;
-        }
-    },
-    { immediate: true }
-);
+
+const logOutUser = async () => {
+    await authStore.logOutUser();
+}
 </script>
 
 <template>
     <div class="navbar">
-        <a v-if="pp" :href="name"><img class="profile" :src="urlBase + pp" alt="profilbild"></a>
+        <div v-if="authStore.isLoggedIn" class="profile">
+            <p>{{ name }}</p>
+            <a :href="name" class="profile"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></a>
+        </div>
         <a v-else href="login">Logga in</a>
+        <button v-if="pp" @click="logOutUser">
+            Logga ut
+        </button>
     </div>
 </template>
 
@@ -44,6 +43,12 @@ watch(
     }
 
     .profile {
+        display: flex;
+        gap: 1vw;
+        align-items: center;
+    }
+
+    .profilepic {
         width: calc(var(--navbar-height) - 0.5vw);
         border-radius: 100%;
     }

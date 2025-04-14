@@ -15,8 +15,16 @@ export const regUser = async (req, res) => {
     const username = format.formatNameForBackEnd(userInput.username);
 
     try {
-        await db.query("INSERT INTO users (username, password) VALUES (?, ?)", [username, hashedPw]);
-        res.status(codes.CREATED).json({ message: "Användare registrerad!" });
+        const [result] = await db.query("INSERT INTO users (username, password) VALUES (?, ?)", [username, hashedPw]);
+        const newId = result.insertId;
+
+        req.session.userId = newId;
+
+        res.status(codes.CREATED).json({
+            id: newId,
+            username: userInput.username,
+            profilePic: null
+        });
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Användare finns redan", error });
     }
@@ -48,10 +56,20 @@ export const logInUser = async (req, res) => {
             profilePic: rows[0].profile_pic
         });
     } catch (error) {
-        console.log("fel vid inloggning")
-        res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid inloggning", error });
     }
-   
+};
+
+// Loggar ut användare genom att ta bort session i backend och kaka i frontend
+export const logOutUser = async (req, res) => {
+    const userId = req.session.userId;
+    req.session.destroy((error) => {
+        if (error) {
+            return res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid utloggning", error });
+        }
+        res.clearCookie("connect.sid");
+        res.status(codes.OK).json({ message: "Utloggning lyckades!" });
+    });
 };
 
 // Hämtar användarinfo för en inloggad användare
@@ -64,7 +82,6 @@ export const getLoggedInUser = async (req, res) => {
         const [rows] = await db.query('SELECT id, username, profile_pic FROM users WHERE id = ?', [req.session.userId]);
         
         return res.status(codes.OK).json({
-            loggedIn: true,
             id: rows[0].id,
             username: format.formatNameForFrontEnd(rows[0].username),
             profilePic: rows[0].profile_pic

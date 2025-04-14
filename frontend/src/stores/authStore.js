@@ -21,6 +21,14 @@ export const useAuthStore = defineStore('auth', {
             return this.handleAuthRequest("post", "/api/auth/register", { username, password });
         },
 
+        async logOutUser() {
+            const res = await this.handleAuthRequest("post", "/api/auth/logout");
+            if (!res.error) {
+              this.user = null;
+            }
+            return res;
+        },
+
         async handleAuthRequest(method, url, data = null) {
             this.loading = true;
             try {
@@ -29,7 +37,6 @@ export const useAuthStore = defineStore('auth', {
               this.error = null;
               return res;
             } catch (error) {
-              this.user = null;
               this.error = error.response?.data?.message || 'Något gick fel';
               return { error: this.error, status: error.response?.status }
             } finally {

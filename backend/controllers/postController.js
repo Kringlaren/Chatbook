@@ -72,7 +72,8 @@ export const getPostsByUsername = async (req, res) => {
 export const createPost = async (req, res) => {
     const userId = req.body.userId;
     const textContent = checkTextContent(req, res);
-
+    console.log(JSON.stringify(req.body.image));
+    console.log(req.file);
     if (!textContent) return;
 
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;

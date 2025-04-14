@@ -10,7 +10,6 @@ const user = ref(null);
 
 onMounted(async () => {
     const res = await auth.fetchUser();
-    console.log("HomeUser: ", res.data);
     if (!res.error) {
         user.value = res.data;
     }
@@ -18,7 +17,7 @@ onMounted(async () => {
 </script>
 
 <template>
-    <Navbar :user="user"></Navbar>
+    <Navbar></Navbar>
     <div class="main-content">
         <div>
             Vänner

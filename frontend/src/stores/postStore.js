@@ -9,8 +9,14 @@ export const usePostStore = defineStore('post', {
     }),
 
     actions: {
+        // Formdata för att filer ska kunna laddas upp
         async createPost(userId, textContent, img) {
-            return this.handlePostRequest("post", "/api/posts/create", { userId, textContent, img });
+            const formData = new FormData();
+            formData.append("userId", userId);
+            formData.append("textContent", textContent);
+            formData.append("image", img);
+
+            return this.handlePostRequest("post", "/api/posts/create", formData);
         },
 
         async fetchAllPosts() {
@@ -24,6 +30,7 @@ export const usePostStore = defineStore('post', {
         async handlePostRequest(method, url, data = null) {
             this.loading = true;
             try {
+              console.log(data);
               const res = await api[method](url, data);
               this.posts = Array.isArray(res.data) ? res.data : [res.data];
               this.error = null;
