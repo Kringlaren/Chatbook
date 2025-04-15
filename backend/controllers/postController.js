@@ -23,7 +23,6 @@ export const getAllPosts = async (req, res) => {
 
         res.status(codes.OK).json(rows);
     } catch (error) {
-        console.log(error);
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
     }
 };
@@ -72,17 +71,27 @@ export const getPostsByUsername = async (req, res) => {
 export const createPost = async (req, res) => {
     const userId = req.body.userId;
     const textContent = checkTextContent(req, res);
-    console.log(JSON.stringify(req.body.image));
-    console.log(req.file);
     if (!textContent) return;
 
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     try {
-        await db.query("INSERT INTO posts (user_id, content, image) VALUES (?, ?, ?)", [userId, textContent, imageUrl]);
-        res.status(codes.CREATED).json({ message: "Inlägg skapad!" });
+        const [result] = await db.query("INSERT INTO posts (user_id, content, image) VALUES (?, ?, ?)", [userId, textContent, imageUrl]);
+        const postId = result.insertId;
+
+        let [rows] = await db.query(`
+            SELECT posts.*, COUNT(likes.id) AS like_count, users.username, users.profile_pic
+            FROM posts
+            LEFT JOIN likes ON posts.id = likes.post_id
+            LEFT JOIN users ON posts.user_id = users.id
+            WHERE posts.id = ?
+            GROUP BY posts.id
+        `, [postId]);
+        rows = format.formatValuesForFrontEnd(rows);
+
+        res.status(codes.CREATED).json(rows[0]);
     } catch (error) {
-        res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid skapande av inlägg", error });
     }
 };
 
@@ -102,7 +111,7 @@ export const createComment = async (req, res) => {
         await db.query("INSERT INTO comments (user_id, post_id, content, image) VALUES (?, ?, ?, ?)", [userId, postId, textContent, imageUrl]);
         res.status(codes.CREATED).json({ message: "Kommentar skapad!" });
     } catch (error) {
-        res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid skapande av kommentar", error });
     }
 }
 
@@ -115,7 +124,7 @@ export const getCommentsForPost = async (req, res) => {
         res.status(codes.OK).json(rows);
 
     } catch (error) {
-        res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid hämtning av kommentarer", error });
     }
 }
 
@@ -126,9 +135,19 @@ export const like = async (req, res) => {
     const { userId, postId } = req.body;
     try {
         await db.query("INSERT INTO likes (user_id, post_id) VALUES (?, ?)", [userId, postId]);
-        res.status(codes.CREATED).json({ message: "Like sparad!" });
+
+        let [rows] = await db.query(`
+            SELECT posts.*, COUNT(likes.id) AS like_count, users.username, users.profile_pic
+            FROM posts
+            LEFT JOIN likes ON posts.id = likes.post_id
+            LEFT JOIN users ON posts.user_id = users.id
+            WHERE posts.id = ?
+            GROUP BY posts.id
+        `, [postId]);
+
+        res.status(codes.CREATED).json(rows[0]);
     } catch (error) {
-        res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid gillning", error });
     }
 }
 

@@ -23,11 +23,10 @@ watch(
 );
 
 const createPost = () => {
-    postStore.createPost(userId.value, content.value, img);
+    postStore.createPost(userId.value, content.value, img.value);
 }
 
 const imageChange = (event) => {
-    console.log(event.target.files);
     const file = event.target.files[0];
     if (file) {
         img.value = file;

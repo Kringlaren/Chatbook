@@ -1,4 +1,6 @@
 <script setup>
+import { usePostStore } from "../stores";
+const postStore = usePostStore();
 const props = defineProps({
     post: Object
 });
@@ -6,11 +8,16 @@ const props = defineProps({
 const urlBase = import.meta.env.VITE_URL_BASE;
 
 const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
+
+const likePost = async () => {
+    postStore.likePost(props.post.id);
+}
+
 </script>
 
 <template>
     <div class="post">
-        <div class="padding">
+        <div class="contentpadding">
             <div class="profile">
                 <img :src="urlBase + post.profile_pic" alt="Profilbild" class="profileimg">
                 <h3><a :href="usernameNoSpace">{{ post.username }}</a></h3>
@@ -22,8 +29,12 @@ const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
         </div>
         
         <img v-if="post.image" :src="urlBase + post.image" alt="Inläggsbild" class="postimg">
-        <div class="padding">
-            <p>Likes: {{ post.like_count }}</p>
+        <div class="actionspadding">
+            <div class="like">
+                <span>{{ post.like_count }}</span>
+                <button @click="likePost" class="iconbutton"><img class="likeimg" src="../assets/images/like.png"></button>
+            </div>
+            
         </div>
         
     </div>
@@ -35,7 +46,6 @@ const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
   text-align: left;
   width: 100%;
   border-radius: var(--default-border-radius);
-  
 }
 
 .profile {
@@ -54,7 +64,19 @@ const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
     border-radius: 100%;
 }
 
-.padding {
-    padding: var(--default-padding);
+.contentpadding {
+    padding: var(--default-padding) var(--default-padding) 0 var(--default-padding);
+}
+.actionspadding {
+    padding: calc(var(--default-padding)/2) var(--default-padding);
+}
+
+.like {
+    display: flex;
+    align-items: center;
+    gap: 0.5vw;
+}
+.likeimg {
+    width: var(--icon-size);
 }
 </style>

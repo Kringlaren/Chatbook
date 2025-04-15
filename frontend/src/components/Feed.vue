@@ -2,7 +2,7 @@
 import { ref, onMounted } from "vue";
 import Post from "./Post.vue";
 
-import { usePostStore } from "../stores/postStore.js";
+import { usePostStore } from "../stores";
 const postStore = usePostStore();
 
 

@@ -2,7 +2,7 @@
 import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { checkUserName, checkUserPassword } from "../services/validationService.js";
-import { useAuthStore } from '../stores/authStore.js';
+import { useAuthStore } from '../stores';
 const authStore = useAuthStore();
 
 const router = useRouter();

@@ -1,7 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { useRouter } from "vue-router";
-import { useAuthStore } from "../stores/authStore.js";
+import { useAuthStore } from "../stores";
 const authStore = useAuthStore();
 
 const router = useRouter();
@@ -10,7 +10,6 @@ const errorMessage = ref("");
 const username = ref("");
 const password = ref("");
 
-const OK = 200;
 const UNAUTHORIZED = 401;
 
 const logIn = async () => {

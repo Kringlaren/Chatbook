@@ -60,9 +60,8 @@ export const logInUser = async (req, res) => {
     }
 };
 
-// Loggar ut användare genom att ta bort session i backend och kaka i frontend
+// Loggar ut användare genom att ta bort session i backend och kaka i frontend, session.detstroy stödjer inte await
 export const logOutUser = async (req, res) => {
-    const userId = req.session.userId;
     req.session.destroy((error) => {
         if (error) {
             return res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid utloggning", error });
