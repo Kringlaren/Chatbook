@@ -19,7 +19,7 @@ export const regUser = async (req, res) => {
         const newId = result.insertId;
 
         req.session.userId = newId;
-
+        
         res.status(codes.CREATED).json({
             id: newId,
             username: userInput.username,
@@ -68,6 +68,7 @@ export const logOutUser = async (req, res) => {
         }
         res.clearCookie("connect.sid");
         res.status(codes.OK).json({ message: "Utloggning lyckades!" });
+        
     });
 };
 
@@ -79,7 +80,6 @@ export const getLoggedInUser = async (req, res) => {
 
     try {
         const [rows] = await db.query('SELECT id, username, profile_pic FROM users WHERE id = ?', [req.session.userId]);
-        
         return res.status(codes.OK).json({
             id: rows[0].id,
             username: format.formatNameForFrontEnd(rows[0].username),

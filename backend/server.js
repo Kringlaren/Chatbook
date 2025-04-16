@@ -5,6 +5,12 @@ import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
 import path from "path";
+import db from "./db.js";
+
+// Sessioner sparas efter serveromstart
+import MySQLStore from "express-mysql-session";
+const MySQLSessionStore = MySQLStore(session);
+const sessionStore = new MySQLSessionStore({}, db);
 
 import dotenv from 'dotenv';
 dotenv.config({ path: "../.env" });
@@ -22,9 +28,11 @@ app.use(cors({
 app.use(session({
     secret: process.env.SESSION_SECRET,
     resave: false,              
-    saveUninitialized: true,
+    saveUninitialized: false,
+    store: sessionStore,
     cookie: {
         httpOnly: true,         // Skydda mot XSS-attacker
+        sameSite: 'lax'
     }
 }));
 

@@ -1,29 +1,15 @@
 <script setup>
-import { ref, defineProps, watch } from "vue";
-import { usePostStore } from "../stores/PostStore.js";
-
-const props = defineProps({
-    user: Object 
-});
+import { ref } from "vue";
+import { usePostStore, useAuthStore } from "../stores/";
 
 const postStore = usePostStore();
+const authStore = useAuthStore();
 
-const userId = ref(0);
 const content = ref("");
 const img = ref(null);
 
-watch(
-    () => props.user,
-    (user) => {
-        if (user) {
-            userId.value = user.id;
-        }
-    },
-    { immediate: true }
-);
-
 const createPost = () => {
-    postStore.createPost(userId.value, content.value, img.value);
+    postStore.createPost(content.value, img.value);
 }
 
 const imageChange = (event) => {
@@ -36,7 +22,7 @@ const imageChange = (event) => {
 
 <template>
     <div class="panel">
-        <div v-if="user">
+        <div v-if="authStore.isLoggedIn">
             <h2>Skapa inlägg</h2>
             <form @submit.prevent="createPost()">
                 <textarea v-model="content" name="postContent" placeholder="Dela din visdom med världen!" required></textarea>

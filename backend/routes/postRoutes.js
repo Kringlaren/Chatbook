@@ -1,5 +1,5 @@
 import express from "express";
-import { createPost, getPostById, getAllPosts, getPostsByUsername, createComment, getCommentsForPost, like } from "../controllers/postController.js";
+import { createPost, getPostById, getAllPosts, getPostsByUsername, createComment, getCommentsForPost, likeChange } from "../controllers/postController.js";
 import upload from "../middleware/upload.js";
 
 const router = express.Router();
@@ -15,6 +15,6 @@ router.post('/comment', upload.single("image"), createComment);
 router.get('/comments/:id', getCommentsForPost);
 
 // Gillningar
-router.post('/like', like);
+router.post('/like', likeChange);
 
 export default router;

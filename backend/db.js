@@ -4,7 +4,7 @@ import dotenv from 'dotenv';
 dotenv.config({ path: "../.env" });
 
 // Startar uppkoppling mot sql-databasen
-const db = await mysql.createConnection(
+const db = mysql.createPool(
 {
     host: process.env.DB_HOST,
     user: process.env.DB_USER,

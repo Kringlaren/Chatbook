@@ -1,18 +1,13 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import Feed from "../components/Feed.vue";
 import Navbar from "../components/Navbar.vue";
 import MakePost from "../components/MakePost.vue";
 import { useAuthStore } from "../stores/authStore.js";
 const auth = useAuthStore();
 
-const user = ref(null);
-
 onMounted(async () => {
-    const res = await auth.fetchUser();
-    if (!res.error) {
-        user.value = res.data;
-    }
+    await auth.fetchUser();
 });
 </script>
 
@@ -23,7 +18,7 @@ onMounted(async () => {
             Vänner
         </div>
         <div class="post-feed">
-            <MakePost :user="user"></MakePost>
+            <MakePost></MakePost>
             <Feed></Feed>
         </div>
     </div>

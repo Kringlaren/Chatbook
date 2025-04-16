@@ -22,7 +22,7 @@ onMounted(async () => {
 
 <template>
     <p v-if="errorMessage">{{ errorMessage }}</p>
-    <div class="feed" v-for="post in posts" :key="post.id">
+    <div class="feed" v-for="post in postStore.posts" :key="post.id">
         <Post :post="post"></Post>
     </div>
 </template>

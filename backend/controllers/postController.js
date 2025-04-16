@@ -5,6 +5,15 @@ import format from '../utils/format.js';
 ///////////// Inlägg  /////////////
 ///////////////////////////////////
 
+const getPostByIdQuery = `
+    SELECT posts.*, COUNT(likes.id) AS like_count, users.username, users.profile_pic
+    FROM posts
+    LEFT JOIN likes ON posts.id = likes.post_id
+    LEFT JOIN users ON posts.user_id = users.id
+    WHERE posts.id = ?
+    GROUP BY posts.id
+`;
+
 // GET //
 /////////
 
@@ -79,14 +88,7 @@ export const createPost = async (req, res) => {
         const [result] = await db.query("INSERT INTO posts (user_id, content, image) VALUES (?, ?, ?)", [userId, textContent, imageUrl]);
         const postId = result.insertId;
 
-        let [rows] = await db.query(`
-            SELECT posts.*, COUNT(likes.id) AS like_count, users.username, users.profile_pic
-            FROM posts
-            LEFT JOIN likes ON posts.id = likes.post_id
-            LEFT JOIN users ON posts.user_id = users.id
-            WHERE posts.id = ?
-            GROUP BY posts.id
-        `, [postId]);
+        let [rows] = await db.query(getPostByIdQuery, [postId]);
         rows = format.formatValuesForFrontEnd(rows);
 
         res.status(codes.CREATED).json(rows[0]);
@@ -131,25 +133,31 @@ export const getCommentsForPost = async (req, res) => {
 ////////////// Gillningar //////////////
 ////////////////////////////////////////
 
-export const like = async (req, res) => {
+// Lägger till en like om användare inte likeat, tar bort annars
+export const likeChange = async (req, res) => {
     const { userId, postId } = req.body;
     try {
         await db.query("INSERT INTO likes (user_id, post_id) VALUES (?, ?)", [userId, postId]);
 
-        let [rows] = await db.query(`
-            SELECT posts.*, COUNT(likes.id) AS like_count, users.username, users.profile_pic
-            FROM posts
-            LEFT JOIN likes ON posts.id = likes.post_id
-            LEFT JOIN users ON posts.user_id = users.id
-            WHERE posts.id = ?
-            GROUP BY posts.id
-        `, [postId]);
 
+        
+    } catch (error) {
+        if (error.code === "ER_DUP_ENTRY") {
+            await db.query("DELETE FROM likes WHERE user_id = ? AND post_id = ?", [userId, postId]);
+        } else {
+            return res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid gillning", error });
+        }
+        
+    }
+
+    try {
+        let [rows] = await db.query(getPostByIdQuery, [postId]);
+        rows[0] = format.formatValuesForFrontEnd(rows[0]);
         res.status(codes.CREATED).json(rows[0]);
     } catch (error) {
-        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid gillning", error });
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid hämtning av uppdaterat inlägg", error });
     }
-}
+};
 
 
 

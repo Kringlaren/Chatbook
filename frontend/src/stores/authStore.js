@@ -10,7 +10,17 @@ export const useAuthStore = defineStore('auth', {
 
     actions: {
         async fetchUser() {
-            return this.handleAuthRequest("get", "/api/auth/me");
+            const res = await this.handleAuthRequest("get", "/api/auth/me", null, {
+              // Så att cashen inte loggar in utloggad användare
+              headers: {
+                "Cache-Control": "no-cache"
+              }
+            });
+            if (res.error) {
+              this.user = null;
+              localStorage.removeItem("user");
+            }
+            return res;
         },
 
         async logInUser(username, password) {
@@ -25,15 +35,23 @@ export const useAuthStore = defineStore('auth', {
             const res = await this.handleAuthRequest("post", "/api/auth/logout");
             if (!res.error) {
               this.user = null;
+              localStorage.removeItem("user");
             }
             return res;
         },
 
-        async handleAuthRequest(method, url, data = null) {
+        async handleAuthRequest(method, url, data = null, config = {}) {
             this.loading = true;
             try {
-              const res = await api[method](url, data);
+              let res;
+              if (method === "post") {
+                res = await api.post(url, data, config);
+              } else if (method === "get") {
+                res = await api.get(url, config);
+              }
+              
               this.user = res.data;
+              localStorage.setItem("user", JSON.stringify(this.user));
               this.error = null;
               return res;
             } catch (error) {

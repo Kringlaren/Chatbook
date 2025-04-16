@@ -9,8 +9,8 @@ const urlBase = import.meta.env.VITE_URL_BASE;
 
 const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
 
-const likePost = async () => {
-    postStore.likePost(props.post.id);
+const changeLikeOnPost = async () => {
+    postStore.changeLikeOnPost(props.post.id);
 }
 
 </script>
@@ -32,7 +32,7 @@ const likePost = async () => {
         <div class="actionspadding">
             <div class="like">
                 <span>{{ post.like_count }}</span>
-                <button @click="likePost" class="iconbutton"><img class="likeimg" src="../assets/images/like.png"></button>
+                <button @click="changeLikeOnPost" class="iconbutton"><img class="likeimg" src="../assets/images/like.png"></button>
             </div>
             
         </div>
