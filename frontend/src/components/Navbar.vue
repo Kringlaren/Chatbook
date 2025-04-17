@@ -17,11 +17,14 @@ const logOutUser = async () => {
 
 <template>
     <div class="navbar">
-        <div v-if="authStore.isLoggedIn" class="profile">
-            <p>{{ name }}</p>
-            <a :href="name" class="profile"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></a>
+        <div>
+            <div v-if="authStore.isLoggedIn" class="profile">
+                <p>{{ name }}</p>
+                <a :href="name" class="profile"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></a>
+            </div>
+            <a v-else href="login">Logga in</a>
         </div>
-        <a v-else href="login">Logga in</a>
+        
         <button v-if="pp" @click="logOutUser">
             Logga ut
         </button>
@@ -40,6 +43,8 @@ const logOutUser = async () => {
         border: var(--default-border);
         border-width: 0 0 1px 0;
         background-color: var(--primary-color);
+        padding: var(--default-padding);
+        box-sizing: border-box;
     }
 
     .profile {

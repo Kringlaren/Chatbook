@@ -29,12 +29,13 @@ onMounted(async () => {
 <style scoped>
 .main-content {
     display: grid;
+    margin: var(--default-gap) 0;
 }
 .post-feed {
     grid-column: 2;
     display: flex;
     flex-direction: column;
-    gap: 2vw;
+    gap: var(--default-gap);
     width: 35vw;
 }
 </style>
