@@ -1,6 +1,10 @@
 <script setup>
-import { usePostStore } from "../stores";
+import { ref } from "vue";
+import { usePostStore, useAuthStore } from "../stores";
+import likedImg from '../assets/images/liked.png';
+import likeImg from '../assets/images/like.png';
 const postStore = usePostStore();
+const authStore = useAuthStore();
 const props = defineProps({
     post: Object
 });
@@ -9,8 +13,13 @@ const urlBase = import.meta.env.VITE_URL_BASE;
 
 const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
 
+let liked = ref(props.post.likedByUser);
+
 const changeLikeOnPost = async () => {
-    postStore.changeLikeOnPost(props.post.id);
+    const res = await postStore.changeLikeOnPost(props.post.id);
+    if (!res.error) {
+        liked.value = res.data.liked;
+    }
 }
 
 </script>
@@ -32,7 +41,8 @@ const changeLikeOnPost = async () => {
         <div class="actionspadding">
             <div class="like">
                 <span>{{ post.like_count }}</span>
-                <button @click="changeLikeOnPost" class="iconbutton"><img class="likeimg" src="../assets/images/like.png"></button>
+                <button v-if="authStore.isLoggedIn" @click="changeLikeOnPost" class="iconbutton"><img class="likeimg" :src="liked ? likedImg : likeImg"></button>
+                <img v-else class="likeimg" :src="likeImg">
             </div>
             
         </div>

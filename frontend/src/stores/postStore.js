@@ -21,7 +21,7 @@ export const usePostStore = defineStore('post', {
         formData.append("image", img);
         const res = this.handlePostRequest("post", "create", formData);
         if (!res.error) {
-          this.posts.push(res.data);
+          this.posts.push(res.data.posts);
         }
         return res;
       },
@@ -29,7 +29,7 @@ export const usePostStore = defineStore('post', {
       async fetchAllPosts() {
         const res = await this.handlePostRequest("get", "all");
         if (!res.error) {
-          this.posts = res.data;
+          this.posts = res.data.posts;
         }
         return res;
       },
@@ -47,7 +47,7 @@ export const usePostStore = defineStore('post', {
         if (!res.error) {
           const index = this.posts.findIndex(p => p.id === postId);
           if (index !== -1) {
-            this.posts[index] = res.data[0];
+            this.posts[index] = res.data.posts[0];
           }
         }
         return res;

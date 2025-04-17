@@ -21,16 +21,26 @@ const getPostByIdQuery = `
 export const getAllPosts = async (req, res) => {
     try {
         let [rows] = await db.query(`
-        SELECT posts.*, COUNT(likes.id) AS like_count, users.username, users.profile_pic FROM posts 
+        SELECT posts.*, COUNT(likes.id) AS like_count, users.username, users.profile_pic, 
+            CASE 
+                WHEN EXISTS (
+                SELECT * 
+                FROM likes 
+                WHERE likes.post_id = posts.id 
+                AND likes.user_id = ?
+            )   THEN true
+            ELSE false
+            END AS likedByUser
+        FROM posts 
         LEFT JOIN likes ON posts.id = likes.post_id 
         LEFT JOIN users ON posts.user_id = users.id
         GROUP BY posts.id
         ORDER BY created_at DESC
-        `);
+        `, [req.session.userId]);
 
         rows = format.formatValuesForFrontEnd(rows);
 
-        res.status(codes.OK).json(rows);
+        res.status(codes.OK).json({posts: rows});
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
     }
@@ -45,7 +55,7 @@ export const getPostById = async (req, res) => {
         LEFT JOIN likes ON posts.id = likes.post_id AND posts.id = ?
         `, [id]);
 
-        row = format.formatValuesForFrontEnd(row);
+        row = format.formatValuesForFrontEnd({posts: row});
 
         res.status(codes.OK).json(row);
     } catch (error) {
@@ -91,7 +101,7 @@ export const createPost = async (req, res) => {
         let [rows] = await db.query(getPostByIdQuery, [postId]);
         rows = format.formatValuesForFrontEnd(rows);
 
-        res.status(codes.CREATED).json(rows[0]);
+        res.status(codes.CREATED).json({posts: rows[0]});
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid skapande av inlägg", error });
     }
@@ -136,30 +146,30 @@ export const getCommentsForPost = async (req, res) => {
 // Lägger till en like om användare inte likeat, tar bort annars
 export const likeChange = async (req, res) => {
     const { userId, postId } = req.body;
+    let isLiked;
+
     try {
-        await db.query("INSERT INTO likes (user_id, post_id) VALUES (?, ?)", [userId, postId]);
+        const [result] = await db.query('SELECT * FROM likes WHERE user_id = ? AND post_id = ?', [userId, postId]);
 
-
-        
-    } catch (error) {
-        if (error.code === "ER_DUP_ENTRY") {
-            await db.query("DELETE FROM likes WHERE user_id = ? AND post_id = ?", [userId, postId]);
+        if (result.length === 0) {
+            await db.query("INSERT INTO likes (user_id, post_id) VALUES (?, ?)", [userId, postId]);
+            isLiked = true;
         } else {
-            return res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid gillning", error });
+            await db.query("DELETE FROM likes WHERE user_id = ? AND post_id = ?", [userId, postId]);
+            isLiked = false;
         }
-        
-    }
 
-    try {
         let [rows] = await db.query(getPostByIdQuery, [postId]);
         rows[0] = format.formatValuesForFrontEnd(rows[0]);
-        res.status(codes.CREATED).json(rows[0]);
+
+        res.status(codes.CREATED).json({
+            posts: rows[0],
+            liked: isLiked
+        });
     } catch (error) {
-        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid hämtning av uppdaterat inlägg", error });
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid likehantering", error });
     }
 };
-
-
 
 /////////// Hjälpfunktioner  ///////////
 ////////////////////////////////////////
