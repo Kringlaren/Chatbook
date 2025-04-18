@@ -6,9 +6,10 @@ import format from '../utils/format.js';
 ///////////////////////////////////
 
 const getPostByIdQuery = `
-    SELECT posts.*, COUNT(likes.id) AS like_count, users.username, users.profile_pic
+    SELECT posts.*, COUNT(likes.id) AS like_count, COUNT(comments.id) AS comment_count, users.username, users.profile_pic
     FROM posts
     LEFT JOIN likes ON posts.id = likes.post_id
+    LEFT JOIN comments ON posts.id = comments.post_id
     LEFT JOIN users ON posts.user_id = users.id
     WHERE posts.id = ?
     GROUP BY posts.id
@@ -21,7 +22,7 @@ const getPostByIdQuery = `
 export const getAllPosts = async (req, res) => {
     try {
         let [rows] = await db.query(`
-        SELECT posts.*, COUNT(likes.id) AS like_count, users.username, users.profile_pic, 
+        SELECT posts.*, COUNT(likes.id) AS like_count, COUNT(comments.id) AS comment_count, users.username, users.profile_pic, 
             CASE 
                 WHEN EXISTS (
                 SELECT * 
@@ -33,6 +34,7 @@ export const getAllPosts = async (req, res) => {
             END AS likedByUser
         FROM posts 
         LEFT JOIN likes ON posts.id = likes.post_id 
+        LEFT JOIN comments ON posts.id = comments.post_id
         LEFT JOIN users ON posts.user_id = users.id
         GROUP BY posts.id
         ORDER BY created_at DESC
@@ -51,8 +53,10 @@ export const getPostById = async (req, res) => {
     const id = req.params.id;
     try {
         const row = await db.query(`
-        SELECT posts.*, COUNT(likes.id) AS like_count FROM posts 
-        LEFT JOIN likes ON posts.id = likes.post_id AND posts.id = ?
+        SELECT posts.*, COUNT(likes.id) AS like_count, COUNT(comments.id) AS comment_count FROM posts 
+        LEFT JOIN likes ON posts.id = likes.post_id
+        LEFT JOIN comments ON posts.id = comments.post_id
+        WHERE posts.id = ?
         `, [id]);
 
         row = format.formatValuesForFrontEnd({posts: row});
@@ -132,7 +136,17 @@ export const getCommentsForPost = async (req, res) => {
     const postId = req.params.id;
 
     try {
-        const [rows] = await db.query("SELECT * FROM comments WHERE post_id=?", [postId]);
+        let [rows] = await db.query(`
+            SELECT comments.*, users.username, users.profile_pic
+            FROM comments
+            LEFT JOIN users ON comments.user_id = users.id
+            WHERE post_id=?
+            GROUP BY comments.id
+            ORDER BY created_at DESC
+        `, [postId]);
+
+        rows = format.formatValuesForFrontEnd(rows);
+        
         res.status(codes.OK).json(rows);
 
     } catch (error) {

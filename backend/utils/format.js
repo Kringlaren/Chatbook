@@ -4,6 +4,7 @@ const formatValuesForFrontEnd = (rows) => {
         row.username = formatNameForFrontEnd(row.username);
         row.created_at = formatTime(row.created_at);
     });
+
     return formatedRows;
 }
 

@@ -9,6 +9,8 @@ const postStore = usePostStore();
 const posts = ref([]);
 const errorMessage = ref("");
 
+const emit = defineEmits(['comment-clicked']);
+
 onMounted(async () => {
     const res = await postStore.fetchAllPosts();
 
@@ -18,12 +20,16 @@ onMounted(async () => {
         posts.value = res.data;
     }
 });
+
+const forwardCommentClicked = (post) => {
+    emit('comment-clicked', post);
+};
 </script>
 
 <template>
     <p v-if="errorMessage">{{ errorMessage }}</p>
     <div class="feed" v-for="post in postStore.posts" :key="post.id">
-        <Post :post="post"></Post>
+        <Post :post="post" @comment-clicked="forwardCommentClicked"></Post>
     </div>
 </template>
 

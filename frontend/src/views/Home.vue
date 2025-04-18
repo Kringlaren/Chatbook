@@ -1,14 +1,24 @@
 <script setup>
-import { onMounted } from "vue";
+import { ref, onMounted } from "vue";
 import Feed from "../components/Feed.vue";
 import Navbar from "../components/Navbar.vue";
 import MakePost from "../components/MakePost.vue";
+import PostModal from "../components/PostModal.vue";
 import { useAuthStore } from "../stores/authStore.js";
 const auth = useAuthStore();
 
 onMounted(async () => {
     await auth.fetchUser();
 });
+
+const expandedPost = ref(null);
+
+const expandPost = (post) => {
+    expandedPost.value = post;
+};
+const closePost = () => {
+    expandedPost.value = null;
+}
 </script>
 
 <template>
@@ -19,10 +29,10 @@ onMounted(async () => {
         </div>
         <div class="post-feed">
             <MakePost></MakePost>
-            <Feed></Feed>
+            <Feed @comment-clicked="expandPost"></Feed>
         </div>
     </div>
-    
+    <PostModal v-if="expandedPost" @close="closePost" :post="expandedPost"></PostModal>
     
 </template>
 

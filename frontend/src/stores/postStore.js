@@ -3,6 +3,7 @@ import api from '../services/api.js';
 import { useAuthStore } from "./";
 
 export const usePostStore = defineStore('post', {
+  // Sparar alla posts i frontend eftersom skalan är liten
     state: () => ({
         posts: [],
         error: null,
@@ -34,8 +35,10 @@ export const usePostStore = defineStore('post', {
         return res;
       },
 
-      async fetchPost(postId) {
-        return this.handlePostRequest("get", "get/" + postId);
+      async expandPost(postId) {
+        this.posts.forEach(post => {
+          
+        });
       },
 
       // Gillningar //
@@ -51,6 +54,13 @@ export const usePostStore = defineStore('post', {
           }
         }
         return res;
+      },
+
+      // Kommentarer //
+      /////////////////
+
+      async fetchAllCommentsForPost(postId) {
+        return this.handlePostRequest("get", "comments/" + postId);
       },
 
       async handlePostRequest(method, url, data = null) {

@@ -73,10 +73,32 @@ button:focus-visible {
   padding: 2em;
 }
 
+.scrollable {
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+.scrollable::-webkit-scrollbar {
+  width: 0.4vw;
+}
+
+.scrollable::-webkit-scrollbar-track {
+  background-color: none;
+}
+
+.scrollable::-webkit-scrollbar-thumb {
+  background-color: var(--border-color);
+  border-radius: 1vw;
+  border: 2px solid transparent;
+  background-clip: content-box;
+}
+
+
+
 #app {
   margin: 0;
   text-align: center;
 }
+
 
 
 @media (prefers-color-scheme: light) {

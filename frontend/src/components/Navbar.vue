@@ -25,7 +25,7 @@ const logOutUser = async () => {
             <a v-else href="login">Logga in</a>
         </div>
         
-        <button v-if="pp" @click="logOutUser">
+        <button v-if="authStore.isLoggedIn" @click="logOutUser">
             Logga ut
         </button>
     </div>
