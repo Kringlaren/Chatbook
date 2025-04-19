@@ -1,6 +1,7 @@
 <script setup>
 import Post from './Post.vue';
 import Comments from './Comments.vue';
+import MakeComment from './MakeComment.vue';
 const props = defineProps({
     post: Object
 });
@@ -14,12 +15,16 @@ const close = () => {
 
 <template>
     <div class="backdrop" @click.self="close">
-        <div class="content">    
+        <div class="panel">    
             <h2>{{ props.post.username }}s inlägg</h2>
 
-            <div class="post scrollable">
-                <div><Post :post="props.post" :modal="true"></Post></div>    
-                <div><Comments :post="props.post"></Comments></div>
+            <div class="scrollable">
+                <div class="content">
+                    <div><Post :post="props.post" :modal="true"></Post></div> 
+                    <p>Kommentarer</p>  
+                    <div><MakeComment :post="props.post"></MakeComment></div> 
+                    <div><Comments :post="props.post"></Comments></div>
+                </div>
             </div>
         </div>
     </div>
@@ -36,7 +41,7 @@ const close = () => {
   justify-content: center;
   z-index: 999;
 }
-.content {
+.panel {
     padding: 2vw;
     width: 50vw;
     height: 80vh;
@@ -47,10 +52,12 @@ const close = () => {
     align-items: center;
 } 
 
-.post {
+.content {
     width: 98%;
     display: flex;
     flex-direction: column;
     align-self: center;
+    border: var(--default-border);
+    border-radius: calc(var(--default-border-radius)/2);
 }
 </style>

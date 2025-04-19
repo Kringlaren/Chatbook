@@ -16,11 +16,9 @@ export const usePostStore = defineStore('post', {
 
       // Formdata för att filer ska kunna laddas upp
       async createPost(textContent, img = null) {
-        const formData = new FormData();
-        formData.append("userId", this.getUserId());
-        formData.append("textContent", textContent);
-        formData.append("image", img);
-        const res = this.handlePostRequest("post", "create", formData);
+        const formData = this.makeContentFormData(textContent, img);
+        
+        const res = await this.handlePostRequest("post", "create", formData);
         if (!res.error) {
           this.posts.push(res.data.posts);
         }
@@ -35,24 +33,15 @@ export const usePostStore = defineStore('post', {
         return res;
       },
 
-      async expandPost(postId) {
-        this.posts.forEach(post => {
-          
-        });
-      },
-
       // Gillningar //
       ////////////////
 
       async changeLikeOnPost(postId) {
         const userId = this.getUserId();
         const res = await this.handlePostRequest("post", "like", {userId, postId});
-        if (!res.error) {
-          const index = this.posts.findIndex(p => p.id === postId);
-          if (index !== -1) {
-            this.posts[index] = res.data.posts[0];
-          }
-        }
+        
+        this.updatePost(postId, res);
+
         return res;
       },
 
@@ -61,6 +50,17 @@ export const usePostStore = defineStore('post', {
 
       async fetchAllCommentsForPost(postId) {
         return this.handlePostRequest("get", "comments/" + postId);
+      },
+
+      async createComment(postId, textContent, img = null) {
+        const formData = this.makeContentFormData(textContent, img);
+        formData.append("postId", postId);
+
+        const res = await this.handlePostRequest("post", "comment", formData);
+
+        this.updatePost(postId, res);
+
+        return res;
       },
 
       async handlePostRequest(method, url, data = null) {
@@ -80,6 +80,25 @@ export const usePostStore = defineStore('post', {
           } finally {
             this.loading = false;
           }
+      },
+
+      // Hjälpfunktioner
+
+      updatePost(postId, res) {
+        if (!res.error) {
+          const index = this.posts.findIndex(p => p.id === postId);
+          if (index !== -1) {
+            this.posts[index] = res.data.posts[0];
+          }
+        }
+      },
+
+      makeContentFormData(textContent, img) {
+        const formData = new FormData();
+        formData.append("userId", this.getUserId());
+        formData.append("textContent", textContent);
+        formData.append("image", img);
+        return formData;
       },
 
       getUserId() {

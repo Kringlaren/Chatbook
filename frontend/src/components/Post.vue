@@ -32,7 +32,7 @@ const expandPost = async () => {
 </script>
 
 <template>
-    <div class="post" :class="{ 'nobottom' : modal }">
+    <div :class="{ 'border' : !modal }" class="post" >
         <div class="contentpadding">
             <div class="profile">
                 <img :src="urlBase + post.profile_pic" alt="Profilbild" class="profileimg">
@@ -62,16 +62,13 @@ const expandPost = async () => {
 
 <style scoped>
 .post {
-    border: var(--default-border);
     text-align: left;
     width: 100%;
     border-radius: calc(var(--default-border-radius)/2);
     background-color: var(--primary-color);
 }
-.nobottom {
-    border-bottom: 0;
-    border-end-end-radius: 0;
-    border-end-start-radius: 0;
+.border {
+    border: var(--default-border);
 }
 
 .profile {

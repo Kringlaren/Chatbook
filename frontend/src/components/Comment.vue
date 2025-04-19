@@ -19,7 +19,10 @@ const usernameNoSpace = props.comment.username.replace(/\s+/g, ".");
             </div>
         
             <p>{{ comment.content }}</p>
+            <img v-if="comment.image" :src="urlBase + comment.image" alt="Inläggsbild" class="commentimg">
         </div>
+
+        
     </div>
 </template>
 
@@ -41,6 +44,10 @@ const usernameNoSpace = props.comment.username.replace(/\s+/g, ".");
     max-width: 3vw;
     max-height: 3vw;
     border-radius: 100%;
+}
+
+.commentimg {
+    width: 10vw;
 }
 
 .contentpadding {

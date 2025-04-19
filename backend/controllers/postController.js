@@ -6,7 +6,7 @@ import format from '../utils/format.js';
 ///////////////////////////////////
 
 const getPostByIdQuery = `
-    SELECT posts.*, COUNT(likes.id) AS like_count, COUNT(comments.id) AS comment_count, users.username, users.profile_pic
+    SELECT posts.*, COUNT(DISTINCT likes.id) AS like_count, COUNT(DISTINCT comments.id) AS comment_count, users.username, users.profile_pic
     FROM posts
     LEFT JOIN likes ON posts.id = likes.post_id
     LEFT JOIN comments ON posts.id = comments.post_id
@@ -22,7 +22,7 @@ const getPostByIdQuery = `
 export const getAllPosts = async (req, res) => {
     try {
         let [rows] = await db.query(`
-        SELECT posts.*, COUNT(likes.id) AS like_count, COUNT(comments.id) AS comment_count, users.username, users.profile_pic, 
+        SELECT posts.*, COUNT(DISTINCT likes.id) AS like_count, COUNT(DISTINCT comments.id) AS comment_count, users.username, users.profile_pic, 
             CASE 
                 WHEN EXISTS (
                 SELECT * 
@@ -117,6 +117,7 @@ export const createPost = async (req, res) => {
 // Skapar kommentar på ett inlägg med eller utan bild
 export const createComment = async (req, res) => {
     const { userId, postId } = req.body;
+
     const textContent = checkTextContent(req, res);
 
     if (!textContent) return;
@@ -125,7 +126,11 @@ export const createComment = async (req, res) => {
 
     try {
         await db.query("INSERT INTO comments (user_id, post_id, content, image) VALUES (?, ?, ?, ?)", [userId, postId, textContent, imageUrl]);
-        res.status(codes.CREATED).json({ message: "Kommentar skapad!" });
+
+        let [rows] = await db.query(getPostByIdQuery, [postId]);
+        rows[0] = format.formatValuesForFrontEnd(rows[0]);
+
+        res.status(codes.CREATED).json({posts: rows[0]});
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid skapande av kommentar", error });
     }
@@ -192,7 +197,7 @@ const checkTextContent = (req, res) => {
     const textContent = req.body.textContent;
 
     if (!textContent) {
-        res.status(codes.BAD_REQUEST).json({ message: "Inlägget måste innehålla text!" });
+        res.status(codes.BAD_REQUEST).json({ message: "Måste innehålla text!" });
         return null;
     }
     return textContent;

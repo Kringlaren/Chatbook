@@ -24,7 +24,6 @@ onMounted(async () => {
 
 <template>
     <div class="comments">
-        <p>Kommentarer</p>
         <p v-if="errorMessage">{{ errorMessage }}</p>
     
         <div class="feed" v-if="comments.length !== 0" v-for="comment in comments" :key="comment.id">
@@ -43,16 +42,11 @@ onMounted(async () => {
         flex-direction: column;
     }
     .comments {
-        width: 98%;
-        border: var(--default-border);
+        width: 100%;
         border-radius: calc(var(--default-border-radius)/2);
         background-color: var(--primary-color);
         display: flex;
         flex-direction: column;
         align-self: center;
-
-        border-top: none;
-        border-start-end-radius: 0;
-        border-start-start-radius: 0;
     }
 </style>
