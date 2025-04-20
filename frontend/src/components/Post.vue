@@ -12,7 +12,7 @@ const props = defineProps({
 });
 const emit = defineEmits(['comment-clicked']);
 
-const urlBase = import.meta.env.VITE_URL_BASE;
+const backEndUrlBase = import.meta.env.VITE_URL_BASE;
 
 const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
 
@@ -35,7 +35,7 @@ const expandPost = async () => {
     <div :class="{ 'border' : !modal }" class="post" >
         <div class="contentpadding">
             <div class="profile">
-                <img :src="urlBase + post.profile_pic" alt="Profilbild" class="profileimg">
+                <img :src="backEndUrlBase + post.profile_pic" alt="Profilbild" class="profileimg">
                 <h3><a :href="usernameNoSpace">{{ post.username }}</a></h3>
                 <p>-</p>
                 <p>{{ post.created_at }}</p>
@@ -44,7 +44,7 @@ const expandPost = async () => {
             <p>{{ post.content }}</p>
         </div>
         
-        <img v-if="post.image" :src="urlBase + post.image" alt="Inläggsbild" class="postimg">
+        <img v-if="post.image" :src="backEndUrlBase + post.image" alt="Inläggsbild" class="postimg">
         <div class="actions">
             <div>
                 <span>{{ post.like_count }}</span>

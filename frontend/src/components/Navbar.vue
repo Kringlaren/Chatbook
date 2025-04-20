@@ -7,6 +7,8 @@ const authStore = useAuthStore();
 const pp = computed(() => authStore.user?.profilePic || "");
 const name = computed(() => authStore.user?.username || "");
 
+const nameWithoutSpace = name.value.replace(/\s/, ".");
+
 const urlBase = import.meta.env.VITE_URL_BASE;
 
 
@@ -18,10 +20,10 @@ const logOutUser = async () => {
 <template>
     <div class="navbar">
         <div>
-            <div v-if="authStore.isLoggedIn" class="profile">
+            <a :href="nameWithoutSpace" v-if="authStore.isLoggedIn" class="profile">
                 <p>{{ name }}</p>
-                <a :href="name" class="profile"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></a>
-            </div>
+                <div class="profile"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></div>
+            </a>
             <a v-else href="login">Logga in</a>
         </div>
         
