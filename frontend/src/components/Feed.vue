@@ -27,16 +27,15 @@ const forwardCommentClicked = (post) => {
 </script>
 
 <template>
-    <p v-if="errorMessage">{{ errorMessage }}</p>
-    <div class="feed" v-for="post in postStore.posts" :key="post.id">
+    <div v-if="posts" v-for="post in postStore.posts" :key="post.id">
         <Post :post="post" @comment-clicked="forwardCommentClicked"></Post>
+    </div>
+    <p v-else-if="errorMessage">{{ errorMessage }}</p>
+    <p v-else>Laddar...</p>
+    <div class="border">
+        <p>Du har nått botten av flödet</p>
     </div>
 </template>
 
 <style scoped>
-    .feed{
-        display: flex;
-        flex-direction: column;
-        align-items: center;
-    }
 </style>

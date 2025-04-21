@@ -27,7 +27,7 @@ const closePost = () => {
         <div>
             Vänner
         </div>
-        <div class="post-feed">
+        <div class="post-feed scrollable">
             <MakePost></MakePost>
             <Feed @comment-clicked="expandPost"></Feed>
         </div>
@@ -47,5 +47,7 @@ const closePost = () => {
     flex-direction: column;
     gap: var(--default-gap);
     width: 35vw;
+    max-height: calc(99vh - var(--navbar-height) - var(--default-gap));
+    padding: 0 1vw;
 }
 </style>

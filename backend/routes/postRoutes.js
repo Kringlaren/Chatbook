@@ -1,5 +1,5 @@
 import express from "express";
-import { createPost, getPostById, getAllPosts, getPostsByUsername, createComment, getCommentsForPost, likeChange } from "../controllers/postController.js";
+import { createPost, getAllPosts, getPostsByUsername, createComment, getCommentsForPost, likeChange } from "../controllers/postController.js";
 import upload from "../middleware/upload.js";
 
 const router = express.Router();
@@ -8,7 +8,6 @@ const router = express.Router();
 router.post('/create', upload.single("image"), createPost);
 router.get('/all', getAllPosts);
 router.get('/by/:username', getPostsByUsername);
-router.get('/get/:id', getPostById);
 
 // Kommentarer
 router.post('/comment', upload.single("image"), createComment);

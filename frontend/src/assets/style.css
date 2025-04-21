@@ -1,7 +1,7 @@
 :root {
   --primary-color: #242424;
   --text-color: #ffffffde;
-  --border-color: #ddd;
+  --border-color: #dddddd;
 
   --default-border: 1px solid var(--border-color);
   --default-border-radius: 1.5vw;
@@ -37,6 +37,7 @@ body {
   margin: 0;
   text-align: center;
   min-width: 320px;
+  overflow-y: hidden;
 }
 
 h1 {
@@ -73,6 +74,11 @@ button:focus-visible {
   padding: 2em;
 }
 
+.border {
+  border: var(--default-border);
+  border-radius: var(--default-border-radius);
+}
+
 .scrollable {
   overflow-y: auto;
   overflow-x: hidden;
@@ -81,10 +87,10 @@ button:focus-visible {
   width: 0.4vw;
 }
 .scrollable::-webkit-scrollbar-track {
-  background-color: none;
+  background: none;
 }
 .scrollable::-webkit-scrollbar-thumb {
-  background-color: var(--border-color);
+  background-color: color-mix(in srgb, var(--border-color) 20%, transparent);
   border-radius: 1vw;
   border: 2px solid transparent;
   background-clip: content-box;

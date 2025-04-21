@@ -16,12 +16,12 @@ const backEndUrlBase = import.meta.env.VITE_URL_BASE;
 
 const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
 
-let liked = ref(props.post.likedByUser);
 
 const changeLikeOnPost = async () => {
     const res = await postStore.changeLikeOnPost(props.post.id);
     if (!res.error) {
-        liked.value = res.data.liked;
+        const updatedPost = res.data.posts[0];
+        Object.assign(props.post, updatedPost);
     }
 }
 
@@ -48,7 +48,7 @@ const expandPost = async () => {
         <div class="actions">
             <div>
                 <span>{{ post.like_count }}</span>
-                <button v-if="authStore.isLoggedIn" @click="changeLikeOnPost" class="iconbutton"><img class="icon" :src="liked ? likedImg : likeImg" alt="gilla"></button>
+                <button v-if="authStore.isLoggedIn" @click="changeLikeOnPost" class="iconbutton"><img class="icon" :src="post.likedByUser ? likedImg : likeImg" alt="gilla"></button>
                 <img v-else class="icon" :src="likeImg" alt="gillningar">
             </div>
             <div>
@@ -64,7 +64,7 @@ const expandPost = async () => {
 .post {
     text-align: left;
     width: 100%;
-    border-radius: calc(var(--default-border-radius)/2);
+    border-radius: var(--default-border-radius);
     background-color: var(--primary-color);
 }
 .border {

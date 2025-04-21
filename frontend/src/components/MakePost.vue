@@ -21,7 +21,7 @@ const imageChange = (event) => {
 </script>
 
 <template>
-    <div class="panel">
+    <div class="border">
         <div v-if="authStore.isLoggedIn">
             <h2>Skapa inlägg</h2>
             <form @submit.prevent="createPost()">
@@ -40,11 +40,6 @@ const imageChange = (event) => {
 </template>
 
 <style scoped>
-.panel {
-    border: var(--default-border);
-    border-radius: var(--default-border-radius);
-}
-
 textarea {
     resize: none;
     width: 50%;

@@ -16,14 +16,14 @@ const close = () => {
 <template>
     <div class="backdrop" @click.self="close">
         <div class="panel">    
-            <h2>{{ props.post.username }}s inlägg</h2>
+            <h2>{{ post.username }}s inlägg</h2>
 
             <div class="scrollable">
                 <div class="content">
-                    <div><Post :post="props.post" :modal="true"></Post></div> 
+                    <div><Post :post="post" :modal="true"></Post></div> 
                     <p>Kommentarer</p>  
-                    <div><MakeComment :post="props.post"></MakeComment></div> 
-                    <div><Comments :post="props.post"></Comments></div>
+                    <div><MakeComment :post="post"></MakeComment></div> 
+                    <div><Comments :post="post"></Comments></div>
                 </div>
             </div>
         </div>
