@@ -53,7 +53,7 @@ const expandPost = async () => {
             </div>
             <div>
                 <span>{{ post.comment_count }}</span> 
-                <button v-if="authStore.isLoggedIn && !modal" @click="expandPost" class="iconbutton"><img class="icon" :src="commentImg" alt="kommentera"></button>
+                <button v-if="!modal" @click="expandPost" class="iconbutton"><img class="icon" :src="commentImg" alt="kommentera"></button>
                 <img v-else class="icon" :src="commentImg" alt="kommentarer">
             </div>
         </div>

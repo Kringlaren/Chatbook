@@ -53,7 +53,7 @@ const close = () => {
 } 
 
 .content {
-    width: 98%;
+    width: 48vw;
     display: flex;
     flex-direction: column;
     align-self: center;

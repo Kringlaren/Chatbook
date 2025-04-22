@@ -34,7 +34,7 @@ const imageChange = (event) => {
             </form>
         </div>
         <div v-else>
-            <h2><a href="login">Logga in</a> för att skapa kommentera!</h2>
+            <h2><a href="login">Logga in</a> för att kommentera!</h2>
         </div>    
 
         
