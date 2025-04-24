@@ -19,6 +19,7 @@ const logOutUser = async () => {
 
 <template>
     <div class="navbar">
+        <a href="/">Hem</a>
         <div>
             <a :href="nameWithoutSpace" v-if="authStore.isLoggedIn" class="profile">
                 <p>{{ name }}</p>
@@ -47,12 +48,8 @@ const logOutUser = async () => {
         background-color: var(--primary-color);
         padding: var(--default-padding);
         box-sizing: border-box;
-    }
-
-    .profile {
-        display: flex;
-        gap: 1vw;
-        align-items: center;
+        font-size: var(--medium-font-size);
+        z-index: 5;
     }
 
     .profilepic {

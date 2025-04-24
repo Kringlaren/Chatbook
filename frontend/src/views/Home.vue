@@ -22,17 +22,20 @@ const closePost = () => {
 </script>
 
 <template>
-    <Navbar></Navbar>
-    <div class="main-content">
-        <div>
-            Vänner
-        </div>
-        <div class="post-feed scrollable">
+    <div class="scrollable">
+        <Navbar></Navbar>
+        <div class="main-content">
+            <div>
+                Vänner
+            </div>
+            <div class="post-feed feed">
             <MakePost></MakePost>
             <Feed @comment-clicked="expandPost"></Feed>
         </div>
     </div>
     <PostModal v-if="expandedPost" @close="closePost" :post="expandedPost"></PostModal>
+    </div>
+    
     
 </template>
 
@@ -43,9 +46,6 @@ const closePost = () => {
 }
 .post-feed {
     grid-column: 2;
-    display: flex;
-    flex-direction: column;
-    gap: var(--default-gap);
     width: 35vw;
     max-height: calc(99vh - var(--navbar-height) - var(--default-gap));
     padding: 0 1vw;

@@ -10,7 +10,7 @@ export const useUserStore = defineStore('user', {
 
     actions: {
         async fetchUserByUsername(username) {
-            const res = await this.handleUserRequest("get", "/api/user/" + username);
+            const res = await this.handleUserRequest("get", username);
             if (!res.error) {
               this.profileUser = res.data;
             }
@@ -22,9 +22,9 @@ export const useUserStore = defineStore('user', {
             try {
               let res;
               if (method === "post") {
-                res = await api.post(url, data, config);
+                res = await api.post("/api/user/" + url, data, config);
               } else if (method === "get") {
-                res = await api.get(url, config);
+                res = await api.get("/api/user/" + url, config);
               }
               this.error = null;
               return res;

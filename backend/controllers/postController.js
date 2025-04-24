@@ -5,8 +5,8 @@ import format from '../utils/format.js';
 ///////////// Inlägg  /////////////
 ///////////////////////////////////
 
-const getPostByIdQuery = `
-    SELECT posts.*, COUNT(DISTINCT likes.id) AS like_count, COUNT(DISTINCT comments.id) AS comment_count, users.username, users.profile_pic,
+const selectAndJoinPartQuery = `
+    SELECT posts.*, COUNT(DISTINCT likes.id) AS like_count, COUNT(DISTINCT comments.id) AS comment_count, users.username, users.profile_pic, 
         CASE 
             WHEN EXISTS (
             SELECT * 
@@ -16,12 +16,29 @@ const getPostByIdQuery = `
         )   THEN true
         ELSE false
         END AS likedByUser
-    FROM posts
-    LEFT JOIN likes ON posts.id = likes.post_id
+    FROM posts 
+    LEFT JOIN likes ON posts.id = likes.post_id 
     LEFT JOIN comments ON posts.id = comments.post_id
     LEFT JOIN users ON posts.user_id = users.id
+`;
+
+const getPostByIdQuery = `
+    ${selectAndJoinPartQuery}
     WHERE posts.id = ?
+    GROUP BY posts.id;
+`;
+
+const getAllPostsQuery = `
+    ${selectAndJoinPartQuery}
     GROUP BY posts.id
+    ORDER BY created_at DESC;
+`;
+
+const getPostsByUsernameQuery = `
+    ${selectAndJoinPartQuery}
+    WHERE users.username = ?
+    GROUP BY posts.id
+    ORDER BY created_at DESC;
 `;
 
 // GET //
@@ -30,50 +47,28 @@ const getPostByIdQuery = `
 // Hämtar alla inlägg från databasen med användarnamn och likes
 export const getAllPosts = async (req, res) => {
     try {
-        let [rows] = await db.query(`
-        SELECT posts.*, COUNT(DISTINCT likes.id) AS like_count, COUNT(DISTINCT comments.id) AS comment_count, users.username, users.profile_pic, 
-            CASE 
-                WHEN EXISTS (
-                SELECT * 
-                FROM likes 
-                WHERE likes.post_id = posts.id 
-                AND likes.user_id = ?
-            )   THEN true
-            ELSE false
-            END AS likedByUser
-        FROM posts 
-        LEFT JOIN likes ON posts.id = likes.post_id 
-        LEFT JOIN comments ON posts.id = comments.post_id
-        LEFT JOIN users ON posts.user_id = users.id
-        GROUP BY posts.id
-        ORDER BY created_at DESC
-        `, [req.session.userId]);
+        let [rows] = await db.query(getAllPostsQuery, [req.session.userId]);
 
         rows = format.formatValuesForFrontEnd(rows);
 
         res.status(codes.OK).json({posts: rows});
     } catch (error) {
-        res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid hämtning av inlägg", error });
     }
 };
 
 // Hämtar alla inlägg av en specifik användare
 export const getPostsByUsername = async (req, res) => {
-    const username = req.body.id;
+    const username = req.params.username;
+    const userId = req.session.userId;
 
     try {
-        const [rows] = await db.query(`
-        SELECT posts.*, COUNT(likes.id) AS like_count FROM posts 
-        LEFT JOIN users ON posts.user_id = users.id AND users.username = ? 
-        LEFT JOIN likes ON posts.id = likes.post_id
-        GROUP BY posts.id;
-        `, [username]);
-
+        let [rows] = await db.query(getPostsByUsernameQuery, [userId, username]);
         rows = format.formatValuesForFrontEnd(rows);
 
         res.status(codes.OK).json(rows);
     } catch (error) {
-        res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid hämtning av inlägg", error });
     }
 }
 

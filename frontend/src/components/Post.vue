@@ -71,12 +71,6 @@ const expandPost = async () => {
     border: var(--default-border);
 }
 
-.profile {
-    display: flex;
-    gap: 1vw;
-    align-items: center;
-}
-
 .postimg {
   width: 100%;
   height: auto;

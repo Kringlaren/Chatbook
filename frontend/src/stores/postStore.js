@@ -33,6 +33,11 @@ export const usePostStore = defineStore('post', {
         return res;
       },
 
+      async fetchPostsByUsername(username) {
+        const res = await this.handlePostRequest("get", "by/" + username);
+        return res;
+      },
+
       // Gillningar //
       ////////////////
 

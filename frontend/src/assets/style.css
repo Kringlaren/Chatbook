@@ -10,9 +10,11 @@
 
   --default-gap: 2vw;
 
-  --navbar-height: 4vw;
+  --navbar-height: 6vw;
 
   --icon-size: 2vw;
+
+  --medium-font-size: 1.8vw;
 
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -64,6 +66,18 @@ button:focus-visible {
   outline: 4px auto -webkit-focus-ring-color;
 }
 
+.profile {
+  display: flex;
+  gap: 1vw;
+  align-items: center;
+}
+
+.feed {
+  display: flex;
+  flex-direction: column;
+  gap: var(--default-gap);
+}
+
 .iconbutton {
   border: 0;
   padding: 0;
@@ -80,8 +94,9 @@ button:focus-visible {
 }
 
 .scrollable {
-  overflow-y: auto;
+  overflow-y: scroll;
   overflow-x: hidden;
+  max-height: 100vh;
 }
 .scrollable::-webkit-scrollbar {
   width: 0.4vw;
