@@ -1,5 +1,4 @@
 <script setup>
-import { ref } from "vue";
 import { usePostStore, useAuthStore } from "../stores";
 import likedImg from '../assets/images/liked.png';
 import likeImg from '../assets/images/like.png';

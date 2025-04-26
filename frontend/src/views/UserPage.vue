@@ -32,7 +32,6 @@ onMounted(async () => {
         errorMessage.value = userRes.error;
     } else {
         user.value = userRes.data;
-        console.log(user.value);
     }
 
     const postRes = await postStore.fetchPostsByUsername(username);
@@ -41,7 +40,6 @@ onMounted(async () => {
         errorMessage.value = postRes.error;
     } else {
         userPosts.value = postRes.data;
-        console.log(userPosts.value);
     }
 });
 
@@ -54,13 +52,28 @@ const closePost = () => {
 
 const changeBanner = async (event) => {
     const file = event.target.files[0];
-    if (file) {
-        authStore.changeBanner(file);
+    if (!file) {
+        return;  
     }
-}
+    const formData = new FormData();
+    formData.append('image', file);
+    const res = await authStore.changeBanner(formData);
+    if (!res.error) {
+        user.value.banner_img = res.banner_img;
+    }
+};
 const changeProfilePic = async (event) => {
-    console.log("profile pic");
-}
+    const file = event.target.files[0];
+    if (!file) {
+        return;  
+    }
+    const formData = new FormData();
+    formData.append('image', file);
+    const res = await authStore.changeProfilePic(formData);
+    if (!res.error) {
+        user.value.profile_pic = res.profile_pic;
+    }
+};
 </script>
 
 <template>
@@ -70,7 +83,7 @@ const changeProfilePic = async (event) => {
             <div class="container">
                 <div v-if="authStore.isLoggedIn && authStore.user.id === user.id">
                     <img class="banner" :src="backEndUrlBase + user.banner_img" alt="banderoll" @click="bannerInput.click()" style="cursor: pointer">
-                    <input type="file" ref="bannerInput" style="display: none" @change="changeBanner">
+                    <input type="file" ref="bannerInput" style="display: none" @change="changeBanner" accept="image/*">
                 </div>
                 <img v-else class="banner" :src="backEndUrlBase + user.banner_img" alt="banderoll">
 
@@ -79,7 +92,7 @@ const changeProfilePic = async (event) => {
                         <img class="profilepic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" @click="profilePicInput.click()" style="cursor: pointer">
                         <input type="file" ref="profilePicInput" style="display: none" @change="changeProfilePic">
                     </div>
-                    <img v-else class="profilepic" :src="backEndUrlBase + user.profile_pic" alt="profilbild">
+                    <img v-else class="profilepic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" accept="image/*">
                     <h1>{{ user.username }}</h1>
                 </div>
             </div>
@@ -109,6 +122,8 @@ const changeProfilePic = async (event) => {
 <style scoped>
 .profilepic {
     width: 8vw;
+    height: 8vw;
+    object-fit: cover;
     border-radius: 100%;
 }
 .banner {

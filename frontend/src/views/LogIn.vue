@@ -13,7 +13,6 @@ const password = ref("");
 
 const logIn = async () => {
     const res = await authStore.logInUser(username.value, password.value);
-    console.log(res);
     if (authStore.isLoggedIn) {
         router.push("/");
     } else if (res.error) {

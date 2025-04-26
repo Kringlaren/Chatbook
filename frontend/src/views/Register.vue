@@ -13,8 +13,6 @@ const passwordError = ref("");
 const username = ref("");
 const password = ref("");
 
-const CREATED = 201;
-
 // Registrerar via service om alla fält är giltiga
 const register = async () => {
     if (!checkUserName(username.value) || !checkUserPassword(password.value)) {

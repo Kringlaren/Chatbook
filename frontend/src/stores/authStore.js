@@ -82,6 +82,17 @@ export const useAuthStore = defineStore('auth', {
               
         },
 
+        async changeProfilePic(formData) {
+            const res = await this.handleAuthRequest("post", "user/change-profile-pic", formData);
+            if (res.error) {
+                return { error: "Kunde inte uppdatera profilbilden" }; 
+            }
+            this.user.profile_pic = res.data.profile_pic;
+            localStorage.setItem("user", JSON.stringify(this.user));
+            return res.data;
+              
+        },
+
         async handleAuthRequest(method, url, data = null, config = {}) {
             this.loading = true;
             try {
