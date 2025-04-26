@@ -17,7 +17,7 @@ onMounted(async () => {
     if (res.error) {
         errorMessage.value = res.error;
     } else {
-        posts.value = res.data;
+        posts.value = res;
     }
 });
 

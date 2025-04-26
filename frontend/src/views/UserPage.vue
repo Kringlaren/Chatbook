@@ -52,10 +52,13 @@ const closePost = () => {
     expandedPost.value = null;
 };
 
-const changeBanner = () => {
-    console.log("banner");
+const changeBanner = async (event) => {
+    const file = event.target.files[0];
+    if (file) {
+        authStore.changeBanner(file);
+    }
 }
-const changeProfilePic = () => {
+const changeProfilePic = async (event) => {
     console.log("profile pic");
 }
 </script>
@@ -86,7 +89,7 @@ const changeProfilePic = () => {
                     <p v-if="user.bio">{{ user.bio }}</p>
                     <p v-else>{{ user.username }} har ingen beskrivning att visa</p>
                 </div>
-                
+
                 <div class="posts feed">
                     <h2>{{ user.username }}s inlägg</h2>
                     <div v-if="userPosts.length !== 0" v-for="post in userPosts" :key="post.id">

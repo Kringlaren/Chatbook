@@ -22,10 +22,10 @@ const register = async () => {
         return;
     }
     const res = await authStore.registerUser(username.value, password.value);
-    if (res.status === CREATED) {
+    if (!res.error) {
         router.push("/");
     } else {
-        errorMessage.value = res.error
+        errorMessage.value = res.error;
     }
     
 };

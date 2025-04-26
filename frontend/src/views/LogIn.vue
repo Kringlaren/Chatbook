@@ -1,5 +1,5 @@
 <script setup>
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores";
 const authStore = useAuthStore();
@@ -10,21 +10,22 @@ const errorMessage = ref("");
 const username = ref("");
 const password = ref("");
 
-const UNAUTHORIZED = 401;
 
 const logIn = async () => {
     const res = await authStore.logInUser(username.value, password.value);
-
+    console.log(res);
     if (authStore.isLoggedIn) {
         router.push("/");
-    } else {
-        if (res.status === UNAUTHORIZED) {
-            errorMessage.value = res.error;
-        } else {
-            errorMessage.value = "Nätverksfel!";
-        }
+    } else if (res.error) {
+        errorMessage.value = res.error;
     }
 };
+
+onMounted(async () => {
+    if (authStore.isLoggedIn) {
+        router.push("/");
+    }
+});
 </script>
 
 <template>

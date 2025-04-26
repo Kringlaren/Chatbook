@@ -17,3 +17,7 @@ export const getUserByName = async (req, res) => {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid hämtning av användare", error});
     } 
 };
+
+export const changeBanner = async (req, res) => {
+    
+}
