@@ -19,7 +19,7 @@ const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
 const changeLikeOnPost = async () => {
     const res = await postStore.changeLikeOnPost(props.post.id);
     if (!res.error) {
-        const updatedPost = res.data.posts[0];
+        const updatedPost = res.posts[0];
         Object.assign(props.post, updatedPost);
     }
 }
@@ -75,9 +75,10 @@ const expandPost = async () => {
   height: auto;
 }
 .profileimg {
-    max-width: 4vw;
-    max-height: 4vw;
+    width: 4vw;
+    height: 4vw;
     border-radius: 100%;
+    object-fit: cover;
 }
 
 .contentpadding {

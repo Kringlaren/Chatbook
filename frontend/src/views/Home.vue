@@ -4,12 +4,6 @@ import Feed from "../components/Feed.vue";
 import Navbar from "../components/Navbar.vue";
 import MakePost from "../components/MakePost.vue";
 import PostModal from "../components/PostModal.vue";
-import { useAuthStore } from "../stores/authStore.js";
-const auth = useAuthStore();
-
-onMounted(async () => {
-    await auth.fetchUser();
-});
 
 const expandedPost = ref(null);
 
@@ -26,7 +20,7 @@ const closePost = () => {
         <Navbar></Navbar>
         <div class="main-content">
             <div>
-                Vänner
+                <h2>Följer</h2>
             </div>
             <div class="post-feed feed">
             <MakePost></MakePost>

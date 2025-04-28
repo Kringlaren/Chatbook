@@ -17,7 +17,7 @@ onMounted(async () => {
     if (res.error) {
         errorMessage.value = res.error;
     } else {
-        comments.value = res.data;
+        comments.value = res;
     }
 });
 </script>

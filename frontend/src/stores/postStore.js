@@ -19,23 +19,22 @@ export const usePostStore = defineStore('post', {
         const formData = this.makeContentFormData(textContent, img);
         
         const res = await this.handlePostRequest("post", "create", formData);
-        if (!res.error) {
-          this.posts.push(res.data.posts);
-        }
-        return res;
+        if (res.error) return { error: "Kunde inte skapa inlägg" };
+        this.posts.unshift(res.data.posts);
+        return res.data;
       },
 
       async fetchAllPosts() {
         const res = await this.handlePostRequest("get", "all");
-        if (!res.error) {
-          this.posts = res.data.posts;
-        }
-        return res;
+        if (res.error) return { error: "Kunde inte hämta inlägg" };
+        this.posts = res.data.posts;
+        return res.data;
       },
 
       async fetchPostsByUsername(username) {
         const res = await this.handlePostRequest("get", "by/" + username);
-        return res;
+        if (res.error) return { error: "Kunde inte hämta inlägg" };
+        return res.data;
       },
 
       // Gillningar //
@@ -44,17 +43,21 @@ export const usePostStore = defineStore('post', {
       async changeLikeOnPost(postId) {
         const userId = this.getUserId();
         const res = await this.handlePostRequest("post", "like", {userId, postId});
+
+        if (res.error) return { error: "Kunde inte ändra likestatus" };
         
         this.updatePost(postId, res);
 
-        return res;
+        return res.data;
       },
 
       // Kommentarer //
       /////////////////
 
       async fetchAllCommentsForPost(postId) {
-        return this.handlePostRequest("get", "comments/" + postId);
+        const res = await this.handlePostRequest("get", "comments/" + postId);
+        if (res.error) return { error: "Kunde inte hämta kommentarer" };
+        return res.data;
       },
 
       async createComment(postId, textContent, img = null) {
@@ -62,10 +65,11 @@ export const usePostStore = defineStore('post', {
         formData.append("postId", postId);
 
         const res = await this.handlePostRequest("post", "comment", formData);
-
+        if (res.error) return { error: "Kunde inte skapa kommentar" };
+        
         this.updatePost(postId, res);
 
-        return res;
+        return res.data;
       },
 
       async handlePostRequest(method, url, data = null) {

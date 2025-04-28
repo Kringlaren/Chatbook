@@ -27,11 +27,10 @@ const profilePicInput = ref(null);
 
 onMounted(async () => {
     const userRes = await userStore.fetchUserByUsername(username);
-
     if (userRes.error) {
         errorMessage.value = userRes.error;
     } else {
-        user.value = userRes.data;
+        user.value = userRes;
     }
 
     const postRes = await postStore.fetchPostsByUsername(username);
@@ -39,7 +38,7 @@ onMounted(async () => {
     if (postRes.error) {
         errorMessage.value = postRes.error;
     } else {
-        userPosts.value = postRes.data;
+        userPosts.value = postRes;
     }
 });
 
@@ -57,7 +56,7 @@ const changeBanner = async (event) => {
     }
     const formData = new FormData();
     formData.append('image', file);
-    const res = await authStore.changeBanner(formData);
+    const res = await userStore.changeBanner(formData);
     if (!res.error) {
         user.value.banner_img = res.banner_img;
     }
@@ -69,7 +68,7 @@ const changeProfilePic = async (event) => {
     }
     const formData = new FormData();
     formData.append('image', file);
-    const res = await authStore.changeProfilePic(formData);
+    const res = await userStore.changeProfilePic(formData);
     if (!res.error) {
         user.value.profile_pic = res.profile_pic;
     }

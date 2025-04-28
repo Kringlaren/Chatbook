@@ -8,8 +8,11 @@ const authStore = useAuthStore();
 const content = ref("");
 const img = ref(null);
 
-const createPost = () => {
-    postStore.createPost(content.value, img.value);
+const createPost = async () => {
+    const res = await postStore.createPost(content.value, img.value);
+    if (res.error) {
+        alert(res.error);
+    }
 }
 
 const imageChange = (event) => {

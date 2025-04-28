@@ -1,13 +1,12 @@
 <script setup>
 import { computed } from "vue";
-import { useAuthStore } from "../stores/authStore.js";
+import { useAuthStore, useUserStore } from "../stores/";
 const authStore = useAuthStore();
+const userStore = useUserStore();
 
 // Computed uppdaterar variabler när de ändras
-const pp = computed(() => authStore.user?.profile_pic || "");
+const pp = computed(() => userStore.userPreferences?.profile_pic || "");
 const name = computed(() => authStore.user?.username || "");
-
-console.log(authStore.user.profile_pic);
 
 const nameWithoutSpace = name.value.replace(/\s/, ".");
 

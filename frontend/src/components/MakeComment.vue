@@ -12,8 +12,11 @@ const authStore = useAuthStore();
 const content = ref("");
 const img = ref(null);
 
-const createComment = () => {
-    postStore.createComment(props.post.id, content.value, img.value);
+const createComment = async () => {
+    const res = await postStore.createComment(props.post.id, content.value, img.value);
+    if (res.error) {
+        alert(res.error);
+    }
 }
 
 const imageChange = (event) => {

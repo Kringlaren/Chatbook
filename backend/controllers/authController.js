@@ -25,7 +25,6 @@ export const regUser = async (req, res) => {
         res.status(codes.CREATED).json({
             id: newId,
             username: userInput.username,
-            profile_pic: rows[0].profile_pic
         });
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Användare finns redan", error });
@@ -55,7 +54,6 @@ export const logInUser = async (req, res) => {
         res.status(codes.OK).json({
             id: rows[0].id,
             username: format.formatNameForFrontEnd(rows[0].username),
-            profile_pic: rows[0].profile_pic
         });
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid inloggning", error });
@@ -85,7 +83,6 @@ export const getLoggedInUser = async (req, res) => {
         return res.status(codes.OK).json({
             id: rows[0].id,
             username: format.formatNameForFrontEnd(rows[0].username),
-            profile_pic: rows[0].profile_pic
         });
     } catch (error) {
         return res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
