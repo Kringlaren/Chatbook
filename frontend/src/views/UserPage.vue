@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from 'vue';
+import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore, usePostStore, useAuthStore } from '../stores';
 import Navbar from '../components/Navbar.vue';
@@ -10,6 +10,8 @@ const userStore = useUserStore();
 const postStore = usePostStore();
 const authStore = useAuthStore();
 
+const isLoggedInUser = ref(false);
+
 const route = useRoute();
 
 const backEndUrlBase = import.meta.env.VITE_URL_BASE;
@@ -17,30 +19,49 @@ const backEndUrlBase = import.meta.env.VITE_URL_BASE;
 const username = route.params.username;
 const user = ref(null);
 const userPosts = ref([]);
+const bio = ref("");
 
-const errorMessage = ref("");
+const errorMessageUser = ref("");
 
 const expandedPost = ref(null);
 
 const bannerInput = ref(null);
 const profilePicInput = ref(null);
+const bioInput = ref("");
 
 onMounted(async () => {
     const userRes = await userStore.fetchUserByUsername(username);
     if (userRes.error) {
-        errorMessage.value = userRes.error;
+        errorMessageUser.value = userRes.error;
     } else {
         user.value = userRes;
     }
 
     const postRes = await postStore.fetchPostsByUsername(username);
 
-    if (postRes.error) {
-        errorMessage.value = postRes.error;
-    } else {
+    if (!postRes.error) {
         userPosts.value = postRes;
     }
+
+    if (authStore.isLoggedIn && authStore.user.id === user.value.id) {
+        isLoggedInUser.value = true;
+    }
+
+    if (user.value.bio) {
+        bio.value = user.value.bio;
+    }
 });
+
+watch(
+  () => authStore.isLoggedIn,
+  async () => {
+    if (authStore.isLoggedIn && authStore.user.id === user.value.id) {
+        isLoggedInUser.value = true;
+    } else {
+        isLoggedInUser.value = false;
+    }
+  },
+);
 
 const expandPost = (post) => {
     expandedPost.value = post;
@@ -73,6 +94,9 @@ const changeProfilePic = async (event) => {
         user.value.profile_pic = res.profile_pic;
     }
 };
+const changeBio = async () => {
+    const res = await userStore.changeBio(bio.value);
+}
 </script>
 
 <template>
@@ -87,7 +111,7 @@ const changeProfilePic = async (event) => {
                 <img v-else class="banner" :src="backEndUrlBase + user.banner_img" alt="banderoll">
 
                 <div class="profile overbanner">
-                    <div v-if="authStore.isLoggedIn && authStore.user.id === user.id">
+                    <div v-if="isLoggedInUser">
                         <img class="profilepic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" @click="profilePicInput.click()" style="cursor: pointer">
                         <input type="file" ref="profilePicInput" style="display: none" @change="changeProfilePic">
                     </div>
@@ -98,8 +122,9 @@ const changeProfilePic = async (event) => {
             <div class="layout">
                 <div class="about">
                     <h3>Om {{ user.username }}</h3>
-                    <p v-if="user.bio">{{ user.bio }}</p>
+                    <textarea v-model="bio" v-if="user.bio" :disabled="!isLoggedInUser"></textarea>
                     <p v-else>{{ user.username }} har ingen beskrivning att visa</p>
+                    <button v-if="isLoggedInUser" @click="changeBio">Spara</button>
                 </div>
 
                 <div class="posts feed">
@@ -111,7 +136,7 @@ const changeProfilePic = async (event) => {
                 </div>
             </div>
         </div>
-        <p v-else-if="errorMessage">{{ errorMessage }}</p>
+        <p v-else-if="errorMessageUser">{{ errorMessageUser }}</p>
         <p v-else>Laddar...</p>
         <PostModal v-if="expandedPost" @close="closePost" :post="expandedPost"></PostModal>
     </div>
@@ -164,5 +189,11 @@ const changeProfilePic = async (event) => {
     max-height: 10vw;
     width: 35vw;
     padding: 1vw;
+}
+.about textarea {
+    resize: none;
+    width: 100%;
+    padding: calc(var(--default-gap)/2);
+    background-color: var(--primary-color);
 }
 </style>

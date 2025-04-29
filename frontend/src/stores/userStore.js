@@ -35,7 +35,7 @@ export const useUserStore = defineStore('user', {
         if (res.error) {
             return { error: "Kunde inte uppdatera banderollen" }; 
         }
-        this.userSettings.banner_img = res.data.banner_img;
+        this.userPreferences.banner_img = res.data.banner_img;
         return res.data;
       },
 
@@ -44,8 +44,7 @@ export const useUserStore = defineStore('user', {
         if (res.error) {
             return { error: "Kunde inte uppdatera profilbilden" }; 
         }
-        this.userSettings.profile_pic = res.data.profile_pic;
-        localStorage.setItem("user", JSON.stringify(this.user));
+        this.userPreferences.profile_pic = res.data.profile_pic;
         return res.data;   
       },
 
