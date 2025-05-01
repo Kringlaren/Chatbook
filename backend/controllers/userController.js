@@ -3,17 +3,32 @@ import codes from '../httpCodes.js';
 import format from '../utils/format.js';
 import fileHelper from '../utils/fileHelper.js';
 
+const selectUserQuery = `
+    SELECT id, username, profile_pic, banner_img, bio, text_color, bg_color, detail_color, created_at, 
+        CASE 
+            WHEN EXISTS (
+                SELECT 1 
+                FROM followers 
+                WHERE followers.user2_id = users.id
+                AND followers.user1_id = ?
+        )   THEN true
+        ELSE false
+        END AS followed_by_user
+    FROM users 
+`;
+
 // Hämtar användardata med namn
 export const getUserByName = async (req, res) => {
     const username = req.params.username;
+    const userId = req.session.userId;
     
     try {
-        let [rows] = await db.query("SELECT id, username, profile_pic, banner_img, bio, text_color, bg_color, detail_color, created_at FROM users WHERE username = ?", [username]);
+        let [rows] = await db.query(selectUserQuery + `WHERE username = ?`, [userId, username]);
         if (rows.length === 0) return res.status(codes.NOT_FOUND).json({ message: "Användaren hittades inte"});
 
         rows = format.formatValuesForFrontEnd(rows);
 
-        res.status(codes.OK).json(rows[0]);
+        res.status(codes.OK).json({ user: rows[0] });
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid hämtning av användare", error});
     } 
@@ -23,7 +38,6 @@ export const getUserByName = async (req, res) => {
 
 export const getUserPreferences = async (req, res) => {
     const userId = req.session.userId;
-
     if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Ingen användare inloggad" });
 
     try {
@@ -44,29 +58,83 @@ export const changeProfilePic = async (req, res) => {
     changeImage(req, res, "profile");
 };
 
+export const changeBio = async (req, res) => {
+    const userId = req.session.userId;
+    if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
+
+    const { content } = req.body;
+
+    try {
+        await db.query("UPDATE users SET bio = ? WHERE id = ?", [content, userId]);
+
+        const [rows] = await db.query("SELECT bio FROM users WHERE id = ?", [userId]);
+        res.status(codes.OK).json({ bio: rows[0].bio });
+    } catch (error) {
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid uppdatering av beskrivning" });
+    }
+}
+
 // Följningar
 
-export const followUserByName = async (req, res) => {
-    const username = req.body.username;
+export const changeFollowByName = async (req, res) => {
+    let { username } = req.body;
+    username = format.formatNameForBackEnd(username);
+
     const userId = req.session.userId;
+    if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
+
+    let isFollowing;
+
     try {
         const [result] = await db.query("SELECT id FROM users WHERE username = ?", [username]);
         const followUserId = result[0].id;
 
-        await db.query("INSERT INTO followers (user1_id, user2_id) VALUES (?, ?)", [userId, followUserId]);
+        const [currentFollow] = await db.query("SELECT id FROM followers WHERE user1_id = ? AND user2_id = ?", [userId, followUserId]);
+        if (currentFollow.length === 0) {
+            await db.query("INSERT INTO followers (user1_id, user2_id) VALUES (?, ?)", [userId, followUserId]);
+            isFollowing = true;
+        } else {
+            await db.query("DELETE FROM followers WHERE user1_id = ? AND user2_id = ?", [userId, followUserId]);
+            isFollowing = false;
+        }
 
-        const [rows] = await db.query("SELECT username, profile_pic, bio, text_color, bg_color, detail_color, created_at FROM users WHERE id = ?", [followUserId]);
+        let [rows] = await db.query(selectUserQuery + "WHERE id = ?", [userId, followUserId]);
         rows = format.formatValuesForFrontEnd(rows);
 
-        res.status(codes.OK).json({ user: rows[0] });
+        res.status(codes.OK).json({ 
+            user: rows[0],
+            following: isFollowing
+         });
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid följning", error });
+    }
+}
+
+export const getFollowedUsers = async (req, res) => {
+    const userId = req.session.userId;
+    if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
+
+    try {
+        const [rows] = await db.query(`
+            SELECT users.id, users.username, users.profile_pic 
+            FROM users 
+            LEFT JOIN followers ON users.id = followers.user2_id 
+            WHERE user1_id = ?`
+        , [userId]);
+        
+        res.status(codes.OK).json({ users: rows });
+
+    } catch (error) {
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid hämntning av följare" });
     }
 }
 
 
 //Byter ut bilder och tar bort de gamla bilderna
 const changeImage = async (req, res, type) => {
+    const userId = req.session.userId;
+    if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
+
     let column;
     let defaultFile;
     let errorMessage;
@@ -82,7 +150,6 @@ const changeImage = async (req, res, type) => {
             errorMessage = "Serverfel vid uppdatering av profilbild";
     }
 
-    const userId = req.session.userId;
     try {
         const [result] = await db.query(
             `SELECT ${column} FROM users WHERE id = ?`,

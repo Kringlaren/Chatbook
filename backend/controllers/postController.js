@@ -15,7 +15,7 @@ const selectAndJoinPartQuery = `
             AND likes.user_id = ?
         )   THEN true
         ELSE false
-        END AS likedByUser
+        END AS liked_by_user
     FROM posts 
     LEFT JOIN likes ON posts.id = likes.post_id 
     LEFT JOIN comments ON posts.id = comments.post_id
@@ -77,7 +77,9 @@ export const getPostsByUsername = async (req, res) => {
 
 // Skapar ett inlägg med eller utan bild
 export const createPost = async (req, res) => {
-    const userId = req.body.userId;
+    const userId = req.session.userId;
+    if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
+
     const textContent = checkTextContent(req, res);
     if (!textContent) return;
 
@@ -101,7 +103,9 @@ export const createPost = async (req, res) => {
 
 // Skapar kommentar på ett inlägg med eller utan bild
 export const createComment = async (req, res) => {
-    const { userId, postId } = req.body;
+    const { postId } = req.body;
+    const userId = req.session.userId;
+    if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
 
     const textContent = checkTextContent(req, res);
 
@@ -149,7 +153,10 @@ export const getCommentsForPost = async (req, res) => {
 
 // Lägger till en like om användare inte likeat, tar bort annars
 export const likeChange = async (req, res) => {
-    const { userId, postId } = req.body;
+    const { postId } = req.body;
+    const userId = req.session.userId;
+    if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
+    
     let isLiked;
 
     try {
@@ -179,7 +186,7 @@ export const likeChange = async (req, res) => {
 ////////////////////////////////////////
 
 const checkTextContent = (req, res) => {
-    const textContent = req.body.textContent;
+    const { textContent } = req.body;
 
     if (!textContent) {
         res.status(codes.BAD_REQUEST).json({ message: "Måste innehålla text!" });

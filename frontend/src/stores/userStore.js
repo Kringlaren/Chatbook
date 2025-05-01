@@ -4,7 +4,8 @@ import api from '../services/api.js';
 export const useUserStore = defineStore('user', {
     state: () => ({
       profileUser: null,
-      userPreferences: [],
+      userPreferences: null,
+      followedUsers: [],
       error: null,
       loading: false
     }),
@@ -46,6 +47,37 @@ export const useUserStore = defineStore('user', {
         }
         this.userPreferences.profile_pic = res.data.profile_pic;
         return res.data;   
+      },
+
+      async changeBio(content) {
+        const res = await this.handleUserRequest("post", "change-bio", {content});
+        if (res.error) {
+          return { error: "Kunde inte uppdatera beskrivningen" };
+        }
+        return res.data;
+      },
+
+      // Följningar //
+      ////////////////
+
+      async changeFollow(username) {
+        const res = await this.handleUserRequest("post", "follow", {username});
+        if (res.error) {
+          return { error: "Kunde inte ändra följarstatus" };
+        }
+
+        this.profileUser = res.data.user;
+        return res.data;
+      },
+
+      async fetchFollowedUsers() {
+        const res = await this.handleUserRequest("get", "followed-users");
+        if (res.error) {
+          return { error: "Kunde inte hämta följda konton" };
+        }
+
+        this.followedUsers = res.data.users;
+        return res.data;
       },
 
       async handleUserRequest(method, url, data = null, config = {}) {

@@ -4,12 +4,14 @@ import { useUserStore, useAuthStore } from "./stores/";
 const userStore = useUserStore();
 const authStore = useAuthStore();
 
-// Så fort en användare hittas hämtar userStore preferenser
+// Så fort en användare hittas hämtar userStore nödvändig information
 watch(
   () => authStore.user,
   async (user) => {
     if (user) {
+      await authStore.fetchUser();
       await userStore.fetchUserPreferences();
+      await userStore.fetchFollowedUsers();
     }
   },
   { immediate: true }

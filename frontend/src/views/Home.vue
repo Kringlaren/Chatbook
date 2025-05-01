@@ -4,6 +4,7 @@ import Feed from "../components/Feed.vue";
 import Navbar from "../components/Navbar.vue";
 import MakePost from "../components/MakePost.vue";
 import PostModal from "../components/PostModal.vue";
+import FollowedList from "../components/FollowedList.vue";
 
 const expandedPost = ref(null);
 
@@ -19,18 +20,14 @@ const closePost = () => {
     <div class="scrollable">
         <Navbar></Navbar>
         <div class="main-content">
-            <div>
-                <h2>Följer</h2>
-            </div>
+            <FollowedList></FollowedList>
             <div class="post-feed feed">
-            <MakePost></MakePost>
-            <Feed @comment-clicked="expandPost"></Feed>
+                <MakePost></MakePost>
+                <Feed @comment-clicked="expandPost"></Feed>
+            </div>
         </div>
+        <PostModal v-if="expandedPost" @close="closePost" :post="expandedPost"></PostModal>
     </div>
-    <PostModal v-if="expandedPost" @close="closePost" :post="expandedPost"></PostModal>
-    </div>
-    
-    
 </template>
 
 <style scoped>

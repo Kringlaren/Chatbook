@@ -14,6 +14,7 @@
 
   --icon-size: 2vw;
 
+  --small-font-size: 1.5vw;
   --medium-font-size: 1.8vw;
 
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
@@ -71,6 +72,12 @@ button:focus-visible {
   gap: 1vw;
   align-items: center;
 }
+.profilepic {
+  border-radius: 100%;
+  object-fit: cover;
+  width: 2vw;
+  height: 2vw;
+}
 
 .feed {
   display: flex;
@@ -116,6 +123,12 @@ button:focus-visible {
   text-align: center;
 }
 
+.right {
+  float: right;
+}
+.left {
+  float: left;
+}
 
 
 @media (prefers-color-scheme: light) {

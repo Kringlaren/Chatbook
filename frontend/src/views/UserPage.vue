@@ -20,6 +20,7 @@ const username = route.params.username;
 const user = ref(null);
 const userPosts = ref([]);
 const bio = ref("");
+const follow = ref("");
 
 const errorMessageUser = ref("");
 
@@ -28,15 +29,16 @@ const expandedPost = ref(null);
 const bannerInput = ref(null);
 const profilePicInput = ref(null);
 const bioInput = ref("");
+const originalBio = ref("");
 
 onMounted(async () => {
     const userRes = await userStore.fetchUserByUsername(username);
+    
     if (userRes.error) {
         errorMessageUser.value = userRes.error;
     } else {
-        user.value = userRes;
+        user.value = userRes.user;
     }
-
     const postRes = await postStore.fetchPostsByUsername(username);
 
     if (!postRes.error) {
@@ -48,7 +50,14 @@ onMounted(async () => {
     }
 
     if (user.value.bio) {
+        originalBio.value = user.value.bio;
         bio.value = user.value.bio;
+    }
+
+    if (user.value.followed_by_user === 1) {
+        follow.value = "Avfölj";
+    } else {
+        follow.value = "Följ";
     }
 });
 
@@ -95,7 +104,24 @@ const changeProfilePic = async (event) => {
     }
 };
 const changeBio = async () => {
+    if (originalBio.value === bio.value) return;
+
     const res = await userStore.changeBio(bio.value);
+    if (res.error) {
+        alert(res.error);
+    }
+};
+
+const changeFollow = async () => {
+    const res = await userStore.changeFollow(user.value.username);
+    if (res.error) {
+        alert(res.error);
+    }
+    if (res.user.followed_by_user) {
+        follow.value = "Avfölj"
+    } else {
+        follow.value = "Följ";
+    }
 }
 </script>
 
@@ -110,7 +136,7 @@ const changeBio = async () => {
                 </div>
                 <img v-else class="banner" :src="backEndUrlBase + user.banner_img" alt="banderoll">
 
-                <div class="profile overbanner">
+                <div class="profile overbanner leftpos">
                     <div v-if="isLoggedInUser">
                         <img class="profilepic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" @click="profilePicInput.click()" style="cursor: pointer">
                         <input type="file" ref="profilePicInput" style="display: none" @change="changeProfilePic">
@@ -118,11 +144,16 @@ const changeBio = async () => {
                     <img v-else class="profilepic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" accept="image/*">
                     <h1>{{ user.username }}</h1>
                 </div>
+                <div v-if="!isLoggedInUser && authStore.isLoggedIn" class="overbanner rightpos">
+                    <div>
+                        <button class="follow" @click="changeFollow">{{ follow }}</button>
+                    </div>
+                </div>
             </div>
             <div class="layout">
                 <div class="about">
                     <h3>Om {{ user.username }}</h3>
-                    <textarea v-model="bio" v-if="user.bio" :disabled="!isLoggedInUser"></textarea>
+                    <textarea v-model="bio" v-if="user.bio || isLoggedInUser" :disabled="!isLoggedInUser"></textarea>
                     <p v-else>{{ user.username }} har ingen beskrivning att visa</p>
                     <button v-if="isLoggedInUser" @click="changeBio">Spara</button>
                 </div>
@@ -168,10 +199,20 @@ const changeBio = async () => {
 .overbanner {
     background-color: color-mix(in srgb, var(--primary-color) 90%, transparent);;
     position: absolute;
-    left: 1vw;
-    bottom: 1vw;
     padding: 1vw;
     border-radius: var(--default-border-radius);
+}
+.rightpos {
+    right: 1vw;
+    bottom: 1vw;
+}
+.leftpos {
+    left: 1vw;
+    bottom: 1vw;
+}
+
+.follow {
+    font-size: var(--small-font-size);
 }
 
 .posts {

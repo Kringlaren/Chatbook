@@ -20,18 +20,20 @@ const logOutUser = async () => {
 
 <template>
     <div class="navbar">
-        <a href="/">Hem</a>
-        <div>
-            <a :href="nameWithoutSpace" v-if="authStore.isLoggedIn" class="profile">
-                <p>{{ name }}</p>
-                <div class="profile"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></div>
-            </a>
-            <a v-else href="login">Logga in</a>
+        <a href="/" class="left">Hem</a>
+        <div class="profile right">
+            <div>
+                <a :href="nameWithoutSpace" v-if="authStore.isLoggedIn" class="profile">
+                    <p>{{ name }}</p>
+                    <div class="profile"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></div>
+                </a>
+                <a v-else href="login">Logga in</a>
+            </div>
+            <button v-if="authStore.isLoggedIn" @click="logOutUser">
+                Logga ut
+            </button>
         </div>
         
-        <button v-if="authStore.isLoggedIn" @click="logOutUser">
-            Logga ut
-        </button>
     </div>
 </template>
 

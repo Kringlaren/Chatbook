@@ -41,8 +41,7 @@ export const usePostStore = defineStore('post', {
       ////////////////
 
       async changeLikeOnPost(postId) {
-        const userId = this.getUserId();
-        const res = await this.handlePostRequest("post", "like", {userId, postId});
+        const res = await this.handlePostRequest("post", "like", {postId});
 
         if (res.error) return { error: "Kunde inte ändra likestatus" };
         
@@ -66,7 +65,7 @@ export const usePostStore = defineStore('post', {
 
         const res = await this.handlePostRequest("post", "comment", formData);
         if (res.error) return { error: "Kunde inte skapa kommentar" };
-        
+
         this.updatePost(postId, res);
 
         return res.data;
@@ -104,17 +103,9 @@ export const usePostStore = defineStore('post', {
 
       makeContentFormData(textContent, img) {
         const formData = new FormData();
-        formData.append("userId", this.getUserId());
         formData.append("textContent", textContent);
         formData.append("image", img);
         return formData;
       },
-
-      getUserId() {
-        const authStore = useAuthStore();
-        return authStore.user?.id || null;
-      }
     },
-
-    
 });

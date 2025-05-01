@@ -47,7 +47,7 @@ const expandPost = async () => {
         <div class="actions">
             <div>
                 <span>{{ post.like_count }}</span>
-                <button v-if="authStore.isLoggedIn" @click="changeLikeOnPost" class="iconbutton"><img class="icon" :src="post.likedByUser ? likedImg : likeImg" alt="gilla"></button>
+                <button v-if="authStore.isLoggedIn" @click="changeLikeOnPost" class="iconbutton"><img class="icon" :src="post.liked_by_user ? likedImg : likeImg" alt="gilla"></button>
                 <img v-else class="icon" :src="likeImg" alt="gillningar">
             </div>
             <div>
