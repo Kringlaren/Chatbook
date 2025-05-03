@@ -20,10 +20,15 @@ const closePost = () => {
     <div class="scrollable">
         <Navbar></Navbar>
         <div class="main-content">
-            <FollowedList></FollowedList>
+            <div class="followed">
+                <FollowedList></FollowedList>
+            </div>
             <div class="post-feed feed">
                 <MakePost></MakePost>
                 <Feed @comment-clicked="expandPost"></Feed>
+            </div>
+            <div style="grid-column: 3; float: right;">
+
             </div>
         </div>
         <PostModal v-if="expandedPost" @close="closePost" :post="expandedPost"></PostModal>
@@ -33,12 +38,16 @@ const closePost = () => {
 <style scoped>
 .main-content {
     display: grid;
+    grid-template-columns: 1fr 2fr 1fr;
+    gap: calc(var(--default-gap)*3);
     margin: var(--default-gap) 0;
 }
 .post-feed {
     grid-column: 2;
-    width: 35vw;
-    max-height: calc(99vh - var(--navbar-height) - var(--default-gap));
-    padding: 0 1vw;
+    
+}
+.followed {
+    grid-column: 1;
+    position: fixed;
 }
 </style>

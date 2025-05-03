@@ -115,13 +115,14 @@ export const getFollowedUsers = async (req, res) => {
     if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
 
     try {
-        const [rows] = await db.query(`
+        let [rows] = await db.query(`
             SELECT users.id, users.username, users.profile_pic 
             FROM users 
             LEFT JOIN followers ON users.id = followers.user2_id 
             WHERE user1_id = ?`
-        , [userId]);
-        
+        , [userId]);        
+        rows = format.formatValuesForFrontEnd(rows);
+
         res.status(codes.OK).json({ users: rows });
 
     } catch (error) {

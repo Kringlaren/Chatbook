@@ -1,8 +1,8 @@
 const formatValuesForFrontEnd = (rows) => {
     const formatedRows = Array.isArray(rows) ? rows : [rows];
     formatedRows.forEach(row => {
-        row.username = formatNameForFrontEnd(row.username);
-        row.created_at = formatTime(row.created_at);
+        if (row.username) {row.username = formatNameForFrontEnd(row.username)}
+        if (row.created_at) {row.created_at = formatTime(row.created_at)}
     });
 
     return formatedRows;

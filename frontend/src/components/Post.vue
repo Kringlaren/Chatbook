@@ -34,13 +34,13 @@ const expandPost = async () => {
     <div :class="{ 'border' : !modal }" class="post" >
         <div class="contentpadding">
             <div class="profile">
-                <img :src="backEndUrlBase + post.profile_pic" alt="Profilbild" class="profileimg">
-                <h3><a :href="usernameNoSpace">{{ post.username }}</a></h3>
+                <img :src="backEndUrlBase + post.profile_pic" alt="Profilbild" class="profilepic">
+                <h3><a class="medium":href="usernameNoSpace">{{ post.username }}</a></h3>
                 <p>-</p>
                 <p>{{ post.created_at }}</p>
             </div>
         
-            <p>{{ post.content }}</p>
+            <p class="small">{{ post.content }}</p>
         </div>
         
         <img v-if="post.image" :src="backEndUrlBase + post.image" alt="Inläggsbild" class="postimg">
@@ -73,12 +73,6 @@ const expandPost = async () => {
 .postimg {
   width: 100%;
   height: auto;
-}
-.profileimg {
-    width: 4vw;
-    height: 4vw;
-    border-radius: 100%;
-    object-fit: cover;
 }
 
 .contentpadding {

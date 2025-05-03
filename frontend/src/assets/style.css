@@ -8,14 +8,14 @@
 
   --default-padding: 1vw;
 
-  --default-gap: 2vw;
+  --default-gap: 1.2vw;
 
-  --navbar-height: 6vw;
+  --navbar-height: 5vw;
 
   --icon-size: 2vw;
 
-  --small-font-size: 1.5vw;
-  --medium-font-size: 1.8vw;
+  --small-font-size: 1.2vw;
+  --medium-font-size: 1.5vw;
 
   font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
   line-height: 1.5;
@@ -75,14 +75,15 @@ button:focus-visible {
 .profilepic {
   border-radius: 100%;
   object-fit: cover;
-  width: 2vw;
-  height: 2vw;
+  width: 3.8vw;
+  height: 3.8vw;
 }
 
 .feed {
   display: flex;
   flex-direction: column;
   gap: var(--default-gap);
+  justify-self: center;
 }
 
 .iconbutton {
@@ -128,6 +129,13 @@ button:focus-visible {
 }
 .left {
   float: left;
+}
+
+.small {
+  font-size: var(--small-font-size);
+}
+.medium {
+  font-size: var(--medium-font-size);
 }
 
 

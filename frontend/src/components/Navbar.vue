@@ -54,11 +54,4 @@ const logOutUser = async () => {
         font-size: var(--medium-font-size);
         z-index: 5;
     }
-
-    .profilepic {
-        width: calc(var(--navbar-height) - 0.5vw);
-        height: calc(var(--navbar-height) - 0.5vw);
-        object-fit: cover;
-        border-radius: 100%;
-    }
 </style>
