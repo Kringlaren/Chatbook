@@ -38,8 +38,6 @@ const saveStyles = () => {
     if (detailColor && userStore.userPreferences.detail_color !== detailColor) {colors.push({ type: "detail_color", color: detailColor })}
     if (linkColor && userStore.userPreferences.link_color !== linkColor) {colors.push({ type: "link_color", color: linkColor })}
 
-    console.log("färger: ", colors);
-
     userStore.changeColors(colors);
     changeMade = false;
 };
