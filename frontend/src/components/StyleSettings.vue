@@ -7,6 +7,7 @@ let changeMade = false;
 let primaryColor;
 let textColor;
 let detailColor;
+let linkColor
 
 const pr = ref(255);
 const pg = ref(255);
@@ -20,15 +21,28 @@ const dr = ref(255);
 const dg = ref(255);
 const db = ref(255);
 
+const lr = ref(255);
+const lg = ref(255);
+const lb = ref(255);
+
 onMounted(() => {
   setSlidersFromComputedColor();
 });
 
 const saveStyles = () => {
     if (!changeMade) return;
-    userStore.changeColors("bg_color", primaryColor);
+    let colors = [];
+
+    if (primaryColor && userStore.userPreferences.bg_color !== primaryColor) {colors.push({ type: "bg_color", color: primaryColor })}
+    if (textColor && userStore.userPreferences.text_color !== textColor) {colors.push({ type: "text_color", color: textColor })}
+    if (detailColor && userStore.userPreferences.detail_color !== detailColor) {colors.push({ type: "detail_color", color: detailColor })}
+    if (linkColor && userStore.userPreferences.link_color !== linkColor) {colors.push({ type: "link_color", color: linkColor })}
+
+    console.log("färger: ", colors);
+
+    userStore.changeColors(colors);
     changeMade = false;
-}
+};
 
 const changeColors = (type) => {
     switch (type) {
@@ -44,26 +58,46 @@ const changeColors = (type) => {
             detailColor = `rgb(${dr.value}, ${dg.value}, ${db.value})`;
             document.documentElement.style.setProperty('--detail-color', detailColor);
             break;
+        case "link":
+            linkColor = `rgb(${lr.value}, ${lg.value}, ${lb.value})`;
+            document.documentElement.style.setProperty('--link-color', linkColor);
+            break;
     }
     
-    
-    changeMade = true
-}
-const resetPrimaryColor = () => {
-    document.documentElement.style.removeProperty('--primary-color');
+    changeMade = true;
+};
+
+const resetColors = (type) => {
+    switch (type) {
+        case "primary":
+            document.documentElement.style.removeProperty('--primary-color');
+            break;
+        case "text":
+            document.documentElement.style.removeProperty('--text-color');
+            break;
+        case "detail":
+            document.documentElement.style.removeProperty('--detail-color');
+            break;
+        case "link":
+            document.documentElement.style.removeProperty('--link-color');
+            break;
+    }
+
     setSlidersFromComputedColor();
     changeMade = false;
-}
+};
 
 const setSlidersFromComputedColor = () => {
   const style = getComputedStyle(document.documentElement);
   const primary = style.getPropertyValue('--primary-color');
   const text = style.getPropertyValue('--text-color');
   const detail = style.getPropertyValue('--detail-color');
+  const link = style.getPropertyValue('--link-color');
 
   const [epr, epg, epb] = extractRGB(primary);
   const [etr, etg, etb] = extractRGB(text);
   const [edr, edg, edb] = extractRGB(detail);
+  const [elr, elg, elb] = extractRGB(link);
 
   pr.value = epr;
   pg.value = epg;
@@ -76,12 +110,16 @@ const setSlidersFromComputedColor = () => {
   dr.value = edr;
   dg.value = edg;
   db.value = edb;
+
+  lr.value = elr;
+  lg.value = elg;
+  lb.value = elb;
 };
 
 const extractRGB = (rgbStr) => {
   const match = rgbStr.match(/\d+/g);
   return match ? match.map(Number) : [255, 255, 255];
-}
+};
 </script>
 
 <template>
@@ -94,7 +132,7 @@ const extractRGB = (rgbStr) => {
             <input class="slider" v-model="pg" @input="changeColors('primary')" id="pg" type="range" max="255" name="g"> <br>
             <label for="pb">B</label>
             <input class="slider" v-model="pb" @input="changeColors('primary')" id="pb" type="range" max="255" name="b"> <br>
-            <button @click="resetPrimaryColor()" class="reset">Återställ</button>
+            <button @click="resetColors('primary')" class="reset">Återställ</button>
         </div>
         
         <div style="grid-column: 2; grid-row: 1;">
@@ -105,6 +143,7 @@ const extractRGB = (rgbStr) => {
             <input class="slider" v-model="tg" @input="changeColors('text')" id="tg" type="range" max="255" name="g"> <br>
             <label for="tb">B</label>
             <input class="slider" v-model="tb" @input="changeColors('text')" id="tb" type="range" max="255" name="b"> <br>
+            <button @click="resetColors('text')" class="reset">Återställ</button>
         </div>
         
         <div style="grid-column: 1; grid-row: 2;">
@@ -115,9 +154,24 @@ const extractRGB = (rgbStr) => {
             <input class="slider" v-model="dg" @input="changeColors('detail')" id="dg" type="range" max="255" name="g"> <br>
             <label for="db">B</label>
             <input class="slider" v-model="db" @input="changeColors('detail')" id="db" type="range" max="255" name="b"> <br>
+            <button @click="resetColors('detail')" class="reset">Återställ</button>
         </div>
 
-        <button @click="saveStyles()">Spara</button>
+        <div style="grid-column: 2; grid-row: 2;">
+            <h4>Länkfärg</h4>
+            <label for="lr">R</label>
+            <input class="slider" v-model="lr" @input="changeColors('link')" id="lr" type="range" max="255" name="r"> <br>
+            <label for="lg">G</label>
+            <input class="slider" v-model="lg" @input="changeColors('link')" id="lg" type="range" max="255" name="g"> <br>
+            <label for="lb">B</label>
+            <input class="slider" v-model="lb" @input="changeColors('link')" id="lb" type="range" max="255" name="b"> <br>
+            <button @click="resetColors('link')" class="reset">Återställ</button>
+        </div>
+
+        <div style="grid-area: 3 / 1 / span 1 / span 2;">
+            <button @click="saveStyles()">Spara</button>
+        </div>
+        
     </div>
 </template>
 
@@ -129,7 +183,7 @@ const extractRGB = (rgbStr) => {
     padding: var(--default-gap);
 }
 button {
-    font-size: var(--small-font-size);
+    font-size: var(--xs-font-size);
 }
 
 h4 {

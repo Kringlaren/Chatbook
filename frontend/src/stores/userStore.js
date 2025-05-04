@@ -64,10 +64,7 @@ export const useUserStore = defineStore('user', {
         }
         colors.forEach(color => {
           this.userPreferences[color.type] = color.color;
-        });
-
-        console.log(this.userPreferences);
-        
+        });    
       },
 
       // Följningar //
