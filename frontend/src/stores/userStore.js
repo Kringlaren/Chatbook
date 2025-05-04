@@ -57,6 +57,14 @@ export const useUserStore = defineStore('user', {
         return res.data;
       },
 
+      async changeColors(type, color) {
+        const res = await this.handleUserRequest("post", "change-color", { type, color })
+        if (res.error) {
+          return { error: "Kunde inte uppdatera färger" };
+        }
+        this.userPreferences[type] = color;
+      },
+
       // Följningar //
       ////////////////
 

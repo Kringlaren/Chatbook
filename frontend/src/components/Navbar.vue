@@ -1,6 +1,8 @@
 <script setup>
 import { computed } from "vue";
 import { useAuthStore, useUserStore } from "../stores/";
+import StyleSettings from "./StyleSettings.vue";
+
 const authStore = useAuthStore();
 const userStore = useUserStore();
 
@@ -33,7 +35,9 @@ const logOutUser = async () => {
                 Logga ut
             </button>
         </div>
-        
+        <div style="position: absolute; top: 50px;">
+            <StyleSettings></StyleSettings>
+        </div>
     </div>
 </template>
 

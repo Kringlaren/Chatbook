@@ -44,6 +44,8 @@ export const getUserPreferences = async (req, res) => {
         let [rows] = await db.query("SELECT profile_pic, banner_img, text_color, bg_color, detail_color FROM users WHERE id = ?", [userId]);
         if (rows.length === 0) return res.status(codes.NOT_FOUND).json({ message: "Användaren hittades inte"});
 
+        rows = format.formatColorsForFrontEnd(rows);
+
         res.status(codes.OK).json({ preferences: rows[0] });
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid hämtning av användarpreferenser", error });
@@ -72,7 +74,25 @@ export const changeBio = async (req, res) => {
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid uppdatering av beskrivning" });
     }
+};
+
+export const changeColor = async (req, res) => {
+    const userId = req.session.userId;
+    if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
+
+    const { type, color } = req.body;
+
+    const column = type;
+    const dbColor = format.rgbToHex(color);
+
+    try {
+        await db.query(`UPDATE users SET ${column} = ? WHERE id = ?`, [dbColor, userId]);
+        res.status(codes.OK).json({ [column]: color });
+    } catch (error) {
+        res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid uppdatering av färg", error });
+    }
 }
+
 
 // Följningar
 
@@ -108,7 +128,7 @@ export const changeFollowByName = async (req, res) => {
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid följning", error });
     }
-}
+};
 
 export const getFollowedUsers = async (req, res) => {
     const userId = req.session.userId;
@@ -128,7 +148,7 @@ export const getFollowedUsers = async (req, res) => {
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid hämntning av följare" });
     }
-}
+};
 
 
 //Byter ut bilder och tar bort de gamla bilderna

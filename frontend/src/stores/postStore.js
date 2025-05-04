@@ -1,9 +1,8 @@
 import { defineStore } from 'pinia';
 import api from '../services/api.js';
-import { useAuthStore } from "./";
 
 export const usePostStore = defineStore('post', {
-  // Sparar alla posts i frontend eftersom skalan är liten
+  // Sparar alla posts i frontend eftersom skalan är liten, kan göra att den laddar ett visst antal åt gången i framtiden
     state: () => ({
         posts: [],
         error: null,
