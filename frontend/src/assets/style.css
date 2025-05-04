@@ -1,10 +1,10 @@
 :root {
   --primary-color: rgb(36, 36, 36);
   --text-color: rgb(240, 240, 240);
-  --border-color: rgb(221, 221, 221);
+  --detail-color: rgb(221, 221, 221);
   --link-color: rgb(100, 108, 255);
 
-  --default-border: 1px solid var(--border-color);
+  --default-border: 1px solid var(--detail-color);
   --default-border-radius: 1.5vw;
 
   --default-padding: 1vw;

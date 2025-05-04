@@ -76,18 +76,31 @@ export const changeBio = async (req, res) => {
     }
 };
 
-export const changeColor = async (req, res) => {
-    const userId = req.session.userId;
-    if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
+// Uppdaterar de färger som skickas med i formatet [{ type: "type", color: rgb(r, g, b) }, ...]
+export const changeColors = async (req, res) => {
+    const { colors } = req.body;
 
-    const { type, color } = req.body;
-
-    const column = type;
-    const dbColor = format.rgbToHex(color);
-
+    if (!Array.isArray(colors) || colors.length === 0) {
+      return res.status(codes.BAD_REQUEST).json({ message: "Ogiltig färgdata" });
+    }
+  
+    const updates = [];
+    const values = [];
+  
     try {
-        await db.query(`UPDATE users SET ${column} = ? WHERE id = ?`, [dbColor, userId]);
-        res.status(codes.OK).json({ [column]: color });
+        colors.forEach(({ type, color }) => {
+            if (!type || !color) return res.status(codes.BAD_REQUEST).json({ message: "Ogiltig färgdata" });
+            const hex = format.rgbToHex(color);
+            updates.push(`${type} = ?`);
+            values.push(hex);
+        });
+      
+        values.push(userId);
+      
+        const query = `UPDATE users SET ${updates.join(", ")} WHERE id = ?`;
+        await db.query(query, values);
+      
+        res.status(codes.OK).json({ colors: colors });
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid uppdatering av färg", error });
     }
