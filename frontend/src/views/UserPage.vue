@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
+import { getAllDefaultColors } from "../services/styleService.js";
 import { useUserStore, usePostStore, useAuthStore } from '../stores';
 import Navbar from '../components/Navbar.vue';
 import Post from '../components/Post.vue';
@@ -118,7 +119,7 @@ const changeFollow = async () => {
         alert(res.error);
     }
     if (res.user.followed_by_user) {
-        follow.value = "Avfölj"
+        follow.value = "Avfölj";
     } else {
         follow.value = "Följ";
     }
@@ -128,7 +129,7 @@ const changeFollow = async () => {
 <template>
     <div class="scrollable">
         <Navbar></Navbar>
-        <div v-if="user">
+        <div v-if="user" class="userpage">
             <div class="container">
                 <div v-if="authStore.isLoggedIn && authStore.user.id === user.id">
                     <img class="banner" :src="backEndUrlBase + user.banner_img" alt="banderoll" @click="bannerInput.click()" style="cursor: pointer">
@@ -175,6 +176,11 @@ const changeFollow = async () => {
 
 
 <style scoped>
+.userpage {
+    background-color: var(--primary-color);
+    color: var(--text-color);
+}
+
 .profilepic {
     width: 8vw;
     height: 8vw;

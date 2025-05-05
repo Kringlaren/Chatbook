@@ -65,6 +65,7 @@ const expandPost = async () => {
     width: 100%;
     border-radius: var(--default-border-radius);
     background-color: var(--primary-color);
+    color: var(--text-color);
 }
 .border {
     border: var(--default-border);
@@ -87,9 +88,5 @@ const expandPost = async () => {
     display: flex;
     align-items: center;
     gap: 0.2vw;
-}
-
-.icon {
-    width: var(--icon-size);
 }
 </style>

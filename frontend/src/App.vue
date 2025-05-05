@@ -1,6 +1,7 @@
 <script setup>
 import { watch } from "vue";
 import { useUserStore, useAuthStore } from "./stores/";
+import { applyColors } from "./services/styleService.js";
 const userStore = useUserStore();
 const authStore = useAuthStore();
 
@@ -12,6 +13,9 @@ watch(
       await authStore.fetchUser();
       await userStore.fetchUserPreferences();
       await userStore.fetchFollowedUsers();
+      if (userStore.userPreferences) {
+        applyColors(userStore.userPreferences);
+      }
     }
   },
   { immediate: true }

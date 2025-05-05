@@ -94,6 +94,10 @@ button:focus-visible {
   background: none;
 }
 
+.icon {
+  width: var(--icon-size);
+}
+
 .card {
   padding: 2em;
 }

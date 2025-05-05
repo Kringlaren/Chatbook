@@ -1,7 +1,8 @@
 <script setup>
-import { computed } from "vue";
+import { computed, ref } from "vue";
 import { useAuthStore, useUserStore } from "../stores/";
 import StyleSettings from "./StyleSettings.vue";
+import settingsImg from '../assets/images/settings.png';
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -13,6 +14,8 @@ const name = computed(() => authStore.user?.username || "");
 const nameWithoutSpace = name.value.replace(/\s/, ".");
 
 const urlBase = import.meta.env.VITE_URL_BASE;
+
+const settingsVisible = ref(false);
 
 
 const logOutUser = async () => {
@@ -35,9 +38,13 @@ const logOutUser = async () => {
                 Logga ut
             </button>
         </div>
-        <div style="position: absolute; top: 50px;">
-            <StyleSettings></StyleSettings>
+        <div v-if="authStore.isLoggedIn">
+            <button class="iconbutton" @click="settingsVisible = !settingsVisible"><img class="navicon" :src="settingsImg"></button>
+            <div v-if="settingsVisible" style="position: absolute; top: 50px;">
+                <StyleSettings></StyleSettings>
+            </div>
         </div>
+        
     </div>
 </template>
 
@@ -57,5 +64,9 @@ const logOutUser = async () => {
         box-sizing: border-box;
         font-size: var(--medium-font-size);
         z-index: 5;
+    }
+    .navicon {
+        width: calc(var(--navbar-height)*3/4);
+        height: calc(var(--navbar-height)*3/4);
     }
 </style>

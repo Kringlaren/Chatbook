@@ -6,4 +6,4 @@ export const checkUserName = (username) => {
 };
 export const checkUserPassword = (password) => {
     return passwordReg.test(password);
-}
+};

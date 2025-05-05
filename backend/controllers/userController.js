@@ -27,6 +27,7 @@ export const getUserByName = async (req, res) => {
         if (rows.length === 0) return res.status(codes.NOT_FOUND).json({ message: "Användaren hittades inte"});
 
         rows = format.formatValuesForFrontEnd(rows);
+        rows = format.formatColorsForFrontEnd(rows);
 
         res.status(codes.OK).json({ user: rows[0] });
     } catch (error) {
@@ -41,7 +42,7 @@ export const getUserPreferences = async (req, res) => {
     if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Ingen användare inloggad" });
 
     try {
-        let [rows] = await db.query("SELECT profile_pic, banner_img, text_color, bg_color, detail_color FROM users WHERE id = ?", [userId]);
+        let [rows] = await db.query("SELECT profile_pic, banner_img, text_color, bg_color, detail_color, link_color FROM users WHERE id = ?", [userId]);
         if (rows.length === 0) return res.status(codes.NOT_FOUND).json({ message: "Användaren hittades inte"});
 
         rows = format.formatColorsForFrontEnd(rows);

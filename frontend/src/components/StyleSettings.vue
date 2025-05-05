@@ -7,7 +7,7 @@ let changeMade = false;
 let primaryColor;
 let textColor;
 let detailColor;
-let linkColor
+let linkColor;
 
 const pr = ref(255);
 const pg = ref(255);
@@ -82,7 +82,23 @@ const resetColors = (type) => {
     }
 
     setSlidersFromComputedColor();
-    changeMade = false;
+    changeMade = true;
+
+    const style = getComputedStyle(document.documentElement);
+    switch (type) {
+      case "primary":
+        primaryColor = style.getPropertyValue('--primary-color');
+        break;
+      case "text":
+        textColor = style.getPropertyValue('--text-color');
+        break;
+      case "detail":
+        detailColor = style.getPropertyValue('--detail-color');
+        break;
+      case "link":
+        linkColor = style.getPropertyValue('--link-color');
+        break;
+    }
 };
 
 const setSlidersFromComputedColor = () => {
