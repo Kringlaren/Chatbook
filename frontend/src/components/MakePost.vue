@@ -10,6 +10,8 @@ const img = ref(null);
 
 const createPost = async () => {
     const res = await postStore.createPost(content.value, img.value);
+    content.value = "";
+    img.value = null;
     if (res.error) {
         alert(res.error);
     }

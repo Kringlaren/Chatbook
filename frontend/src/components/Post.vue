@@ -19,7 +19,7 @@ const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
 const changeLikeOnPost = async () => {
     const res = await postStore.changeLikeOnPost(props.post.id);
     if (!res.error) {
-        const updatedPost = res.posts[0];
+        const updatedPost = res.post;
         Object.assign(props.post, updatedPost);
     }
 }

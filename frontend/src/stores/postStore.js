@@ -2,9 +2,10 @@ import { defineStore } from 'pinia';
 import api from '../services/api.js';
 
 export const usePostStore = defineStore('post', {
-  // Sparar alla posts i frontend eftersom skalan är liten, kan göra att den laddar ett visst antal åt gången i framtiden
+  // Sparar alla inlägg i frontend eftersom skalan är liten, kan göra att den laddar ett visst antal åt gången i framtiden, kommentarer på senaste inlägget
     state: () => ({
         posts: [],
+        comments: [],
         error: null,
         loading: false
     }),
@@ -44,7 +45,7 @@ export const usePostStore = defineStore('post', {
 
         if (res.error) return { error: "Kunde inte ändra likestatus" };
         
-        this.updatePost(postId, res);
+        this.updatePost(res.data.post);
 
         return res.data;
       },
@@ -55,6 +56,7 @@ export const usePostStore = defineStore('post', {
       async fetchAllCommentsForPost(postId) {
         const res = await this.handlePostRequest("get", "comments/" + postId);
         if (res.error) return { error: "Kunde inte hämta kommentarer" };
+        this.comments = res.data;
         return res.data;
       },
 
@@ -65,7 +67,8 @@ export const usePostStore = defineStore('post', {
         const res = await this.handlePostRequest("post", "comment", formData);
         if (res.error) return { error: "Kunde inte skapa kommentar" };
 
-        this.updatePost(postId, res);
+        this.comments.unshift(res.data.comment);
+        this.updatePost(res.data.post);
 
         return res.data;
       },
@@ -91,12 +94,13 @@ export const usePostStore = defineStore('post', {
 
       // Hjälpfunktioner
 
-      updatePost(postId, res) {
-        if (!res.error) {
-          const index = this.posts.findIndex(p => p.id === postId);
-          if (index !== -1) {
-            this.posts[index] = res.data.posts[0];
-          }
+      updatePost(post) {
+        
+        const index = this.posts.findIndex(p => p.id === post.id);
+        
+        if (index !== -1) {
+          this.posts[index] = post;
+          console.log(this.posts[index]);
         }
       },
 

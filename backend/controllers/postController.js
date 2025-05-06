@@ -5,7 +5,7 @@ import format from '../utils/format.js';
 ///////////// Inlägg  /////////////
 ///////////////////////////////////
 
-const selectAndJoinPartQuery = `
+const selectAndJoinPostQuery = `
     SELECT posts.*, COUNT(DISTINCT likes.id) AS like_count, COUNT(DISTINCT comments.id) AS comment_count, users.username, users.profile_pic, 
         CASE 
             WHEN EXISTS (
@@ -23,22 +23,39 @@ const selectAndJoinPartQuery = `
 `;
 
 const getPostByIdQuery = `
-    ${selectAndJoinPartQuery}
+    ${selectAndJoinPostQuery}
     WHERE posts.id = ?
-    GROUP BY posts.id;
 `;
 
 const getAllPostsQuery = `
-    ${selectAndJoinPartQuery}
+    ${selectAndJoinPostQuery}
     GROUP BY posts.id
     ORDER BY created_at DESC;
 `;
 
 const getPostsByUsernameQuery = `
-    ${selectAndJoinPartQuery}
+    ${selectAndJoinPostQuery}
     WHERE users.username = ?
     GROUP BY posts.id
     ORDER BY created_at DESC;
+`;
+
+const selectAndJoinCommentQuery = `
+    SELECT comments.*, users.username, users.profile_pic
+    FROM comments
+    LEFT JOIN users ON comments.user_id = users.id
+`;
+
+const getCommentsForPostQuery = `
+    ${selectAndJoinCommentQuery}
+    WHERE post_id=?
+    GROUP BY comments.id
+    ORDER BY created_at DESC
+`;
+
+const getCommentById = `
+    ${selectAndJoinCommentQuery}
+    WHERE comments.id = ?;
 `;
 
 // GET //
@@ -114,12 +131,16 @@ export const createComment = async (req, res) => {
     const imageUrl = req.file ? `/uploads/${req.file.filename}` : null;
 
     try {
-        await db.query("INSERT INTO comments (user_id, post_id, content, image) VALUES (?, ?, ?, ?)", [userId, postId, textContent, imageUrl]);
+        const [result] = await db.query("INSERT INTO comments (user_id, post_id, content, image) VALUES (?, ?, ?, ?)", [userId, postId, textContent, imageUrl]);
+        const commentId = result.insertId;
 
-        let [rows] = await db.query(getPostByIdQuery, [userId, postId]);
-        rows[0] = format.formatValuesForFrontEnd(rows[0]);
+        let [posts] = await db.query(getPostByIdQuery, [userId, postId]);
+        posts = format.formatValuesForFrontEnd(posts[0]);
 
-        res.status(codes.CREATED).json({posts: rows[0]});
+        let [comments] = await db.query(getCommentById, [commentId]);
+        comments = format.formatValuesForFrontEnd(comments[0]);
+
+        res.status(codes.CREATED).json({post: posts[0], comment: comments[0]});
     } catch (error) {
         res.status(codes.SERVER_ERROR).json({ message: "Serverfel vid skapande av kommentar", error });
     }
@@ -130,14 +151,7 @@ export const getCommentsForPost = async (req, res) => {
     const postId = req.params.id;
 
     try {
-        let [rows] = await db.query(`
-            SELECT comments.*, users.username, users.profile_pic
-            FROM comments
-            LEFT JOIN users ON comments.user_id = users.id
-            WHERE post_id=?
-            GROUP BY comments.id
-            ORDER BY created_at DESC
-        `, [postId]);
+        let [rows] = await db.query(getCommentsForPostQuery, [postId]);
 
         rows = format.formatValuesForFrontEnd(rows);
         
@@ -171,10 +185,10 @@ export const likeChange = async (req, res) => {
         }
 
         let [rows] = await db.query(getPostByIdQuery, [userId, postId]);
-        rows[0] = format.formatValuesForFrontEnd(rows[0]);
+        rows = format.formatValuesForFrontEnd(rows[0]);
 
         res.status(codes.CREATED).json({
-            posts: rows[0],
+            post: rows[0],
             liked: isLiked
         });
     } catch (error) {

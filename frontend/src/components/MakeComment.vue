@@ -14,10 +14,12 @@ const img = ref(null);
 
 const createComment = async () => {
     const res = await postStore.createComment(props.post.id, content.value, img.value);
+    content.value = "";
+    img.value = null;
     if (res.error) {
         alert(res.error);
     }
-}
+};
 
 const imageChange = (event) => {
     const file = event.target.files[0];
