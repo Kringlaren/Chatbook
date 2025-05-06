@@ -24,7 +24,7 @@ watch(
 </script>
 
 <template>
-    <div class="scrollable">
+    <div class="scrollable followedlist">
         <h2 class="header">Följer</h2>
         <div v-if="authStore.isLoggedIn" class="list">
             <div v-if="profiles.length !== 0" v-for="profile in profiles" :key="profile.id">
@@ -48,11 +48,10 @@ watch(
 }
 
 .followedlist {
-    position: fixed;
-    width: inherit;
+    height: 100%;
 }
 
 .header {
-    margin-top: 0;
+    margin-top: var(--default-gap);
 }
 </style>

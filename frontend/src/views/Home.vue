@@ -40,14 +40,14 @@ const closePost = () => {
     display: grid;
     grid-template-columns: 1fr 2fr 1fr;
     gap: calc(var(--default-gap)*3);
-    margin: var(--default-gap) 0;
 }
 .post-feed {
     grid-column: 2;
-    
+    margin: var(--default-gap) 0;
 }
 .followed {
     grid-column: 1;
     position: fixed;
+    height: calc(100vh - var(--navbar-height) - var(--default-gap));
 }
 </style>
