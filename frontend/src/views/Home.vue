@@ -5,6 +5,7 @@ import Navbar from "../components/Navbar.vue";
 import MakePost from "../components/MakePost.vue";
 import PostModal from "../components/PostModal.vue";
 import FollowedList from "../components/FollowedList.vue";
+import Scoreboard from "../components/Scoreboard.vue";
 
 const expandedPost = ref(null);
 
@@ -28,7 +29,8 @@ const closePost = () => {
                 <Feed @comment-clicked="expandPost"></Feed>
             </div>
             <div style="grid-column: 3; float: right;">
-
+                <Scoreboard></Scoreboard>
+                <a class="gamelink" href="game"><button>Spela Zombielabyrinten!</button></a>
             </div>
         </div>
         <PostModal v-if="expandedPost" @close="closePost" :post="expandedPost"></PostModal>
@@ -50,4 +52,5 @@ const closePost = () => {
     position: fixed;
     height: calc(100vh - var(--navbar-height) - var(--default-gap));
 }
+
 </style>

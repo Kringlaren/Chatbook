@@ -3,7 +3,7 @@ const States = {
     Patrolling: 1
 }
 
-let speedMultiplyer = 1.8;
+const speedMultiplyer = 1.8;
 
 export class Zombie {
     constructor (x, y, maze, colors, speed, state = States.Patrolling) {

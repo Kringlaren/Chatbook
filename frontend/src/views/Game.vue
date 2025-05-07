@@ -1,6 +1,12 @@
 <script setup>
-import { ref, onMounted } from "vue";
-import { boot } from "../game/main.js";
+import { ref, onMounted, onUnmounted, watch } from "vue";
+import { boot, resizeGame } from "../game/main.js";
+import { useAuthStore, useGameStore } from "../stores";
+import Navbar from "../components/Navbar.vue";
+import Scoreboard from "../components/Scoreboard.vue";
+
+const authStore = useAuthStore();
+const gameStore = useGameStore();
 
 const canvas = ref(null);
 
@@ -11,7 +17,7 @@ const stats = {
   lives: ref(3),
   points: ref(0),
   pointsMultiplier: ref(1.0),
-  highscore: ref(0),
+  pb: ref(0),
   lastScore: ref(0)
 };
 
@@ -23,41 +29,85 @@ function handleKeyUp(e) {
     keys[e.key.toLowerCase()] = false;
 }
 
-onMounted(() => {
-    document.addEventListener('keydown', handleKeyDown)
-    document.addEventListener('keyup', handleKeyUp)
-    console.log(canvas.value);
+const handleResize = () => resizeGame(canvas.value);
+
+onMounted(async () => {
+    const pbRes = await gameStore.fetchPb();
+
+    if (!pbRes.error && pbRes.score) {
+        stats.pb.value = pbRes.score.score;
+    }
+
     if (canvas.value) {
-      boot(canvas.value, stats, keys);
+        document.addEventListener('keydown', handleKeyDown);
+        document.addEventListener('keyup', handleKeyUp);
+        window.addEventListener('resize', handleResize);
+        boot(canvas.value, stats, keys);
     }
 });
+
+onUnmounted(() => {
+    document.removeEventListener('keydown', handleKeyDown);
+    document.removeEventListener('keyup', handleKeyUp);
+    window.removeEventListener('resize', handleResize);
+});
+
+let first = true;
+watch(
+    () => stats.pb.value,
+    async (score) => {
+        if (authStore.isLoggedIn && !first) {
+            await gameStore.saveScore(score);
+        }
+        first = false;
+    }
+);
 </script>
 
 <template>
-    <canvas ref="canvas"></canvas>
-    <div>
-        <p>
-            Infesterade mynt ger dig mer poäng per mynt, men var försiktig, de kan också framkalla en till zombie! <br>
+    <Navbar></Navbar>
+    <div class="layout">
+        <canvas ref="canvas"></canvas>
+        <div class="stats">
+            <div>
+                <h3>Dina stats</h3>
+                <p id="coins">Mynt samlade: {{ stats.coins }}</p>
+                <p id="pointsmult">x{{ stats.pointsMultiplier }} Poäng</p>
+                <hr>
+                <p id="points">Poäng: {{ stats.points }}</p>
+                <p id="lives">Liv kvar: {{ stats.lives }}</p>
+                <hr>
+                <p id="pb">Personbästa: {{ stats.pb }}</p>
+                <p id="lastscore">Förra: {{ stats.lastScore }}</p>
+            </div>
+
+            <div class="scrollable scoreboard">
+                <Scoreboard></Scoreboard>
+            </div>
+        </div>
+        <p style="grid-area: 2 / 1 / 2 / 2;">
+            Infesterade mynt ger dig mer poäng per mynt, men var försiktig, de kan också framkalla en till zombie!
             Varje 16 mynt läggs ett till mynt till och både du och zombiesen blir snabbare!
         </p>
-
-        <div class="stats">
-            <p id="coins">Mynt samlade: {{ stats.coins }}</p>
-            <p id="pointsmult">x{{ stats.pointsMultiplier }} Poäng</p>
-            <hr>
-            <p id="points">Poäng: {{ stats.points }}</p>
-            <p id="lives">Liv kvar: {{ stats.lives }}</p>
-            <hr>
-            <p id="highscore">Highscore: {{ stats.highscore }}</p>
-            <p id="lastscore">Förra: {{ stats.lastScore }}</p>
-        </div>
     </div>
+    
 </template>
 
 <style scoped>
+canvas {
+    float: left;
+}
+ol {
+    padding-left: var(--default-gap);
+}
 .stats {
-    position: fixed;
-    top:1vw;
-    right:3vw;
+    margin:  var(--default-gap) calc(var(--default-gap)*4) 0 calc(var(--default-gap)*4);
+}
+.layout {
+    display: grid;
+    grid-template-columns: 3fr 1fr;
+}
+.scoreboard {
+    max-height: 15vw;
 }
 </style>

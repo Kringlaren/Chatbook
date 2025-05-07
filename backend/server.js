@@ -4,6 +4,7 @@ import cors from "cors";
 import authRoutes from "./routes/authRoutes.js";
 import userRoutes from "./routes/userRoutes.js";
 import postRoutes from "./routes/postRoutes.js";
+import gameRoutes from "./routes/gameRoutes.js";
 import path from "path";
 import db from "./db.js";
 
@@ -44,6 +45,7 @@ app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use('/api/auth', authRoutes);
 app.use('/api/user', userRoutes);
 app.use('/api/posts', postRoutes);
+app.use('/api/game', gameRoutes);
 
 
 

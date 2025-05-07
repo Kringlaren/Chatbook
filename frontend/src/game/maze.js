@@ -56,8 +56,8 @@ const Feature = {
     InfestedCoin: 3
 }
 
-let startCoinAmount = 4;
-let infestedCoinChance = 20;
+const startCoinAmount = 4;
+const infestedCoinChance = 20;
 
 export class Maze {
 
