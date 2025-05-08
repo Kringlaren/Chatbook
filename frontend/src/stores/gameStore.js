@@ -33,14 +33,20 @@ export const useGameStore = defineStore('game', {
             return res.data
         },
 
-        async fetchScoreboard() {
+        async fetchScoreboard(top = 0) {
             const res = await this.handleGameRequest("get", "scoreboard");
             if (res.error) {
                 return { error: "Kunde inte hämta poängdata" }
             }
 
-            this.scoreboard = res.data.scores;
-            return res.data
+            if (top === 0 || top >= res.data.scores.length) {
+                this.scoreboard = res.data.scores;
+            }
+            else {
+                this.scoreboard = res.data.scores.slice(0, top);
+            }
+            
+            return res.data;
         },
 
         async fetchPb() {

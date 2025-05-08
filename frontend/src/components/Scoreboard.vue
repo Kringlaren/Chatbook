@@ -2,6 +2,10 @@
 import { ref, onMounted, watch } from "vue";
 import { useGameStore } from "../stores";
 
+const props = defineProps({
+    top: Number,
+});
+
 const gameStore = useGameStore();
 
 const scores = ref([]);
@@ -12,7 +16,8 @@ onMounted(async () => {
 });
 
 async function reloadBoard() {
-    const res = await gameStore.fetchScoreboard();
+    let top = props.top ? props.top : 0;
+    const res = await gameStore.fetchScoreboard(top);
     if (res.error) {
         errorMessage.value = res.error;
     }

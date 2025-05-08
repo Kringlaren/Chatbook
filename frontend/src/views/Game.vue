@@ -32,10 +32,12 @@ function handleKeyUp(e) {
 const handleResize = () => resizeGame(canvas.value);
 
 onMounted(async () => {
-    const pbRes = await gameStore.fetchPb();
+    if (authStore.isLoggedIn) {
+        const pbRes = await gameStore.fetchPb();
 
-    if (!pbRes.error && pbRes.score) {
-        stats.pb.value = pbRes.score.score;
+        if (!pbRes.error && pbRes.score) {
+            stats.pb.value = pbRes.score.score;
+        }
     }
 
     if (canvas.value) {
@@ -52,14 +54,13 @@ onUnmounted(() => {
     window.removeEventListener('resize', handleResize);
 });
 
-let first = true;
+
 watch(
     () => stats.pb.value,
     async (score) => {
-        if (authStore.isLoggedIn && !first) {
+        if (authStore.isLoggedIn) {
             await gameStore.saveScore(score);
         }
-        first = false;
     }
 );
 </script>
