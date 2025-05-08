@@ -64,10 +64,6 @@ button {
 button:hover {
   border-color: #646cff;
 }
-button:focus,
-button:focus-visible {
-  outline: 4px auto -webkit-focus-ring-color;
-}
 
 .profile {
   display: flex;
@@ -117,13 +113,13 @@ button:focus-visible {
   max-height: 100vh;
 }
 .scrollable::-webkit-scrollbar {
-  width: 0.4vw;
+  width: 0.6vw;
 }
 .scrollable::-webkit-scrollbar-track {
   background: none;
 }
 .scrollable::-webkit-scrollbar-thumb {
-  background-color: color-mix(in srgb, var(--border-color) 20%, transparent);
+  background-color: color-mix(in srgb, var(--detail-color) 20%, transparent);
   border-radius: 1vw;
   border: 2px solid transparent;
   background-clip: content-box;

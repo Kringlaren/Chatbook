@@ -3,6 +3,7 @@ import { computed, ref } from "vue";
 import { useAuthStore, useUserStore } from "../stores/";
 import StyleSettings from "./StyleSettings.vue";
 import settingsImg from '../assets/images/settings.png';
+import settingsSelectedImg from '../assets/images/settingsselected.png';
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -25,25 +26,34 @@ const logOutUser = async () => {
 
 <template>
     <div class="navbar">
-        <a href="/" class="left">Hem</a>
-        <div class="profile right">
-            <div>
-                <a :href="nameWithoutSpace" v-if="authStore.isLoggedIn" class="profile">
-                    <p>{{ name }}</p>
-                    <div class="profile"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></div>
-                </a>
-                <a v-else href="login">Logga in</a>
-            </div>
-            <button v-if="authStore.isLoggedIn" @click="logOutUser">
-                Logga ut
-            </button>
+        <!--Vänster-->
+        <div class="navleft">
+            <a href="/">Hem</a>
+            <a href="game">Spel</a>
         </div>
-        <div v-if="authStore.isLoggedIn">
-            <button class="iconbutton" @click="settingsVisible = !settingsVisible"><img class="navicon" :src="settingsImg"></button>
-            <div v-if="settingsVisible" style="position: absolute; top: 50px;">
-                <StyleSettings></StyleSettings>
+        
+        <!--Höger-->
+        <div class="navright">
+            <div class="profile">
+                <div>
+                    <a :href="nameWithoutSpace" v-if="authStore.isLoggedIn" class="profile">
+                        <p>{{ name }}</p>
+                        <div class="profile"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></div>
+                    </a>
+                    <a v-else href="login">Logga in</a>
+                </div>
+                <button v-if="authStore.isLoggedIn" @click="logOutUser">
+                    Logga ut
+                </button>
+            </div>
+            <div v-if="authStore.isLoggedIn">
+                <button class="iconbutton" @click="settingsVisible = !settingsVisible"><img class="navicon" :src="settingsVisible ? settingsSelectedImg : settingsImg"></button>
+                <div v-if="settingsVisible" class="settings">
+                    <StyleSettings></StyleSettings>
+                </div>
             </div>
         </div>
+        
         
     </div>
 </template>
@@ -52,6 +62,7 @@ const logOutUser = async () => {
     .navbar {
         display: flex;
         align-items: center;
+        justify-content: space-between;
         gap: 5vw;
         position: sticky;
         top: 0;
@@ -68,5 +79,16 @@ const logOutUser = async () => {
     .navicon {
         width: calc(var(--navbar-height)*3/4);
         height: calc(var(--navbar-height)*3/4);
+    }
+
+    .settings {
+        position: absolute;
+        right: 0;
+    }
+
+    .navleft, .navright {
+        display: flex;
+        gap: calc(var(--default-gap)*2);
+        align-items: center;
     }
 </style>

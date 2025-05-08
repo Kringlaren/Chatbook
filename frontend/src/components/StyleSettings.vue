@@ -203,4 +203,11 @@ button {
 h4 {
     margin: 0;
 }
+label {
+    font-size: var(--small-font-size);
+}
+
+.slider {
+    width: 12vw;
+}
 </style>

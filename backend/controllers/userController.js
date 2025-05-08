@@ -4,7 +4,7 @@ import format from '../utils/format.js';
 import fileHelper from '../utils/fileHelper.js';
 
 const selectUserQuery = `
-    SELECT id, username, profile_pic, banner_img, bio, text_color, bg_color, detail_color, created_at, 
+    SELECT users.id, username, profile_pic, banner_img, bio, text_color, bg_color, detail_color, users.created_at, COUNT(followers.id) AS followers_count,
         CASE 
             WHEN EXISTS (
                 SELECT 1 
@@ -15,6 +15,7 @@ const selectUserQuery = `
         ELSE false
         END AS followed_by_user
     FROM users 
+    LEFT JOIN followers ON users.id = followers.user2_id
 `;
 
 // Hämtar användardata med namn
@@ -28,6 +29,7 @@ export const getUserByName = async (req, res) => {
 
         rows = format.formatValuesForFrontEnd(rows);
         rows = format.formatColorsForFrontEnd(rows);
+        console.log(rows);
 
         res.status(codes.OK).json({ user: rows[0] });
     } catch (error) {
@@ -137,7 +139,7 @@ export const changeFollowByName = async (req, res) => {
             isFollowing = false;
         }
 
-        let [rows] = await db.query(selectUserQuery + "WHERE id = ?", [userId, followUserId]);
+        let [rows] = await db.query(selectUserQuery + "WHERE users.id = ?", [userId, followUserId]);
         rows = format.formatValuesForFrontEnd(rows);
 
         res.status(codes.OK).json({ 

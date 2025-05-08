@@ -120,8 +120,10 @@ const changeFollow = async () => {
     }
     if (res.user.followed_by_user) {
         follow.value = "Avfölj";
+        user.value.followers_count++;
     } else {
         follow.value = "Följ";
+        user.value.followers_count--;
     }
 }
 </script>
@@ -145,9 +147,10 @@ const changeFollow = async () => {
                     <img v-else class="profilepic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" accept="image/*">
                     <h1>{{ user.username }}</h1>
                 </div>
-                <div v-if="!isLoggedInUser && authStore.isLoggedIn" class="overbanner rightpos">
+                <div class="overbanner rightpos">
                     <div>
-                        <button class="follow" @click="changeFollow">{{ follow }}</button>
+                        <span class="followcount">{{ user.followers_count }} följare</span>
+                        <button v-if="!isLoggedInUser && authStore.isLoggedIn" class="follow" @click="changeFollow">{{ follow }}</button>
                     </div>
                 </div>
             </div>
@@ -218,6 +221,10 @@ const changeFollow = async () => {
 }
 
 .follow {
+    font-size: var(--small-font-size);
+    margin-left: 1vw;
+}
+.followcount {
     font-size: var(--small-font-size);
 }
 
