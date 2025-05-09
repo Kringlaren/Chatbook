@@ -25,12 +25,12 @@ watch(
 
 <template>
     <div class="scrollable followedlist">
-        <h2 class="header">Följer</h2>
+        <h2>Följer</h2>
         <p v-if="!authStore.isLoggedIn"><a href="/login">Logga in</a> för att följa andra!</p>
         <p v-else-if="profiles.length === 0">Börja följa folk för att se dem här!</p>
         <div v-else="authStore.isLoggedIn" class="list">
             <div v-if="profiles.length !== 0" v-for="profile in profiles" :key="profile.id">
-                <a :href="nameWithoutSpace(profile.username)" class="profile medium">
+                <a :href="nameWithoutSpace(profile.username)" class="flexrow medium">
                     <img :src="backEndUrlBase + profile.profile_pic" alt="profilbild" class="profilepic">
                     <span>{{ profile.username }}</span>
                 </a>
@@ -50,9 +50,6 @@ watch(
 
 .followedlist {
     height: 100%;
-}
-
-.header {
     margin-top: var(--default-gap);
 }
 </style>

@@ -34,11 +34,11 @@ const logOutUser = async () => {
         
         <!--Höger-->
         <div class="navright">
-            <div class="profile">
+            <div class="flexrow">
                 <div>
-                    <a :href="nameWithoutSpace" v-if="authStore.isLoggedIn" class="profile">
+                    <a :href="nameWithoutSpace" v-if="authStore.isLoggedIn" class="flexrow">
                         <p>{{ name }}</p>
-                        <div class="profile"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></div>
+                        <div class="flexrow"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></div>
                     </a>
                     <a v-else href="login">Logga in</a>
                 </div>

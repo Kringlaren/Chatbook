@@ -140,46 +140,55 @@ const extractRGB = (rgbStr) => {
     <div class="settings border">
         <div style="grid-column: 1; grid-row: 1;">
             <h4 class="header">Huvudfärg</h4>
-            <label for="pr">R</label>
-            <input class="slider" v-model="pr" @input="changeColors('primary')" id="pr" type="range" max="255" name="r"> <br>
-            <label  for="pg">G</label>
-            <input class="slider" v-model="pg" @input="changeColors('primary')" id="pg" type="range" max="255" name="g"> <br>
-            <label for="pb">B</label>
-            <input class="slider" v-model="pb" @input="changeColors('primary')" id="pb" type="range" max="255" name="b"> <br>
-            <button @click="resetColors('primary')" class="reset">Återställ</button>
+            <div class="colorsetting">
+                <label for="pr">R</label>
+                <input class="slider" v-model="pr" @input="changeColors('primary')" id="pr" type="range" max="255" name="r">
+                <label  for="pg">G</label>
+                <input class="slider" v-model="pg" @input="changeColors('primary')" id="pg" type="range" max="255" name="g">
+                <label for="pb">B</label>
+                <input class="slider" v-model="pb" @input="changeColors('primary')" id="pb" type="range" max="255" name="b">
+                <button @click="resetColors('primary')" class="reset">Återställ</button>
+            </div>
         </div>
         
         <div style="grid-column: 2; grid-row: 1;">
             <h4>Textfärg</h4>
-            <label for="tr">R</label>
-            <input class="slider" v-model="tr" @input="changeColors('text')" id="tr" type="range" max="255" name="r"> <br>
-            <label for="tg">G</label>
-            <input class="slider" v-model="tg" @input="changeColors('text')" id="tg" type="range" max="255" name="g"> <br>
-            <label for="tb">B</label>
-            <input class="slider" v-model="tb" @input="changeColors('text')" id="tb" type="range" max="255" name="b"> <br>
-            <button @click="resetColors('text')" class="reset">Återställ</button>
+            <div class="colorsetting">
+                <label for="tr">R</label>
+                <input class="slider" v-model="tr" @input="changeColors('text')" id="tr" type="range" max="255" name="r">
+                <label for="tg">G</label>
+                <input class="slider" v-model="tg" @input="changeColors('text')" id="tg" type="range" max="255" name="g">
+                <label for="tb">B</label>
+                <input class="slider" v-model="tb" @input="changeColors('text')" id="tb" type="range" max="255" name="b">
+                <button @click="resetColors('text')" class="reset">Återställ</button>
+            </div>
         </div>
         
         <div style="grid-column: 1; grid-row: 2;">
             <h4>Detaljfärg</h4>
-            <label for="dr">R</label>
-            <input class="slider" v-model="dr" @input="changeColors('detail')" id="dr" type="range" max="255" name="r"> <br>
-            <label for="dg">G</label>
-            <input class="slider" v-model="dg" @input="changeColors('detail')" id="dg" type="range" max="255" name="g"> <br>
-            <label for="db">B</label>
-            <input class="slider" v-model="db" @input="changeColors('detail')" id="db" type="range" max="255" name="b"> <br>
-            <button @click="resetColors('detail')" class="reset">Återställ</button>
+            <div class="colorsetting">
+                <label for="dr">R</label>
+                <input class="slider" v-model="dr" @input="changeColors('detail')" id="dr" type="range" max="255" name="r">
+                <label for="dg">G</label>
+                <input class="slider" v-model="dg" @input="changeColors('detail')" id="dg" type="range" max="255" name="g">
+                <label for="db">B</label>
+                <input class="slider" v-model="db" @input="changeColors('detail')" id="db" type="range" max="255" name="b">
+                <button @click="resetColors('detail')" class="reset">Återställ</button>
+            </div>
         </div>
 
         <div style="grid-column: 2; grid-row: 2;">
             <h4>Länkfärg</h4>
-            <label for="lr">R</label>
-            <input class="slider" v-model="lr" @input="changeColors('link')" id="lr" type="range" max="255" name="r"> <br>
-            <label for="lg">G</label>
-            <input class="slider" v-model="lg" @input="changeColors('link')" id="lg" type="range" max="255" name="g"> <br>
-            <label for="lb">B</label>
-            <input class="slider" v-model="lb" @input="changeColors('link')" id="lb" type="range" max="255" name="b"> <br>
-            <button @click="resetColors('link')" class="reset">Återställ</button>
+            <div class="colorsetting">
+                <label for="lr">R</label>
+                <input class="slider" v-model="lr" @input="changeColors('link')" id="lr" type="range" max="255" name="r">
+                <label for="lg">G</label>
+                <input class="slider" v-model="lg" @input="changeColors('link')" id="lg" type="range" max="255" name="g">
+                <label for="lb">B</label>
+                <input class="slider" v-model="lb" @input="changeColors('link')" id="lb" type="range" max="255" name="b">
+                <button @click="resetColors('link')" class="reset">Återställ</button>
+            </div>
+            
         </div>
 
         <div style="grid-area: 3 / 1 / span 1 / span 2;">
@@ -208,6 +217,28 @@ label {
 }
 
 .slider {
-    width: 12vw;
+    -webkit-appearance: none; 
+    appearance: none;
+    background-color: var(--detail-color);
+    width: 10vw;
+    height: 0.3vw;
+    cursor: grab;
+    border-radius: var(--default-border-radius);
+}
+.slider::-webkit-slider-thumb {
+    -webkit-appearance: none;
+    width: 1vw;
+    height: 1vw;
+    border-radius: 100%;
+    background-color: var(--text-color);
+}
+.slider:active {
+    cursor: grabbing;
+}
+
+.colorsetting {
+    display: flex;
+    flex-direction: column;
+    gap: calc(var(--default-gap)/2);
 }
 </style>

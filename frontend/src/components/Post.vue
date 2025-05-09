@@ -33,7 +33,7 @@ const expandPost = async () => {
 <template>
     <div :class="{ 'border' : !modal }" class="post" >
         <div class="contentpadding">
-            <div class="profile">
+            <div class="flexrow">
                 <img :src="backEndUrlBase + post.profile_pic" alt="Profilbild" class="profilepic">
                 <h3><a class="medium":href="usernameNoSpace">{{ post.username }}</a></h3>
                 <p>-</p>

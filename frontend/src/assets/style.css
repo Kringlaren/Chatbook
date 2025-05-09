@@ -65,9 +65,9 @@ button:hover {
   border-color: #646cff;
 }
 
-.profile {
+.flexrow {
   display: flex;
-  gap: 1vw;
+  gap: var(--default-gap);
   align-items: center;
 }
 .profilepic {
