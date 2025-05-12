@@ -1,12 +1,15 @@
 <script setup>
 import { ref } from "vue";
 import { usePostStore, useAuthStore } from "../stores/";
+import selectImg from "../assets/images/selectimg.png";
 
 const postStore = usePostStore();
 const authStore = useAuthStore();
 
 const content = ref("");
 const img = ref(null);
+const imageInput = ref(null);
+const imgName = ref("");
 
 const createPost = async () => {
     const res = await postStore.createPost(content.value, img.value);
@@ -21,6 +24,7 @@ const imageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
         img.value = file;
+        imgName.value = file.name || "";
     }
 }
 </script>
@@ -30,9 +34,14 @@ const imageChange = (event) => {
         <div v-if="authStore.isLoggedIn">
             <h2>Skapa inlägg</h2>
             <form @submit.prevent="createPost()">
-                <textarea v-model="content" name="postContent" placeholder="Dela din visdom med världen!" required></textarea>
-                <br>
-                <input @change="imageChange" type="file" accept="image/*">
+                <div class="inputrow">
+                    <textarea v-model="content" name="postContent" placeholder="Dela din visdom med världen!" required></textarea>
+                    <div class="imgupload">
+                        <img class="bigicon" :src="selectImg" alt="Välj bild" id="imgUpload" @click="imageInput.click()" style="cursor: pointer">
+                        <input type="file" ref="imageInput" @change="imageChange">
+                        <label for="imgUpload" class="imglabel">{{ imgName }}</label>
+                    </div>
+                </div>
                 <button type="submit">Lägg upp!</button>   
             </form>
         </div>
@@ -49,5 +58,9 @@ textarea {
     resize: none;
     width: 50%;
     height: 5vw;
+}
+
+button {
+    margin: var(--default-gap);
 }
 </style>

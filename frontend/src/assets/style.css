@@ -50,6 +50,13 @@ h1 {
   line-height: 1.1;
 }
 
+input {
+  font-size: var(--small-font-size);
+}
+input[type="file"] {
+  display: none;
+}
+
 button {
   border-radius: 8px;
   border: 1px solid transparent;
@@ -70,6 +77,25 @@ button:hover {
   gap: var(--default-gap);
   align-items: center;
 }
+.inputrow {
+  display: flex;
+  gap: calc(var(--default-gap)/2);
+  align-items: center;
+  justify-content: center;
+}
+
+.imgupload {
+  position: relative;
+  width: 5vw;
+}
+.imglabel {
+  display: block;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .profilepic {
   border-radius: 100%;
   object-fit: cover;
@@ -92,6 +118,12 @@ button:hover {
 
 .icon {
   width: var(--icon-size);
+  height: var(--icon-size);
+}
+
+.bigicon {
+  width: calc(var(--navbar-height)*3/4);
+  height: calc(var(--navbar-height)*3/4);
 }
 
 .card {

@@ -1,6 +1,7 @@
 <script setup>
 import { ref } from "vue";
 import { usePostStore, useAuthStore } from "../stores/";
+import selectImg from "../assets/images/selectimg.png";
 
 const props = defineProps({
     post: Object
@@ -11,6 +12,8 @@ const authStore = useAuthStore();
 
 const content = ref("");
 const img = ref(null);
+const imageInput = ref(null);
+const imgName = ref("");
 
 const createComment = async () => {
     const res = await postStore.createComment(props.post.id, content.value, img.value);
@@ -25,6 +28,7 @@ const imageChange = (event) => {
     const file = event.target.files[0];
     if (file) {
         img.value = file;
+        imgName.value = file.name || "";
     }
 }
 </script>
@@ -33,9 +37,15 @@ const imageChange = (event) => {
     <div>
         <div v-if="authStore.isLoggedIn">
             <form @submit.prevent="createComment()">
-                <input type="text" v-model="content" name="postContent" placeholder="Sprid dina åsikter!" required/>
-                <input @change="imageChange" type="file" accept="image/*">
-                <button type="submit">Kommentera!</button>
+                <div class="inputrow">
+                    <input type="text" v-model="content" name="postContent" placeholder="Sprid dina åsikter!" required/>
+                    <div class="imgupload">
+                        <img class="icon" :src="selectImg" alt="Välj bild" @click="imageInput.click()" style="cursor: pointer">
+                        <input type="file" ref="imageInput" @change="imageChange">
+                        <label for="imgUpload" class="imglabel">{{ imgName }}</label>
+                    </div>
+                    <button type="submit">Kommentera!</button>
+                </div>                
             </form>
         </div>
         <div v-else>
@@ -47,9 +57,9 @@ const imageChange = (event) => {
 </template>
 
 <style scoped>
-textarea {
-    resize: none;
-    width: 50%;
-    height: 5vw;
+input[type="text"] {
+    width: 40%;
+    height: calc(var(--icon-size)/2);
 }
+
 </style>
