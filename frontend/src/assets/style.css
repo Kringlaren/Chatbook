@@ -189,10 +189,6 @@ button:hover {
   font-size: var(--medium-font-size);
 }
 
-.center {
-  text-align: center;
-}
-
 @media only screen and (max-width: 600px) {
   :root  {
     --default-padding: 1.5vw;
@@ -204,11 +200,11 @@ button:hover {
     --navbar-height: 20vw;
 
     --icon-size: 5vw;
-    --big-icon-size: 10vw;
+    --big-icon-size: 7vw;
     --profile-pic-size: 8vw;
 
     --xs-font-size: 2vw;
     --small-font-size: 3vw;
-    --medium-font-size: 4vw;
+    --medium-font-size: 3.5vw;
   }
 }

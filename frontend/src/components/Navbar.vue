@@ -92,5 +92,9 @@ const logOutUser = async () => {
         .navbar {
             flex-direction: column;
         }
+        .settings {
+            top: 5%;
+            right: 25%;
+        }
     }
 </style>

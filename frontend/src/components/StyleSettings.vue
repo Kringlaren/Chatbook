@@ -138,7 +138,7 @@ const extractRGB = (rgbStr) => {
 
 <template>
     <div class="settings card">
-        <div style="grid-column: 1; grid-row: 1;">
+        <div>
             <h4 class="header">Huvudfärg</h4>
             <div class="color-setting">
                 <label for="pr">R</label>
@@ -151,7 +151,7 @@ const extractRGB = (rgbStr) => {
             </div>
         </div>
         
-        <div style="grid-column: 2; grid-row: 1;">
+        <div>
             <h4>Textfärg</h4>
             <div class="color-setting">
                 <label for="tr">R</label>
@@ -164,7 +164,7 @@ const extractRGB = (rgbStr) => {
             </div>
         </div>
         
-        <div style="grid-column: 1; grid-row: 2;">
+        <div>
             <h4>Detaljfärg</h4>
             <div class="color-setting">
                 <label for="dr">R</label>
@@ -177,7 +177,7 @@ const extractRGB = (rgbStr) => {
             </div>
         </div>
 
-        <div style="grid-column: 2; grid-row: 2;">
+        <div>
             <h4>Länkfärg</h4>
             <div class="color-setting">
                 <label for="lr">R</label>
@@ -191,7 +191,7 @@ const extractRGB = (rgbStr) => {
             
         </div>
 
-        <div style="grid-area: 3 / 1 / span 1 / span 2;">
+        <div class="bottom-middle">
             <button @click="saveStyles()">Spara</button>
         </div>
         
@@ -201,7 +201,8 @@ const extractRGB = (rgbStr) => {
 <style scoped>
 .settings {
     display: grid;
-    gap: var(--default-gap);
+    grid-template: 1fr 1fr / 1fr 1fr;
+    gap: var(--profile-gap);
 }
 button {
     font-size: var(--xs-font-size);
@@ -212,6 +213,10 @@ h4 {
 }
 label {
     font-size: var(--small-font-size);
+}
+
+.reset {
+    margin-top: calc(var(--default-gap)/3);
 }
 
 .slider {
@@ -237,7 +242,12 @@ label {
 .color-setting {
     display: flex;
     flex-direction: column;
-    gap: calc(var(--default-gap)/2);
+    gap: calc(var(--default-gap)/4);
+}
+
+.bottom-middle {
+    grid-column-start: 1;
+    grid-column-end: 3;
 }
 
 @media only screen and (max-width: 600px) {

@@ -29,7 +29,6 @@ export const getUserByName = async (req, res) => {
 
         rows = format.formatValuesForFrontEnd(rows);
         rows = format.formatColorsForFrontEnd(rows);
-        console.log(rows);
 
         res.status(codes.OK).json({ user: rows[0] });
     } catch (error) {
