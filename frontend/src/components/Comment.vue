@@ -10,28 +10,32 @@ const usernameNoSpace = props.comment.username.replace(/\s+/g, ".");
 
 <template>
     <div class="comment">
-        <div class="contentpadding">
+        <div class="content-padding">
             <div class="profile">
-                <img :src="urlBase + comment.profile_pic" alt="Profilbild" class="profileimg">
+                <img :src="urlBase + comment.profile_pic" alt="Profilbild" class="profile-img">
                 <h3><a :href="usernameNoSpace">{{ comment.username }}</a></h3>
                 <p>-</p>
                 <p>{{ comment.created_at }}</p>
             </div>
         
             <p>{{ comment.content }}</p>
-            <img v-if="comment.image" :src="urlBase + comment.image" alt="Inläggsbild" class="commentimg">
+            <img v-if="comment.image" :src="urlBase + comment.image" alt="Inläggsbild" class="comment-img">
         </div>
-
-        
     </div>
 </template>
 
 <style scoped>
+
+p {
+    margin: 0;
+}
+
 .comment {
-  text-align: left;
-  width: 100%;
-  background-color: var(--primary-color);
-  border-radius: calc(var(--default-border-radius)/2);
+    text-align: left;
+    width: 100%;
+    background-color: var(--primary-color);
+    border-radius: calc(var(--default-border-radius)/2);
+    margin-bottom: var(--default-gap);
 }
 
 .profile {
@@ -40,17 +44,17 @@ const usernameNoSpace = props.comment.username.replace(/\s+/g, ".");
     align-items: center;
 }
 
-.profileimg {
+.profile-img {
     max-width: 3vw;
     max-height: 3vw;
     border-radius: 100%;
 }
 
-.commentimg {
-    width: 10vw;
+.comment-img {
+    width: 15%;
 }
 
-.contentpadding {
+.content-padding {
     padding: var(--default-padding) var(--default-padding) 0 var(--default-padding);
 }
 </style>

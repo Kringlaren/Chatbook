@@ -31,8 +31,8 @@ const closePost = () => {
                 <MakePost></MakePost>
                 <Feed @comment-clicked="expandPost"></Feed>
             </div>
-            <div class="gamead">
-                <img class="adimg" :src="gameImg">
+            <div class="ads">
+                <img class="ad-img" :src="gameImg">
                 <Scoreboard :top="scoreboardTop"></Scoreboard>
                 <a class="gamelink" href="game"><button>Spela Zombielabyrinten!</button></a>
             </div>
@@ -55,12 +55,26 @@ const closePost = () => {
 .followed {
     grid-column: 1;
     position: fixed;
-    height: calc(100vh - var(--navbar-height) - var(--default-gap));
+    height: var(--height-under-nav);
 }
 
-.gamead {
+.ads {
     grid-column: 3; 
     float: right;
     margin: var(--default-gap) 0;
+}
+
+@media only screen and (max-width: 600px) {
+    .main-content {
+        display: block;
+        margin: var(--default-gap);
+    }
+
+    .followed {
+        display: none;
+    }
+    .ads {
+        display: none;
+    }
 }
 </style>

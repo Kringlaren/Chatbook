@@ -14,7 +14,7 @@ const close = () => {
 </script>
 
 <template>
-    <div class="backdrop" @click.self="close">
+    <div class="back-drop" @click.self="close">
         <div class="panel">    
             <h2>{{ post.username }}s inlägg</h2>
 
@@ -32,7 +32,7 @@ const close = () => {
 </template>
 
 <style scoped>
-.backdrop {
+.back-drop {
   position: fixed;
   top: 0; left: 0; right: 0; bottom: 0;
   background-color: rgba(0, 0, 0, 0.6);
@@ -42,7 +42,7 @@ const close = () => {
   z-index: 999;
 }
 .panel {
-    padding: 2vw;
+    padding: var(--default-padding);
     width: 50vw;
     height: 80vh;
     border-radius: var(--default-border-radius);
@@ -53,11 +53,21 @@ const close = () => {
 } 
 
 .content {
-    width: 48vw;
+    width: 45vw;
     display: flex;
     flex-direction: column;
     align-self: center;
     border: var(--default-border);
     border-radius: calc(var(--default-border-radius)/2);
+}
+
+@media only screen and (max-width: 600px) {
+    .panel {
+        width: 80vw;
+    }
+
+    .content {
+        width: 75vw;
+    }
 }
 </style>

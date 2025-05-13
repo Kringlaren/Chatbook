@@ -32,27 +32,27 @@ const expandPost = async () => {
 
 <template>
     <div :class="{ 'border' : !modal }" class="post" >
-        <div class="contentpadding">
-            <div class="flexrow">
-                <img :src="backEndUrlBase + post.profile_pic" alt="Profilbild" class="profilepic">
+        <div class="content-padding">
+            <div class="flex-row">
+                <img :src="backEndUrlBase + post.profile_pic" alt="Profilbild" class="profile-pic">
                 <h3><a class="medium":href="usernameNoSpace">{{ post.username }}</a></h3>
                 <p>-</p>
                 <p>{{ post.created_at }}</p>
             </div>
         
-            <p class="small">{{ post.content }}</p>
+            <p class="text-content">{{ post.content }}</p>
         </div>
         
-        <img v-if="post.image" :src="backEndUrlBase + post.image" alt="Inläggsbild" class="postimg">
+        <img v-if="post.image" :src="backEndUrlBase + post.image" alt="Inläggsbild" class="post-img">
         <div class="actions">
             <div>
                 <span>{{ post.like_count }}</span>
-                <button v-if="authStore.isLoggedIn" @click="changeLikeOnPost" class="iconbutton"><img class="icon" :src="post.liked_by_user ? likedImg : likeImg" alt="gilla"></button>
+                <button v-if="authStore.isLoggedIn" @click="changeLikeOnPost" class="icon-button"><img class="icon" :src="post.liked_by_user ? likedImg : likeImg" alt="gilla"></button>
                 <img v-else class="icon" :src="likeImg" alt="gillningar">
             </div>
             <div>
                 <span>{{ post.comment_count }}</span> 
-                <button v-if="!modal" @click="expandPost" class="iconbutton"><img class="icon" :src="commentImg" alt="kommentera"></button>
+                <button v-if="!modal" @click="expandPost" class="icon-button"><img class="icon" :src="commentImg" alt="kommentera"></button>
                 <img v-else class="icon" :src="commentImg" alt="kommentarer">
             </div>
         </div>
@@ -71,13 +71,17 @@ const expandPost = async () => {
     border: var(--default-border);
 }
 
-.postimg {
+.post-img {
   width: 100%;
   height: auto;
 }
 
-.contentpadding {
+.content-padding {
     padding: var(--default-padding) var(--default-padding) 0 var(--default-padding);
+}
+.text-content {
+    font-size: var(--small-font-size);
+    word-break: break-all;
 }
 .actions {
     display: flex;

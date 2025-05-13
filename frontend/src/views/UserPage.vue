@@ -131,7 +131,8 @@ const changeFollow = async () => {
 <template>
     <div class="scrollable">
         <Navbar></Navbar>
-        <div v-if="user" class="userpage">
+        <div v-if="user" class="user-page">
+            <!--Banner-->
             <div class="container">
                 <div v-if="authStore.isLoggedIn && authStore.user.id === user.id">
                     <img class="banner" :src="backEndUrlBase + user.banner_img" alt="banderoll" @click="bannerInput.click()" style="cursor: pointer">
@@ -139,22 +140,26 @@ const changeFollow = async () => {
                 </div>
                 <img v-else class="banner" :src="backEndUrlBase + user.banner_img" alt="banderoll">
 
-                <div class="profile overbanner leftpos">
+                <!--Profil-->
+                <div class="profile over-banner left-pos">
                     <div v-if="isLoggedInUser">
-                        <img class="profilepic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" @click="profilePicInput.click()" style="cursor: pointer">
+                        <img class="big-profile-pic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" @click="profilePicInput.click()" style="cursor: pointer">
                         <input type="file" ref="profilePicInput" style="display: none" @change="changeProfilePic">
                     </div>
-                    <img v-else class="profilepic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" accept="image/*">
+                    <img v-else class="big-profile-pic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" accept="image/*">
                     <h1>{{ user.username }}</h1>
                 </div>
-                <div class="overbanner rightpos">
+                <!--Följningar-->
+                <div class="over-banner right-pos">
                     <div>
-                        <span class="followcount">{{ user.followers_count }} följare</span>
+                        <span class="follow-count">{{ user.followers_count }} följare</span>
                         <button v-if="!isLoggedInUser && authStore.isLoggedIn" class="follow" @click="changeFollow">{{ follow }}</button>
                     </div>
                 </div>
             </div>
+            <!--Main-->
             <div class="layout">
+                <!--Om-->
                 <div class="about">
                     <h3>Om {{ user.username }}</h3>
                     <textarea v-model="bio" v-if="user.bio || isLoggedInUser" :disabled="!isLoggedInUser"></textarea>
@@ -162,6 +167,7 @@ const changeFollow = async () => {
                     <button v-if="isLoggedInUser" @click="changeBio">Spara</button>
                 </div>
 
+                <!--Inlägg-->
                 <div class="posts feed">
                     <h2>{{ user.username }}s inlägg</h2>
                     <div v-if="userPosts.length !== 0" v-for="post in userPosts" :key="post.id">
@@ -179,17 +185,11 @@ const changeFollow = async () => {
 
 
 <style scoped>
-.userpage {
+.user-page {
     background-color: var(--primary-color);
     color: var(--text-color);
 }
 
-.profilepic {
-    width: 8vw;
-    height: 8vw;
-    object-fit: cover;
-    border-radius: 100%;
-}
 .banner {
     width: 100%;
     height: 25vw;
@@ -205,17 +205,17 @@ const changeFollow = async () => {
     grid-column-end: 2;
     grid-row: 1;
 }
-.overbanner {
+.over-banner {
     background-color: color-mix(in srgb, var(--primary-color) 90%, transparent);;
     position: absolute;
     padding: 1vw;
     border-radius: var(--default-border-radius);
 }
-.rightpos {
+.right-pos {
     right: 1vw;
     bottom: 1vw;
 }
-.leftpos {
+.left-pos {
     left: 1vw;
     bottom: 1vw;
 }
@@ -224,7 +224,7 @@ const changeFollow = async () => {
     font-size: var(--small-font-size);
     margin-left: 1vw;
 }
-.followcount {
+.follow-count {
     font-size: var(--small-font-size);
 }
 

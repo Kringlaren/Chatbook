@@ -34,12 +34,12 @@ const imageChange = (event) => {
         <div v-if="authStore.isLoggedIn">
             <h2>Skapa inlägg</h2>
             <form @submit.prevent="createPost()">
-                <div class="inputrow">
-                    <textarea v-model="content" name="postContent" placeholder="Dela din visdom med världen!" required></textarea>
-                    <div class="imgupload">
-                        <img class="bigicon" :src="selectImg" alt="Välj bild" id="imgUpload" @click="imageInput.click()" style="cursor: pointer">
+                <div class="input-row">
+                    <textarea v-model="content" name="postContent" maxlength="255" required></textarea>
+                    <div class="img-upload">
+                        <img class="big-icon" :src="selectImg" alt="Välj bild" id="imgUpload" @click="imageInput.click()" style="cursor: pointer">
                         <input type="file" ref="imageInput" @change="imageChange">
-                        <label for="imgUpload" class="imglabel">{{ imgName }}</label>
+                        <label for="imgUpload" class="img-label">{{ imgName }}</label>
                     </div>
                 </div>
                 <button type="submit">Lägg upp!</button>   
@@ -58,6 +58,8 @@ textarea {
     resize: none;
     width: 50%;
     height: 5vw;
+    font-size: var(--small-font-size);
+    font-family: var(--font-family);
 }
 
 button {

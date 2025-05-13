@@ -27,18 +27,19 @@ const logOutUser = async () => {
 <template>
     <div class="navbar">
         <!--Vänster-->
-        <div class="navleft">
+        <div class="nav-left">
             <a href="/">Hem</a>
+            <a href="following">Följer</a>
             <a href="game">Spel</a>
         </div>
         
         <!--Höger-->
-        <div class="navright">
-            <div class="flexrow">
+        <div class="nav-right">
+            <div class="flex-row">
                 <div>
-                    <a :href="nameWithoutSpace" v-if="authStore.isLoggedIn" class="flexrow">
+                    <a :href="nameWithoutSpace" v-if="authStore.isLoggedIn" class="flex-row">
                         <p>{{ name }}</p>
-                        <div class="flexrow"><img class="profilepic" :src="urlBase + pp" alt="profilbild"></div>
+                        <div class="flex-row"><img class="profile-pic" :src="urlBase + pp" alt="profilbild"></div>
                     </a>
                     <a v-else href="login">Logga in</a>
                 </div>
@@ -47,7 +48,7 @@ const logOutUser = async () => {
                 </button>
             </div>
             <div v-if="authStore.isLoggedIn">
-                <button class="iconbutton" @click="settingsVisible = !settingsVisible"><img class="navicon" :src="settingsVisible ? settingsSelectedImg : settingsImg"></button>
+                <button class="icon-button" @click="settingsVisible = !settingsVisible"><img class="big-icon" :src="settingsVisible ? settingsSelectedImg : settingsImg"></button>
                 <div v-if="settingsVisible" class="settings">
                     <StyleSettings></StyleSettings>
                 </div>
@@ -63,7 +64,6 @@ const logOutUser = async () => {
         display: flex;
         align-items: center;
         justify-content: space-between;
-        gap: 5vw;
         position: sticky;
         top: 0;
         width: 100%;
@@ -76,19 +76,21 @@ const logOutUser = async () => {
         font-size: var(--medium-font-size);
         z-index: 5;
     }
-    .navicon {
-        width: calc(var(--navbar-height)*3/4);
-        height: calc(var(--navbar-height)*3/4);
-    }
 
     .settings {
         position: absolute;
         right: 0;
     }
 
-    .navleft, .navright {
+    .nav-left, .nav-right {
         display: flex;
-        gap: calc(var(--default-gap)*2);
+        gap: var(--nav-gap);
         align-items: center;
+    }
+
+    @media only screen and (max-width: 600px) {
+        .navbar {
+            flex-direction: column;
+        }
     }
 </style>

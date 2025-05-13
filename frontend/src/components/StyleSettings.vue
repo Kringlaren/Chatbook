@@ -137,10 +137,10 @@ const extractRGB = (rgbStr) => {
 </script>
 
 <template>
-    <div class="settings border">
+    <div class="settings card">
         <div style="grid-column: 1; grid-row: 1;">
             <h4 class="header">Huvudfärg</h4>
-            <div class="colorsetting">
+            <div class="color-setting">
                 <label for="pr">R</label>
                 <input class="slider" v-model="pr" @input="changeColors('primary')" id="pr" type="range" max="255" name="r">
                 <label  for="pg">G</label>
@@ -153,7 +153,7 @@ const extractRGB = (rgbStr) => {
         
         <div style="grid-column: 2; grid-row: 1;">
             <h4>Textfärg</h4>
-            <div class="colorsetting">
+            <div class="color-setting">
                 <label for="tr">R</label>
                 <input class="slider" v-model="tr" @input="changeColors('text')" id="tr" type="range" max="255" name="r">
                 <label for="tg">G</label>
@@ -166,7 +166,7 @@ const extractRGB = (rgbStr) => {
         
         <div style="grid-column: 1; grid-row: 2;">
             <h4>Detaljfärg</h4>
-            <div class="colorsetting">
+            <div class="color-setting">
                 <label for="dr">R</label>
                 <input class="slider" v-model="dr" @input="changeColors('detail')" id="dr" type="range" max="255" name="r">
                 <label for="dg">G</label>
@@ -179,7 +179,7 @@ const extractRGB = (rgbStr) => {
 
         <div style="grid-column: 2; grid-row: 2;">
             <h4>Länkfärg</h4>
-            <div class="colorsetting">
+            <div class="color-setting">
                 <label for="lr">R</label>
                 <input class="slider" v-model="lr" @input="changeColors('link')" id="lr" type="range" max="255" name="r">
                 <label for="lg">G</label>
@@ -200,10 +200,8 @@ const extractRGB = (rgbStr) => {
 
 <style scoped>
 .settings {
-    background-color: var(--primary-color);
     display: grid;
     gap: var(--default-gap);
-    padding: var(--default-gap);
 }
 button {
     font-size: var(--xs-font-size);
@@ -236,9 +234,20 @@ label {
     cursor: grabbing;
 }
 
-.colorsetting {
+.color-setting {
     display: flex;
     flex-direction: column;
     gap: calc(var(--default-gap)/2);
+}
+
+@media only screen and (max-width: 600px) {
+    .slider {
+        width: 20vw;
+        height: 1vw;
+    }
+    .slider::-webkit-slider-thumb {
+        width: 2vw;
+        height: 2vw;
+    }
 }
 </style>

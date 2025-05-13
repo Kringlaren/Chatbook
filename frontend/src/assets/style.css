@@ -2,7 +2,7 @@
   --primary-color: rgb(36, 36, 36);
   --text-color: rgb(240, 240, 240);
   --detail-color: rgb(221, 221, 221);
-  --link-color: rgb(100, 108, 255);
+  --link-color: rgb(255, 105, 180);
 
   --default-border: 1px solid var(--detail-color);
   --default-border-radius: 1.5vw;
@@ -10,19 +10,28 @@
   --default-padding: 1vw;
 
   --default-gap: 1.2vw;
+  --nav-gap: 2.5vw;
+  --profile-gap: 1vw;
 
   --navbar-height: 5vw;
+  --height-under-nav: calc(100vh - var(--navbar-height) - var(--default-gap));
 
   --icon-size: 2vw;
+  --big-icon-size: calc(var(--navbar-height)*3/4);
+
+  --profile-pic-size: 3.5vw;
+  --big-profile-pic-size: 8vw;
 
   --xs-font-size: 0.9vw;
   --small-font-size: 1.2vw;
   --medium-font-size: 1.5vw;
 
-  font-family: system-ui, Avenir, Helvetica, Arial, sans-serif;
+  --font-family: Helvetica, Arial;
+
+  font-family: var(--font-family);
   line-height: 1.5;
   font-weight: 400;
-  font-size: 1vw;
+  font-size: var(--small-font-size);
 
   color-scheme: light dark;
   color: var(--text-color);
@@ -45,11 +54,6 @@ body {
   overflow-y: hidden;
 }
 
-h1 {
-  font-size: 3.2em;
-  line-height: 1.1;
-}
-
 input {
   font-size: var(--small-font-size);
 }
@@ -69,26 +73,26 @@ button {
   transition: border-color 0.25s;
 }
 button:hover {
-  border-color: #646cff;
+  border-color: var(--link-color);
 }
 
-.flexrow {
+.flex-row {
   display: flex;
-  gap: var(--default-gap);
+  gap: var(--profile-gap);
   align-items: center;
 }
-.inputrow {
+.input-row {
   display: flex;
   gap: calc(var(--default-gap)/2);
   align-items: center;
   justify-content: center;
 }
 
-.imgupload {
+.img-upload {
   position: relative;
   width: 5vw;
 }
-.imglabel {
+.img-label {
   display: block;
   width: 100%;
   white-space: nowrap;
@@ -96,11 +100,17 @@ button:hover {
   text-overflow: ellipsis;
 }
 
-.profilepic {
+.profile-pic {
   border-radius: 100%;
   object-fit: cover;
-  width: 3.8vw;
-  height: 3.8vw;
+  width: var(--profile-pic-size);
+  height: var(--profile-pic-size);
+}
+.big-profile-pic {
+  border-radius: 100%;
+  object-fit: cover;
+  width: var(--big-profile-pic-size);
+  height: var(--big-profile-pic-size);
 }
 
 .feed {
@@ -110,7 +120,7 @@ button:hover {
   justify-self: center;
 }
 
-.iconbutton {
+.icon-button {
   border: 0;
   padding: 0;
   background: none;
@@ -121,16 +131,19 @@ button:hover {
   height: var(--icon-size);
 }
 
-.bigicon {
-  width: calc(var(--navbar-height)*3/4);
-  height: calc(var(--navbar-height)*3/4);
+.big-icon {
+  width: var(--big-icon-size);
+  height: var(--big-icon-size);
 }
 
 .card {
-  padding: 2em;
+  background-color: var(--primary-color);
+  border: var(--default-border);
+  border-radius: var(--default-border-radius);
+  padding: var(--default-padding);
 }
 
-.adimg {
+.ad-img {
   width: 100%;
 }
 
@@ -176,16 +189,26 @@ button:hover {
   font-size: var(--medium-font-size);
 }
 
+.center {
+  text-align: center;
+}
 
-@media (prefers-color-scheme: light) {
-  :root {
-    color: #213547;
-    background-color: #ffffff;
-  }
-  a:hover {
-    color: #747bff;
-  }
-  button {
-    background-color: #f9f9f9;
+@media only screen and (max-width: 600px) {
+  :root  {
+    --default-padding: 1.5vw;
+
+    --default-gap: 5vw;
+    --nav-gap: 5vw;
+    --profile-gap: 2vw;
+
+    --navbar-height: 20vw;
+
+    --icon-size: 5vw;
+    --big-icon-size: 10vw;
+    --profile-pic-size: 8vw;
+
+    --xs-font-size: 2vw;
+    --small-font-size: 3vw;
+    --medium-font-size: 4vw;
   }
 }

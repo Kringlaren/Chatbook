@@ -26,7 +26,6 @@ async function reloadBoard() {
 watch (
     () => gameStore.scoreboard,
         (board) => {
-            console.log("scoreboard skillnad");
             scores.value = board;
         }
 )
