@@ -1,4 +1,6 @@
 import { defineStore } from 'pinia';
+import { useAuthStore } from './';
+import { formatNameForBackEnd } from '../services/format.js';
 import api from '../services/api.js';
 
 export const useUserStore = defineStore('user', {
@@ -80,13 +82,24 @@ export const useUserStore = defineStore('user', {
         return res.data;
       },
 
-      async fetchFollowedUsers() {
-        const res = await this.handleUserRequest("get", "followed-users");
+      async fetchFollowedUsers(inputUsername = "") {
+        let username;
+        const authStore = useAuthStore();
+        if (inputUsername === "") {
+          username = formatNameForBackEnd(authStore.user?.username);
+        } else {
+          username = formatNameForBackEnd(inputUsername);
+        }
+
+        const res = await this.handleUserRequest("get", "followed-users/" + username);
         if (res.error) {
           return { error: "Kunde inte hämta följda konton" };
         }
 
-        this.followedUsers = res.data.users;
+        if (inputUsername === "") {
+          this.followedUsers = res.data.users;
+        }
+        
         return res.data;
       },
 

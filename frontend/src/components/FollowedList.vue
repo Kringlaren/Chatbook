@@ -1,23 +1,32 @@
 <script setup>
-import { watch, ref } from "vue";
+import { watch, ref, onMounted } from "vue";
 import { useUserStore, useAuthStore } from "../stores";
+import { formatNameForBackEnd } from "../services/format";
 const userStore = useUserStore();
 const authStore = useAuthStore();
+
+const props = defineProps({
+    username: String
+});
 
 const profiles = ref([]);
 
 const backEndUrlBase = import.meta.env.VITE_URL_BASE;
 
-const nameWithoutSpace = (name) => {
-    return name.replace(/\s/, ".");
-}
-
+onMounted(async () => {
+    if (props.username) {
+        const res = await userStore.fetchFollowedUsers(props.username);
+        profiles.value = res.users;
+        console.log("annan", profiles.value);
+    }
+});
 
 watch(
     () => userStore.followedUsers,
     async (users) => {
-        if (users) {
+        if (users && !props.username) {
             profiles.value = users;
+            console.log("du", profiles.value);
         }
     },
 ); 
@@ -25,16 +34,19 @@ watch(
 
 <template>
     <div class="scrollable followed-list">
-        <h2>Följer</h2>
-        <p v-if="!authStore.isLoggedIn"><a href="/login">Logga in</a> för att följa andra!</p>
-        <p v-else-if="profiles.length === 0">Börja följa folk för att se dem här!</p>
-        <div v-else="authStore.isLoggedIn" class="list">
+        <div v-if="!props.username">
+            <p v-if="!authStore.isLoggedIn"><a href="/login">Logga in</a> för att följa andra!</p>
+            <p v-else-if="profiles.length === 0">Börja följa folk för att se dem här!</p>
+        </div>
+        
+        <div class="list">
             <div v-if="profiles.length !== 0" v-for="profile in profiles" :key="profile.id">
-                <a :href="nameWithoutSpace(profile.username)" class="flex-row medium">
+                <a :href="formatNameForBackEnd(profile.username)" class="flex-row medium">
                     <img :src="backEndUrlBase + profile.profile_pic" alt="profilbild" class="profile-pic">
                     <span>{{ profile.username }}</span>
                 </a>
             </div>
+            <p v-else>{{ props.username }} följer ingen</p>
         </div>
     </div>
 </template>
@@ -49,7 +61,6 @@ watch(
 }
 
 .followed-list {
-    height: 100%;
-    margin-top: var(--default-gap);
+    height: inherit;
 }
 </style>

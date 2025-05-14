@@ -3,6 +3,7 @@
   --text-color: rgb(240, 240, 240);
   --detail-color: rgb(221, 221, 221);
   --link-color: rgb(255, 105, 180);
+  --error-color: rgba(255, 50, 50, 0.3);
 
   --default-border: 1px solid var(--detail-color);
   --default-border-radius: 1.5vw;
@@ -42,6 +43,7 @@ a {
   font-weight: 500;
   color: var(--link-color);
   text-decoration: inherit;
+  font-size: var(--medium-font-size);
 }
 a:hover {
   color: color-mix(in srgb, var(--link-color) 85%, #000);
@@ -60,6 +62,7 @@ input {
 input[type="file"] {
   display: none;
 }
+
 
 button {
   border-radius: 8px;
@@ -81,6 +84,14 @@ button:hover {
   gap: var(--profile-gap);
   align-items: center;
 }
+.flex-column {
+  display: flex;
+  flex-direction: column;
+}
+.flex-list {
+  flex: 1;
+}
+
 .input-row {
   display: flex;
   gap: calc(var(--default-gap)/2);
@@ -158,7 +169,7 @@ button:hover {
   max-height: 100vh;
 }
 .scrollable::-webkit-scrollbar {
-  width: 0.6vw;
+  width: 6px;
 }
 .scrollable::-webkit-scrollbar-track {
   background: none;
@@ -175,6 +186,16 @@ button:hover {
   text-align: center;
 }
 
+.container {
+  position: relative;
+}
+.over {
+  background-color: color-mix(in srgb, var(--primary-color) 90%, transparent);
+  position: absolute;
+  padding: 1vw;
+  border-radius: var(--default-border-radius);
+}
+
 .right {
   float: right;
 }
@@ -189,6 +210,31 @@ button:hover {
   font-size: var(--medium-font-size);
 }
 
+.error {
+  font-size: var(--xs-font-size);
+  background-color: var(--error-color);
+  padding: var(--default-padding);
+  border-radius: calc(var(--default-border-radius)/2);
+  margin-top: 2%;
+}
+
+@media only screen and (max-width: 1100px) {
+  :root {
+    --default-gap: 3vw;
+
+    --navbar-height: 10vw;
+
+    --icon-size: 4vw;
+    --big-icon-size: 6vw;
+
+    --profile-pic-size: 6vw;
+    --big-profile-pic-size: 12vw;
+
+    --xs-font-size: 1.8vw;
+    --small-font-size: 2.5vw;
+    --medium-font-size: 3vw;
+  }
+}
 @media only screen and (max-width: 600px) {
   :root  {
     --default-padding: 1.5vw;

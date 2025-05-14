@@ -18,6 +18,13 @@ const selectUserQuery = `
     LEFT JOIN followers ON users.id = followers.user2_id
 `;
 
+const selectFollowingByUserId = `
+    SELECT users.id, users.username, users.profile_pic 
+    FROM users 
+    LEFT JOIN followers ON users.id = followers.user2_id 
+    WHERE user1_id = ?
+`;
+
 // Hämtar användardata med namn
 export const getUserByName = async (req, res) => {
     const username = req.params.username;
@@ -151,16 +158,14 @@ export const changeFollowByName = async (req, res) => {
 };
 
 export const getFollowedUsers = async (req, res) => {
-    const userId = req.session.userId;
-    if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
+    let userId;
 
     try {
-        let [rows] = await db.query(`
-            SELECT users.id, users.username, users.profile_pic 
-            FROM users 
-            LEFT JOIN followers ON users.id = followers.user2_id 
-            WHERE user1_id = ?`
-        , [userId]);        
+        const username = req.params.username;
+        const [idResult] = await db.query("SELECT id FROM users WHERE username = ?", [username]);
+        userId = idResult[0].id;
+
+        let [rows] = await db.query(selectFollowingByUserId, [userId]);        
         rows = format.formatValuesForFrontEnd(rows);
 
         res.status(codes.OK).json({ users: rows });

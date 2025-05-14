@@ -250,7 +250,7 @@ label {
     grid-column-end: 3;
 }
 
-@media only screen and (max-width: 600px) {
+@media only screen and (max-width: 1100px) {
     .slider {
         width: 20vw;
         height: 1vw;

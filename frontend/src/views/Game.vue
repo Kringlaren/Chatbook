@@ -2,6 +2,7 @@
 import { ref, onMounted, onUnmounted, watch } from "vue";
 import { boot, resizeGame } from "../game/main.js";
 import { useAuthStore, useGameStore } from "../stores";
+import infoImg from "../assets/images/info.png";
 import Navbar from "../components/Navbar.vue";
 import Scoreboard from "../components/Scoreboard.vue";
 
@@ -9,6 +10,8 @@ const authStore = useAuthStore();
 const gameStore = useGameStore();
 
 const canvas = ref(null);
+
+const infoVisible = ref(false);
 
 const keys = {};
 
@@ -68,7 +71,15 @@ watch(
 <template>
     <Navbar></Navbar>
     <div class="layout">
-        <canvas ref="canvas"></canvas>
+        <div class="container">
+            <canvas ref="canvas"></canvas>
+            <button class="icon-button info-button" @click="infoVisible = !infoVisible"><img class="icon" :src="infoImg" alt="info"></button>
+            <p v-if="infoVisible" class="info over">
+                Infesterade mynt ger dig mer poäng per mynt, men var försiktig, de kan också framkalla en till zombie! <br>
+                Varje 16 mynt läggs ett till mynt till och både du och zombiesen blir snabbare!
+            </p>
+        </div>
+        
         <div class="stats">
             <div>
                 <h3>Dina stats</h3>
@@ -86,11 +97,8 @@ watch(
                 <Scoreboard></Scoreboard>
             </div>
         </div>
-        <p style="grid-area: 2 / 1 / 2 / 2;">
-            Infesterade mynt ger dig mer poäng per mynt, men var försiktig, de kan också framkalla en till zombie!
-            Varje 16 mynt läggs ett till mynt till och både du och zombiesen blir snabbare!
-        </p>
     </div>
+    <p class="not-supported">Sidan stödjer inte din skärmstorlek</p>
     
 </template>
 
@@ -101,14 +109,40 @@ canvas {
 ol {
     padding-left: var(--default-gap);
 }
+h3 {
+    margin:0;
+}
+
 .stats {
     margin:  var(--default-gap) calc(var(--default-gap)*4) 0 calc(var(--default-gap)*4);
 }
 .layout {
-    display: grid;
-    grid-template-columns: 3fr 1fr;
+    display: flex;
 }
 .scoreboard {
-    max-height: 15vw;
+    max-height: 16vw;
+}
+
+.info-button {
+    position: absolute;
+    top: var(--default-padding);
+    right: var(--default-padding);
+}
+.info {
+    top: 5%;
+    right: 1%;
+}
+
+.not-supported {
+    display: none;
+}
+
+@media only screen and (max-width: 600px) {
+    .layout {
+        display: none;
+    }
+    .not-supported {
+        display: block;
+    }
 }
 </style>

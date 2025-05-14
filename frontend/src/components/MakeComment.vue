@@ -37,12 +37,12 @@ const imageChange = (event) => {
     <div>
         <div v-if="authStore.isLoggedIn">
             <form @submit.prevent="createComment()">
-                <div class="inputrow">
+                <div class="input-row">
                     <input type="text" v-model="content" name="postContent" placeholder="Sprid dina åsikter!" required/>
-                    <div class="imgupload">
+                    <div class="img-upload">
                         <img class="icon" :src="selectImg" alt="Välj bild" @click="imageInput.click()" style="cursor: pointer">
                         <input type="file" ref="imageInput" @change="imageChange">
-                        <label for="imgUpload" class="imglabel">{{ imgName }}</label>
+                        <label for="imgUpload" class="img-slabel">{{ imgName }}</label>
                     </div>
                     <button type="submit">Kommentera!</button>
                 </div>                

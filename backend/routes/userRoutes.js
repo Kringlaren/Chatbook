@@ -10,7 +10,7 @@ router.post('/change-bio', changeBio);
 router.post('/change-color', changeColors);
 
 router.post('/follow', changeFollowByName);
-router.get('/followed-users', getFollowedUsers);
+router.get('/followed-users/:username', getFollowedUsers);
 
 router.get('/preferences', getUserPreferences);
 

@@ -1,11 +1,11 @@
 <script setup>
 import { ref, onMounted, watch } from 'vue';
 import { useRoute } from 'vue-router';
-import { getAllDefaultColors } from "../services/styleService.js";
 import { useUserStore, usePostStore, useAuthStore } from '../stores';
 import Navbar from '../components/Navbar.vue';
 import Post from '../components/Post.vue';
 import PostModal from '../components/PostModal.vue';
+import FollowedList from '../components/FollowedList.vue';
 
 const userStore = useUserStore();
 const postStore = usePostStore();
@@ -29,7 +29,7 @@ const expandedPost = ref(null);
 
 const bannerInput = ref(null);
 const profilePicInput = ref(null);
-const bioInput = ref("");
+
 const originalBio = ref("");
 
 onMounted(async () => {
@@ -133,7 +133,7 @@ const changeFollow = async () => {
         <Navbar></Navbar>
         <div v-if="user" class="user-page">
             <!--Banner-->
-            <div class="container">
+            <div class="container banner-container">
                 <div v-if="authStore.isLoggedIn && authStore.user.id === user.id">
                     <img class="banner" :src="backEndUrlBase + user.banner_img" alt="banderoll" @click="bannerInput.click()" style="cursor: pointer">
                     <input type="file" ref="bannerInput" style="display: none" @change="changeBanner" accept="image/*">
@@ -141,7 +141,7 @@ const changeFollow = async () => {
                 <img v-else class="banner" :src="backEndUrlBase + user.banner_img" alt="banderoll">
 
                 <!--Profil-->
-                <div class="profile over-banner left-pos">
+                <div class="flex-row over left-pos">
                     <div v-if="isLoggedInUser">
                         <img class="big-profile-pic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" @click="profilePicInput.click()" style="cursor: pointer">
                         <input type="file" ref="profilePicInput" style="display: none" @change="changeProfilePic">
@@ -149,8 +149,8 @@ const changeFollow = async () => {
                     <img v-else class="big-profile-pic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" accept="image/*">
                     <h1>{{ user.username }}</h1>
                 </div>
-                <!--Följningar-->
-                <div class="over-banner right-pos">
+                <!--Följare-->
+                <div class="over right-pos">
                     <div>
                         <span class="follow-count">{{ user.followers_count }} följare</span>
                         <button v-if="!isLoggedInUser && authStore.isLoggedIn" class="follow" @click="changeFollow">{{ follow }}</button>
@@ -159,14 +159,20 @@ const changeFollow = async () => {
             </div>
             <!--Main-->
             <div class="layout">
-                <!--Om-->
-                <div class="about">
-                    <h3>Om {{ user.username }}</h3>
-                    <textarea v-model="bio" v-if="user.bio || isLoggedInUser" :disabled="!isLoggedInUser"></textarea>
-                    <p v-else>{{ user.username }} har ingen beskrivning att visa</p>
-                    <button v-if="isLoggedInUser" @click="changeBio">Spara</button>
+                <div class="info">
+                    <!--Om-->
+                    <div class="about">
+                        <h3>Om {{ user.username }}</h3>
+                        <textarea v-model="bio" v-if="user.bio || isLoggedInUser" :disabled="!isLoggedInUser" maxlength="255"></textarea>
+                        <p v-else>{{ user.username }} har ingen beskrivning att visa</p>
+                        <button v-if="isLoggedInUser" @click="changeBio">Spara</button>
+                    </div>
+                    <!--Följer-->
+                    <div class="following flex-column">
+                        <h3>{{ user.username }} följer</h3>
+                        <FollowedList :username="user.username" class="flex-list"></FollowedList>
+                    </div>
                 </div>
-
                 <!--Inlägg-->
                 <div class="posts feed">
                     <h2>{{ user.username }}s inlägg</h2>
@@ -174,6 +180,7 @@ const changeFollow = async () => {
                         <Post :post="post" @comment-clicked="expandPost"></Post>
                     </div>
                     <p v-else>{{ user.username }} har inga inlägg</p>
+                    <p class="card">{{ user.username }} gick med {{ user.created_at }}</p>
                 </div>
             </div>
         </div>
@@ -185,6 +192,10 @@ const changeFollow = async () => {
 
 
 <style scoped>
+h3 {
+    margin-top:0;
+}
+
 .user-page {
     background-color: var(--primary-color);
     color: var(--text-color);
@@ -198,19 +209,13 @@ const changeFollow = async () => {
 .layout {
     display: grid;
     padding: var(--default-gap);
+    padding-bottom: 0;
 }
-.container {
-    position: relative;
-    grid-column-start: 1;
-    grid-column-end: 2;
+.banner-container {
+    grid-column: 1 3;
     grid-row: 1;
 }
-.over-banner {
-    background-color: color-mix(in srgb, var(--primary-color) 90%, transparent);;
-    position: absolute;
-    padding: 1vw;
-    border-radius: var(--default-border-radius);
-}
+
 .right-pos {
     right: 1vw;
     bottom: 1vw;
@@ -234,20 +239,71 @@ const changeFollow = async () => {
     width: 45vw;
 }
 
-.about {
+.info {
     text-align: left;
+    padding: 1vw;
     grid-row: 2;
     grid-column: 1;
     position: sticky;
+    height: fit-content;
     top: var(--navbar-height);
-    max-height: 10vw;
-    width: 35vw;
-    padding: 1vw;
+    display: flex;
+    flex-direction: column;
+}
+
+.about {
+    height: 15vw;
 }
 .about textarea {
     resize: none;
     width: 100%;
     padding: calc(var(--default-gap)/2);
     background-color: var(--primary-color);
+    font-size: var(--small-font-size);
+    font-family: var(--font-family);
+}
+
+.following {
+    height: calc(100vh - var(--navbar-height) - var(--default-gap) - 15vw);
+}
+@media only screen and (max-width: 1100px) {
+    .right-pos, .left-pos {
+        bottom: 2vw;
+    }
+
+    .layout {
+        grid-template-columns: 1fr 2fr;
+    }
+
+    .about {
+        height: 25vw;
+    }
+    .following {
+        height: calc(100vh - var(--navbar-height) - var(--default-gap) - 25vw);
+    }
+    .posts {
+        width: 55vw;
+    }
+}
+
+@media only screen and (max-width: 600px) {
+    .banner-container {
+        grid-column: 1;
+    }
+    .info {
+        position: inherit;
+        margin: 0 auto;
+    }
+    .posts {
+        grid-column: 1;
+        grid-row: 3;
+        width: 80vw;
+    }
+    .about {
+        height: fit-content;
+    }
+    .following {
+        display: none;
+    }
 }
 </style>

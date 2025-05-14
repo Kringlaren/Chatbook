@@ -24,8 +24,9 @@ const closePost = () => {
     <div class="scrollable">
         <Navbar></Navbar>
         <div class="main-content">
-            <div class="followed">
-                <FollowedList></FollowedList>
+            <div class="followed flex-column">
+                <h3>Följer</h3>
+                <FollowedList class="flex-list"></FollowedList>
             </div>
             <div class="post-feed feed">
                 <MakePost></MakePost>
@@ -56,12 +57,23 @@ const closePost = () => {
     grid-column: 1;
     position: fixed;
     height: var(--height-under-nav);
+    padding-top: var(--default-gap);
 }
 
 .ads {
     grid-column: 3; 
     float: right;
     margin: var(--default-gap) 0;
+}
+
+@media only screen and (max-width: 1100px) {
+    .main-content {
+        grid-template-columns: 1fr 2fr;
+    }
+
+    .ads {
+        display: none;
+    }
 }
 
 @media only screen and (max-width: 600px) {
@@ -71,9 +83,6 @@ const closePost = () => {
     }
 
     .followed {
-        display: none;
-    }
-    .ads {
         display: none;
     }
 }

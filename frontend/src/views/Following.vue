@@ -6,8 +6,9 @@ import Navbar from "../components/Navbar.vue";
 
 <template>
     <Navbar></Navbar>
-    <div class="box">
-        <FollowedList></FollowedList>
+    <div class="box flex-column">
+        <h3>Du följer</h3>
+        <FollowedList class="flex-list"></FollowedList>
     </div>
 </template>
 

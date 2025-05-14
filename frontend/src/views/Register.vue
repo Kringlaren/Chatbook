@@ -3,6 +3,8 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { checkUserName, checkUserPassword } from "../services/validationService.js";
 import { useAuthStore } from '../stores';
+import profileImg from '../assets/images/pp.png';
+
 const authStore = useAuthStore();
 
 const router = useRouter();
@@ -55,29 +57,59 @@ const checkPassword = () => {
 </script>
 
 <template>
-    <div>
+    <div class="flex-column center">
         <h1>Registrera dig!</h1>
-        <form @submit.prevent="register">
+        <div class="card form">
             <div>
-                <div>
-                    <label for="username">Användarnamn</label>
+                <img class="big-profile-pic" :src="profileImg" alt="profilbild">
+            </div>
+            <form @submit.prevent="register">
+                <div class="left">
+                    <label for="username"><b>Användarnamn</b></label>
                     <input v-model="username" @blur="checkName" type="text" id="username" maxlength="50" placeholder="ex John Doe" required />
-                </div>
-                <div v-if="usernameError">{{ usernameError }}</div>
-            </div>
-            <div>
-                <div>
-                    <label for="password">Lösenord</label>
+                    <div v-if="usernameError" class="error">{{ usernameError }}</div>
+
+                    <label for="password"><b>Lösenord</b></label>
                     <input v-model="password" @blur="checkPassword" type="password" id="password" maxlength="255" required />
+                    <div v-if="passwordError" class="error">{{ passwordError }}</div>
                 </div>
-                <div v-if="passwordError">{{ passwordError }}</div>
-            </div>
-            <button type="submit">Skapa konto</button>
-            <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
-        </form>
-    </div>
-    <div>
+                <button type="submit">Skapa konto</button>
+                <p v-if="errorMessage" class="error">{{ errorMessage }}</p>
+            </form>
+        </div>
         <p>Hur du redan ett konto?</p>
         <a href="login">Logga in här</a>
     </div>
 </template>
+
+<style scoped>
+input, .form {
+    box-sizing: border-box;
+}
+input {
+    width: 100%;
+}
+button {
+    margin-top: var(--default-gap);
+}
+p {
+    margin-bottom: 0;
+}
+.form {
+    width: 40vw;
+    margin-bottom: var(--default-gap);
+}
+.left {
+    text-align: left;
+    width: 100%;
+}
+.center {
+    align-items: center;
+}
+
+@media only screen and (max-width: 1100px) {
+    .form {
+        width: 75vw;
+    }
+}
+</style>

@@ -37,8 +37,8 @@ const imageChange = (event) => {
                 <div class="input-row">
                     <textarea v-model="content" name="postContent" maxlength="255" required></textarea>
                     <div class="img-upload">
-                        <img class="big-icon" :src="selectImg" alt="Välj bild" id="imgUpload" @click="imageInput.click()" style="cursor: pointer">
-                        <input type="file" ref="imageInput" @change="imageChange">
+                        <img class="big-icon" :src="selectImg" alt="Välj bild" @click="imageInput.click()" style="cursor: pointer">
+                        <input type="file" ref="imageInput" id="imgUpload" @change="imageChange">
                         <label for="imgUpload" class="img-label">{{ imgName }}</label>
                     </div>
                 </div>

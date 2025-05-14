@@ -30,7 +30,7 @@ const logOutUser = async () => {
         <div class="nav-left">
             <a href="/">Hem</a>
             <a href="following">Följer</a>
-            <a href="game">Spel</a>
+            <a href="game" class="mobile-not-supported">Spel</a>
         </div>
         
         <!--Höger-->
@@ -95,6 +95,9 @@ const logOutUser = async () => {
         .settings {
             top: 5%;
             right: 25%;
+        }
+        .mobile-not-supported {
+            display: none;
         }
     }
 </style>
