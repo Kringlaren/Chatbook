@@ -4,6 +4,7 @@ import { useAuthStore, useUserStore } from "../stores/";
 import StyleSettings from "./StyleSettings.vue";
 import settingsImg from '../assets/images/settings.png';
 import settingsSelectedImg from '../assets/images/settingsselected.png';
+import { formatNameForBackEnd } from "../services/format";
 
 const authStore = useAuthStore();
 const userStore = useUserStore();
@@ -12,12 +13,11 @@ const userStore = useUserStore();
 const pp = computed(() => userStore.userPreferences?.profile_pic || "");
 const name = computed(() => authStore.user?.username || "");
 
-const nameWithoutSpace = name.value.replace(/\s/, ".");
+const nameWithoutSpace = formatNameForBackEnd(name.value);
 
 const urlBase = import.meta.env.VITE_URL_BASE;
 
 const settingsVisible = ref(false);
-
 
 const logOutUser = async () => {
     await authStore.logOutUser();
@@ -30,25 +30,25 @@ const logOutUser = async () => {
         <div class="nav-left">
             <a href="/">Hem</a>
             <a href="following">Följer</a>
-            <a href="game" class="mobile-not-supported">Spel</a>
+            <a href="game" class="narrow-screen-not-supported">Spel</a>
         </div>
         
         <!--Höger-->
         <div class="nav-right">
             <div class="flex-row">
                 <div>
-                    <a :href="nameWithoutSpace" v-if="authStore.isLoggedIn" class="flex-row">
+                    <a :href="'user/' + nameWithoutSpace" v-if="authStore.isLoggedIn" class="flex-row">
                         <p>{{ name }}</p>
                         <div class="flex-row"><img class="profile-pic" :src="urlBase + pp" alt="profilbild"></div>
                     </a>
                     <a v-else href="login">Logga in</a>
                 </div>
-                <button v-if="authStore.isLoggedIn" @click="logOutUser">
-                    Logga ut
-                </button>
+                <button v-if="authStore.isLoggedIn" @click="logOutUser">Logga ut</button>
             </div>
             <div v-if="authStore.isLoggedIn">
-                <button class="icon-button" @click="settingsVisible = !settingsVisible"><img class="big-icon" :src="settingsVisible ? settingsSelectedImg : settingsImg"></button>
+                <button class="icon-button" @click="settingsVisible = !settingsVisible">
+                    <img class="big-icon" :src="settingsVisible ? settingsSelectedImg : settingsImg">
+                </button>
                 <div v-if="settingsVisible" class="settings">
                     <StyleSettings></StyleSettings>
                 </div>
@@ -95,9 +95,6 @@ const logOutUser = async () => {
         .settings {
             top: 5%;
             right: 25%;
-        }
-        .mobile-not-supported {
-            display: none;
         }
     }
 </style>

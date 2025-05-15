@@ -6,14 +6,14 @@ import selectImg from "../assets/images/selectimg.png";
 const postStore = usePostStore();
 const authStore = useAuthStore();
 
-const content = ref("");
+const textContent = ref("");
 const img = ref(null);
 const imageInput = ref(null);
 const imgName = ref("");
 
 const createPost = async () => {
-    const res = await postStore.createPost(content.value, img.value);
-    content.value = "";
+    const res = await postStore.createPost(textContent.value, img.value);
+    textContent.value = "";
     img.value = null;
     if (res.error) {
         alert(res.error);
@@ -30,15 +30,15 @@ const imageChange = (event) => {
 </script>
 
 <template>
-    <div class="border">
+    <div class="card">
         <div v-if="authStore.isLoggedIn">
             <h2>Skapa inlägg</h2>
             <form @submit.prevent="createPost()">
                 <div class="input-row">
-                    <textarea v-model="content" name="postContent" maxlength="255" required></textarea>
+                    <textarea v-model="textContent" name="postContent" maxlength="255" required></textarea>
                     <div class="img-upload">
                         <img class="big-icon" :src="selectImg" alt="Välj bild" @click="imageInput.click()" style="cursor: pointer">
-                        <input type="file" ref="imageInput" id="imgUpload" @change="imageChange">
+                        <input type="file" ref="imageInput" id="imgUpload" @change="imageChange" accept="image/*">
                         <label for="imgUpload" class="img-label">{{ imgName }}</label>
                     </div>
                 </div>

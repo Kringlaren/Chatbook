@@ -5,6 +5,7 @@ import {Maze} from "./maze.js";
 const maxlives = 3;
 const multiplierAddage = 0.2;
 const speedIncrease = 1.1;
+const startingZomieCount = 3;
 
 const Feature = {
     Floor: 0,
@@ -24,7 +25,7 @@ let player;
 let zombies = [];
 let maze;
 let coins = 0;
-let lives = 3;
+let lives = maxlives;
 let points = 0;
 let pointsMultiplyer = 1.0;
 
@@ -53,6 +54,7 @@ export function boot(canvas, bootStats, bootKeys){
     ctx = canvas.getContext("2d");
 
     stats = bootStats;
+    stats.lives.value = maxlives;
     keys = bootKeys;
 
     pb = stats.pb.value;
@@ -63,7 +65,7 @@ export function boot(canvas, bootStats, bootKeys){
     maze.drawMaze();
     player.drawPlayer(ctx);
 
-    addZombies(3);
+    addZombies(startingZomieCount);
 
     requestAnimationFrame(process);
 }

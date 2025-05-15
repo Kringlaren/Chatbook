@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { ref } from "vue";
 import Feed from "../components/Feed.vue";
 import Navbar from "../components/Navbar.vue";
 import MakePost from "../components/MakePost.vue";
@@ -10,14 +10,14 @@ import gameImg from "../assets/images/zombiegame.png";
 
 const expandedPost = ref(null);
 
-const scoreboardTop = 10
+const scoreboardTop = 10;
 
 const expandPost = (post) => {
     expandedPost.value = post;
 };
 const closePost = () => {
     expandedPost.value = null;
-}
+};
 </script>
 
 <template>
@@ -26,16 +26,16 @@ const closePost = () => {
         <div class="main-content">
             <div class="followed flex-column">
                 <h3>Följer</h3>
-                <FollowedList class="flex-list"></FollowedList>
+                <FollowedList></FollowedList>
             </div>
-            <div class="post-feed feed">
+            <div class="post-feed flex-column">
                 <MakePost></MakePost>
                 <Feed @comment-clicked="expandPost"></Feed>
             </div>
             <div class="ads">
                 <img class="ad-img" :src="gameImg">
                 <Scoreboard :top="scoreboardTop"></Scoreboard>
-                <a class="gamelink" href="game"><button>Spela Zombielabyrinten!</button></a>
+                <a href="game"><button>Spela Zombielabyrinten!</button></a>
             </div>
         </div>
         <PostModal v-if="expandedPost" @close="closePost" :post="expandedPost"></PostModal>
@@ -49,15 +49,19 @@ const closePost = () => {
     gap: calc(var(--default-gap)*3);
     margin: 0 var(--default-gap);
 }
+
 .post-feed {
     grid-column: 2;
     margin: var(--default-gap) 0;
+    width: 45vw;
 }
+
 .followed {
     grid-column: 1;
     position: fixed;
     height: var(--height-under-nav);
     padding-top: var(--default-gap);
+    width: 25%;
 }
 
 .ads {
@@ -66,9 +70,14 @@ const closePost = () => {
     margin: var(--default-gap) 0;
 }
 
+/*Reklam visas inte under 1100px, följningar visas inte under 600px*/
 @media only screen and (max-width: 1100px) {
     .main-content {
         grid-template-columns: 1fr 2fr;
+    }
+
+    .post-feed {
+        width: 67vw;
     }
 
     .ads {
@@ -80,6 +89,10 @@ const closePost = () => {
     .main-content {
         display: block;
         margin: var(--default-gap);
+    }
+
+    .post-feed {
+        width: 90vw;
     }
 
     .followed {

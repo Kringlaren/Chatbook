@@ -5,14 +5,16 @@ import Register from "../views/Register.vue";
 import UserPage from "../views/UserPage.vue";
 import Game from "../views/Game.vue";
 import Following from "../views/Following.vue";
+import NotFound from "../views/404.vue";
 
 const routes = [
     { path: "/", component: Home },
     { path: "/login", component: LogIn },
     { path: "/register", component: Register },
-    { path: "/:username", component: UserPage },
+    { path: "/user/:username", component: UserPage },
     { path: "/game", component:  Game },
-    { path: "/following", component: Following }
+    { path: "/following", component: Following },
+    { path: '/:pathMatch(.*)*', component: NotFound }
 ];
 
 const router = createRouter({

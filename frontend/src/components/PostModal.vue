@@ -2,6 +2,7 @@
 import Post from './Post.vue';
 import Comments from './Comments.vue';
 import MakeComment from './MakeComment.vue';
+
 const props = defineProps({
     post: Object
 });
@@ -19,7 +20,7 @@ const close = () => {
             <h2>{{ post.username }}s inlägg</h2>
 
             <div class="scrollable">
-                <div class="content">
+                <div class="content flex-column card">
                     <div><Post :post="post" :modal="true"></Post></div> 
                     <p>Kommentarer</p>  
                     <div><MakeComment :post="post"></MakeComment></div> 
@@ -33,13 +34,13 @@ const close = () => {
 
 <style scoped>
 .back-drop {
-  position: fixed;
-  top: 0; left: 0; right: 0; bottom: 0;
-  background-color: rgba(0, 0, 0, 0.6);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 999;
+    position: fixed;
+    top: 0; left: 0; right: 0; bottom: 0;
+    background-color: rgba(0, 0, 0, 0.6);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 999;
 }
 .panel {
     padding: var(--default-padding);
@@ -54,13 +55,17 @@ const close = () => {
 
 .content {
     width: 45vw;
-    display: flex;
-    flex-direction: column;
     align-self: center;
-    border: var(--default-border);
     border-radius: calc(var(--default-border-radius)/2);
 }
-
+@media only screen and (max-width: 1100px) {
+    .panel {
+        width: 70vw;
+    }
+    .content {
+        width: 65vw;
+    }
+}
 @media only screen and (max-width: 600px) {
     .panel {
         width: 80vw;

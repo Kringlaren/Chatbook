@@ -17,7 +17,7 @@ const keys = {};
 
 const stats = {
   coins: ref(0),
-  lives: ref(3),
+  lives: ref(0),
   points: ref(0),
   pointsMultiplier: ref(1.0),
   pb: ref(0),
@@ -27,7 +27,6 @@ const stats = {
 function handleKeyDown(e) {
     keys[e.key.toLowerCase()] = true;
 }
-
 function handleKeyUp(e) {
     keys[e.key.toLowerCase()] = false;
 }
@@ -51,13 +50,14 @@ onMounted(async () => {
     }
 });
 
+// Tar bort eventlisteners när sidan ändras för att de inte ska vara kvar på andra delar av webbplatsen
 onUnmounted(() => {
     document.removeEventListener('keydown', handleKeyDown);
     document.removeEventListener('keyup', handleKeyUp);
     window.removeEventListener('resize', handleResize);
 });
 
-
+// När personbästat uppdateras i spelet sparas poängen i databasen
 watch(
     () => stats.pb.value,
     async (score) => {
@@ -83,14 +83,14 @@ watch(
         <div class="stats">
             <div>
                 <h3>Dina stats</h3>
-                <p id="coins">Mynt samlade: {{ stats.coins }}</p>
-                <p id="pointsmult">x{{ stats.pointsMultiplier }} Poäng</p>
+                <p>Mynt samlade: {{ stats.coins }}</p>
+                <p>x{{ stats.pointsMultiplier }} Poäng</p>
                 <hr>
-                <p id="points">Poäng: {{ stats.points }}</p>
-                <p id="lives">Liv kvar: {{ stats.lives }}</p>
+                <p>Poäng: {{ stats.points }}</p>
+                <p>Liv kvar: {{ stats.lives }}</p>
                 <hr>
-                <p id="pb">Personbästa: {{ stats.pb }}</p>
-                <p id="lastscore">Förra: {{ stats.lastScore }}</p>
+                <p>Personbästa: {{ stats.pb }}</p>
+                <p>Förra: {{ stats.lastScore }}</p>
             </div>
 
             <div class="scrollable scoreboard">
@@ -98,17 +98,14 @@ watch(
             </div>
         </div>
     </div>
-    <p class="not-supported">Sidan stödjer inte din skärmstorlek</p>
-    
+    <p class="not-supported-info">Sidan stödjer inte din skärmstorlek</p>
 </template>
 
 <style scoped>
 canvas {
     float: left;
 }
-ol {
-    padding-left: var(--default-gap);
-}
+
 h3 {
     margin:0;
 }
@@ -116,9 +113,11 @@ h3 {
 .stats {
     margin:  var(--default-gap) calc(var(--default-gap)*4) 0 calc(var(--default-gap)*4);
 }
+
 .layout {
     display: flex;
 }
+
 .scoreboard {
     max-height: 16vw;
 }
@@ -133,15 +132,28 @@ h3 {
     right: 1%;
 }
 
-.not-supported {
+.not-supported-info {
     display: none;
+}
+
+/*Inte jättabra stöd för smalare skärmar och inget alls för mobiler och liknande*/
+@media only screen and (max-width: 1100px) {
+    canvas {
+        float: none;
+    }
+    .layout {
+        flex-direction: column;
+    }
+    .scoreboard {
+        max-height: 25vw;
+    }
 }
 
 @media only screen and (max-width: 600px) {
     .layout {
         display: none;
     }
-    .not-supported {
+    .not-supported-info {
         display: block;
     }
 }

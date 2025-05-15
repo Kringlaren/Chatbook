@@ -11,9 +11,9 @@ const userStore = useUserStore();
 const postStore = usePostStore();
 const authStore = useAuthStore();
 
-const isLoggedInUser = ref(false);
-
 const route = useRoute();
+
+const isLoggedInUser = ref(false);
 
 const backEndUrlBase = import.meta.env.VITE_URL_BASE;
 
@@ -21,22 +21,23 @@ const username = route.params.username;
 const user = ref(null);
 const userPosts = ref([]);
 const bio = ref("");
-const follow = ref("");
 
-const errorMessageUser = ref("");
+const originalBio = ref("");
+const followOrUnfollow = ref("");
+
+const errorMessage = ref("");
 
 const expandedPost = ref(null);
 
 const bannerInput = ref(null);
 const profilePicInput = ref(null);
 
-const originalBio = ref("");
-
+// Hämtar användardata, inlägg, följstatus och om användaren är den inloggade användaren
 onMounted(async () => {
     const userRes = await userStore.fetchUserByUsername(username);
     
     if (userRes.error) {
-        errorMessageUser.value = userRes.error;
+        errorMessage.value = userRes.error;
     } else {
         user.value = userRes.user;
     }
@@ -56,12 +57,13 @@ onMounted(async () => {
     }
 
     if (user.value.followed_by_user === 1) {
-        follow.value = "Avfölj";
+        followOrUnfollow.value = "Avfölj";
     } else {
-        follow.value = "Följ";
+        followOrUnfollow.value = "Följ";
     }
 });
 
+// Uppdaterar isLoggedInUser om man loggar ut/in
 watch(
   () => authStore.isLoggedIn,
   async () => {
@@ -119,13 +121,13 @@ const changeFollow = async () => {
         alert(res.error);
     }
     if (res.user.followed_by_user) {
-        follow.value = "Avfölj";
+        followOrUnfollow.value = "Avfölj";
         user.value.followers_count++;
     } else {
-        follow.value = "Följ";
+        followOrUnfollow.value = "Följ";
         user.value.followers_count--;
     }
-}
+};
 </script>
 
 <template>
@@ -136,7 +138,7 @@ const changeFollow = async () => {
             <div class="container banner-container">
                 <div v-if="authStore.isLoggedIn && authStore.user.id === user.id">
                     <img class="banner" :src="backEndUrlBase + user.banner_img" alt="banderoll" @click="bannerInput.click()" style="cursor: pointer">
-                    <input type="file" ref="bannerInput" style="display: none" @change="changeBanner" accept="image/*">
+                    <input type="file" ref="bannerInput" @change="changeBanner" accept="image/*">
                 </div>
                 <img v-else class="banner" :src="backEndUrlBase + user.banner_img" alt="banderoll">
 
@@ -144,16 +146,16 @@ const changeFollow = async () => {
                 <div class="flex-row over left-pos">
                     <div v-if="isLoggedInUser">
                         <img class="big-profile-pic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" @click="profilePicInput.click()" style="cursor: pointer">
-                        <input type="file" ref="profilePicInput" style="display: none" @change="changeProfilePic">
+                        <input type="file" ref="profilePicInput" @change="changeProfilePic" accept="image/*">
                     </div>
-                    <img v-else class="big-profile-pic" :src="backEndUrlBase + user.profile_pic" alt="profilbild" accept="image/*">
+                    <img v-else class="big-profile-pic" :src="backEndUrlBase + user.profile_pic" alt="profilbild">
                     <h1>{{ user.username }}</h1>
                 </div>
                 <!--Följare-->
                 <div class="over right-pos">
                     <div>
                         <span class="follow-count">{{ user.followers_count }} följare</span>
-                        <button v-if="!isLoggedInUser && authStore.isLoggedIn" class="follow" @click="changeFollow">{{ follow }}</button>
+                        <button v-if="!isLoggedInUser && authStore.isLoggedIn" class="follow-butn" @click="changeFollow">{{ followOrUnfollow }}</button>
                     </div>
                 </div>
             </div>
@@ -170,21 +172,21 @@ const changeFollow = async () => {
                     <!--Följer-->
                     <div class="following flex-column">
                         <h3>{{ user.username }} följer</h3>
-                        <FollowedList :username="user.username" class="flex-list"></FollowedList>
+                        <FollowedList :username="user.username"></FollowedList>
                     </div>
                 </div>
                 <!--Inlägg-->
-                <div class="posts feed">
+                <div class="posts flex-column">
                     <h2>{{ user.username }}s inlägg</h2>
                     <div v-if="userPosts.length !== 0" v-for="post in userPosts" :key="post.id">
                         <Post :post="post" @comment-clicked="expandPost"></Post>
                     </div>
                     <p v-else>{{ user.username }} har inga inlägg</p>
-                    <p class="card">{{ user.username }} gick med {{ user.created_at }}</p>
+                    <div class="card">{{ user.username }} gick med {{ user.created_at }}</div>
                 </div>
             </div>
         </div>
-        <p v-else-if="errorMessageUser">{{ errorMessageUser }}</p>
+        <p v-else-if="errorMessage">{{ errorMessage }}</p>
         <p v-else>Laddar...</p>
         <PostModal v-if="expandedPost" @close="closePost" :post="expandedPost"></PostModal>
     </div>
@@ -192,7 +194,7 @@ const changeFollow = async () => {
 
 
 <style scoped>
-h3 {
+h3, h2 {
     margin-top:0;
 }
 
@@ -208,6 +210,7 @@ h3 {
 }
 .layout {
     display: grid;
+    grid-template-columns: 2fr 3fr;
     padding: var(--default-gap);
     padding-bottom: 0;
 }
@@ -225,7 +228,7 @@ h3 {
     bottom: 1vw;
 }
 
-.follow {
+.follow-butn {
     font-size: var(--small-font-size);
     margin-left: 1vw;
 }
@@ -237,6 +240,7 @@ h3 {
     grid-row: 2;
     grid-column: 2;
     width: 45vw;
+    margin: var(--default-gap) 0;
 }
 
 .info {
@@ -245,10 +249,11 @@ h3 {
     grid-row: 2;
     grid-column: 1;
     position: sticky;
-    height: fit-content;
+    height: var(--height-under-nav);
     top: var(--navbar-height);
     display: flex;
     flex-direction: column;
+    width: 90%;
 }
 
 .about {
@@ -256,7 +261,7 @@ h3 {
 }
 .about textarea {
     resize: none;
-    width: 100%;
+    width: 30vw;
     padding: calc(var(--default-gap)/2);
     background-color: var(--primary-color);
     font-size: var(--small-font-size);
@@ -265,6 +270,7 @@ h3 {
 
 .following {
     height: calc(100vh - var(--navbar-height) - var(--default-gap) - 15vw);
+    width: 30vw;
 }
 @media only screen and (max-width: 1100px) {
     .right-pos, .left-pos {
@@ -287,12 +293,21 @@ h3 {
 }
 
 @media only screen and (max-width: 600px) {
+    h1 {
+        font-size: var(--medium-font-size);
+    }
     .banner-container {
         grid-column: 1;
+    }
+    .layout {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
     }
     .info {
         position: inherit;
         margin: 0 auto;
+        height: fit-content;
     }
     .posts {
         grid-column: 1;
@@ -301,6 +316,9 @@ h3 {
     }
     .about {
         height: fit-content;
+    }
+    .about textarea {
+        width: 75vw;
     }
     .following {
         display: none;

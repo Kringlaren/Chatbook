@@ -5,7 +5,7 @@
   --link-color: rgb(255, 105, 180);
   --error-color: rgba(255, 50, 50, 0.3);
 
-  --default-border: 1px solid var(--detail-color);
+  --default-border: 1.2px solid var(--detail-color);
   --default-border-radius: 1.5vw;
 
   --default-padding: 1vw;
@@ -20,6 +20,7 @@
   --icon-size: 2vw;
   --big-icon-size: calc(var(--navbar-height)*3/4);
 
+  --small-profile-pic-size: 3vw;
   --profile-pic-size: 3.5vw;
   --big-profile-pic-size: 8vw;
 
@@ -47,6 +48,12 @@ a {
 }
 a:hover {
   color: color-mix(in srgb, var(--link-color) 85%, #000);
+}
+
+h1 {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 body {
@@ -79,17 +86,24 @@ button:hover {
   border-color: var(--link-color);
 }
 
-.flex-row {
+.profile {
   display: flex;
   gap: var(--profile-gap);
   align-items: center;
 }
-.flex-column {
+
+.flex-row, .flex-column {
   display: flex;
+  gap: var(--default-gap);
+}
+.flex-row {
+  align-items: center;
+}
+.flex-column {
   flex-direction: column;
 }
-.flex-list {
-  flex: 1;
+.center {
+  align-items: center;
 }
 
 .input-row {
@@ -101,7 +115,7 @@ button:hover {
 
 .img-upload {
   position: relative;
-  width: 5vw;
+  width: var(--big-icon-size);
 }
 .img-label {
   display: block;
@@ -111,24 +125,21 @@ button:hover {
   text-overflow: ellipsis;
 }
 
-.profile-pic {
+.small-profile-pic, .profile-pic, .big-profile-pic {
   border-radius: 100%;
   object-fit: cover;
+}
+.small-profile-pic {
+  width: var(--small-profile-pic-size);
+  height: var(--small-profile-pic-size);
+}
+.profile-pic {
   width: var(--profile-pic-size);
   height: var(--profile-pic-size);
 }
 .big-profile-pic {
-  border-radius: 100%;
-  object-fit: cover;
   width: var(--big-profile-pic-size);
   height: var(--big-profile-pic-size);
-}
-
-.feed {
-  display: flex;
-  flex-direction: column;
-  gap: var(--default-gap);
-  justify-self: center;
 }
 
 .icon-button {
@@ -140,6 +151,7 @@ button:hover {
 .icon {
   width: var(--icon-size);
   height: var(--icon-size);
+  cursor: pointer;
 }
 
 .big-icon {
@@ -152,6 +164,12 @@ button:hover {
   border: var(--default-border);
   border-radius: var(--default-border-radius);
   padding: var(--default-padding);
+}
+
+.ignore-padding {
+  position: relative;
+  left: calc(0px - var(--default-padding));
+  width: calc(100% + var(--default-padding) * 2);
 }
 
 .ad-img {
@@ -196,6 +214,18 @@ button:hover {
   border-radius: var(--default-border-radius);
 }
 
+/*För långa namn förkortas med ... vid upplösningar där för långa namn är möjliga*/
+.name {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.user-text {
+  font-size: var(--small-font-size);
+  overflow-wrap: break-word;
+}
+
 .right {
   float: right;
 }
@@ -227,6 +257,7 @@ button:hover {
     --icon-size: 4vw;
     --big-icon-size: 6vw;
 
+    --small-profile-pic-size: 5vw;
     --profile-pic-size: 6vw;
     --big-profile-pic-size: 12vw;
 
@@ -247,10 +278,16 @@ button:hover {
 
     --icon-size: 5vw;
     --big-icon-size: 7vw;
+
+    --small-profile-pic-size: 6vw;
     --profile-pic-size: 8vw;
 
     --xs-font-size: 2vw;
     --small-font-size: 3vw;
     --medium-font-size: 3.5vw;
+  }
+
+  .narrow-screen-not-supported {
+    display: none;
   }
 }

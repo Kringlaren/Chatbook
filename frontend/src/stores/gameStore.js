@@ -9,6 +9,7 @@ export const useGameStore = defineStore('game', {
     }),
 
     actions: {
+        // Sparar poäng genom att lägga till om användaren inte finns eller byta ut om den finns oavsätt top-antalet, sorterar sedan 
         async saveScore(score) {
             const res = await this.handleGameRequest("post", "save-score", {score});
             if (res.error) {
@@ -33,7 +34,10 @@ export const useGameStore = defineStore('game', {
             return res.data
         },
 
+        // Hämtar alla poäng och antingen sparar top-antalet eller alla
         async fetchScoreboard(top = 0) {
+            this.top = top;
+
             const res = await this.handleGameRequest("get", "scoreboard");
             if (res.error) {
                 return { error: "Kunde inte hämta poängdata" }
@@ -75,6 +79,6 @@ export const useGameStore = defineStore('game', {
             } finally {
               this.loading = false;
             }
-          }
+        }
     }
 });

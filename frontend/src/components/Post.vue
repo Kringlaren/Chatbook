@@ -3,19 +3,23 @@ import { usePostStore, useAuthStore } from "../stores";
 import likedImg from '../assets/images/liked.png';
 import likeImg from '../assets/images/like.png';
 import commentImg from '../assets/images/comment.png';
+import { formatNameForBackEnd } from "../services/format";
+
 const postStore = usePostStore();
 const authStore = useAuthStore();
+
 const props = defineProps({
     post: Object,
     modal: { type: Boolean, default: false } 
 });
+
 const emit = defineEmits(['comment-clicked']);
 
 const backEndUrlBase = import.meta.env.VITE_URL_BASE;
 
-const usernameNoSpace = props.post.username.replace(/\s+/g, ".");
+const usernameNoSpace = formatNameForBackEnd(props.post?.username);
 
-
+// Uppdaterar front-end inlägget med svar från servern
 const changeLikeOnPost = async () => {
     const res = await postStore.changeLikeOnPost(props.post.id);
     if (!res.error) {
@@ -31,20 +35,18 @@ const expandPost = async () => {
 </script>
 
 <template>
-    <div :class="{ 'border' : !modal }" class="post" >
-        <div class="content-padding">
-            <div class="flex-row">
-                <img :src="backEndUrlBase + post.profile_pic" alt="Profilbild" class="profile-pic">
-                <h3><a class="medium":href="usernameNoSpace">{{ post.username }}</a></h3>
-                <p>-</p>
-                <p>{{ post.created_at }}</p>
-            </div>
-        
-            <p class="text-content">{{ post.content }}</p>
+    <div :class="{ 'card' : !modal }" class="post" >
+        <div class="profile">
+            <img :src="backEndUrlBase + post.profile_pic" alt="Profilbild" class="profile-pic">
+            <h3><a :href="'user/' + usernameNoSpace">{{ post.username }}</a></h3>
+            <p>-</p>
+            <p>{{ post.created_at }}</p>
         </div>
         
-        <img v-if="post.image" :src="backEndUrlBase + post.image" alt="Inläggsbild" class="post-img">
-        <div class="actions">
+        <p class="user-text">{{ post.content }}</p>
+        
+        <img v-if="post.image" :src="backEndUrlBase + post.image" alt="Inläggsbild" class="post-img ignore-padding">
+        <div class="actions ignore-padding">
             <div>
                 <span>{{ post.like_count }}</span>
                 <button v-if="authStore.isLoggedIn" @click="changeLikeOnPost" class="icon-button"><img class="icon" :src="post.liked_by_user ? likedImg : likeImg" alt="gilla"></button>
@@ -63,26 +65,13 @@ const expandPost = async () => {
 .post {
     text-align: left;
     width: 100%;
-    border-radius: var(--default-border-radius);
-    background-color: var(--primary-color);
-    color: var(--text-color);
-}
-.border {
-    border: var(--default-border);
+    box-sizing: border-box;
 }
 
 .post-img {
-  width: 100%;
-  height: auto;
+    height: auto;
 }
 
-.content-padding {
-    padding: var(--default-padding) var(--default-padding) 0 var(--default-padding);
-}
-.text-content {
-    font-size: var(--small-font-size);
-    word-break: break-all;
-}
 .actions {
     display: flex;
     gap: var(--default-gap);

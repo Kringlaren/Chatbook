@@ -3,24 +3,30 @@ import { ref, onMounted } from "vue";
 import { useUserStore } from "../stores";
 
 const userStore = useUserStore();
+
 let changeMade = false;
+
 let primaryColor;
 let textColor;
 let detailColor;
 let linkColor;
 
+// p - primary
 const pr = ref(255);
 const pg = ref(255);
 const pb = ref(255);
 
+// t - text
 const tr = ref(255);
 const tg = ref(255);
 const tb = ref(255);
 
+// d - detail
 const dr = ref(255);
 const dg = ref(255);
 const db = ref(255);
 
+// l - link
 const lr = ref(255);
 const lg = ref(255);
 const lb = ref(255);
@@ -102,34 +108,35 @@ const resetColors = (type) => {
 };
 
 const setSlidersFromComputedColor = () => {
-  const style = getComputedStyle(document.documentElement);
-  const primary = style.getPropertyValue('--primary-color');
-  const text = style.getPropertyValue('--text-color');
-  const detail = style.getPropertyValue('--detail-color');
-  const link = style.getPropertyValue('--link-color');
-
-  const [epr, epg, epb] = extractRGB(primary);
-  const [etr, etg, etb] = extractRGB(text);
-  const [edr, edg, edb] = extractRGB(detail);
-  const [elr, elg, elb] = extractRGB(link);
-
-  pr.value = epr;
-  pg.value = epg;
-  pb.value = epb;
-
-  tr.value = etr;
-  tg.value = etg;
-  tb.value = etb;
-
-  dr.value = edr;
-  dg.value = edg;
-  db.value = edb;
-
-  lr.value = elr;
-  lg.value = elg;
-  lb.value = elb;
+    const style = getComputedStyle(document.documentElement);
+    const primary = style.getPropertyValue('--primary-color');
+    const text = style.getPropertyValue('--text-color');
+    const detail = style.getPropertyValue('--detail-color');
+    const link = style.getPropertyValue('--link-color');
+    
+    const [epr, epg, epb] = extractRGB(primary);
+    const [etr, etg, etb] = extractRGB(text);
+    const [edr, edg, edb] = extractRGB(detail);
+    const [elr, elg, elb] = extractRGB(link);
+    
+    pr.value = epr;
+    pg.value = epg;
+    pb.value = epb;
+    
+    tr.value = etr;
+    tg.value = etg;
+    tb.value = etb;
+    
+    dr.value = edr;
+    dg.value = edg;
+    db.value = edb;
+    
+    lr.value = elr;
+    lg.value = elg;
+    lb.value = elb;
 };
 
+// Gör en array av en rgb-sträng på formen rgb(RRR, GGG, BBB) eller liknande
 const extractRGB = (rgbStr) => {
   const match = rgbStr.match(/\d+/g);
   return match ? match.map(Number) : [255, 255, 255];
@@ -139,7 +146,7 @@ const extractRGB = (rgbStr) => {
 <template>
     <div class="settings card">
         <div>
-            <h4 class="header">Huvudfärg</h4>
+            <h4>Huvudfärg</h4>
             <div class="color-setting">
                 <label for="pr">R</label>
                 <input class="slider" v-model="pr" @input="changeColors('primary')" id="pr" type="range" max="255" name="r">
@@ -199,11 +206,6 @@ const extractRGB = (rgbStr) => {
 </template>
 
 <style scoped>
-.settings {
-    display: grid;
-    grid-template: 1fr 1fr / 1fr 1fr;
-    gap: var(--profile-gap);
-}
 button {
     font-size: var(--xs-font-size);
 }
@@ -211,8 +213,15 @@ button {
 h4 {
     margin: 0;
 }
+
 label {
     font-size: var(--small-font-size);
+}
+
+.settings {
+    display: grid;
+    grid-template: 1fr 1fr / 1fr 1fr;
+    gap: var(--profile-gap);
 }
 
 .reset {

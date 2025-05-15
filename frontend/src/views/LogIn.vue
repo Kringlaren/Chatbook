@@ -39,7 +39,7 @@ onMounted(async () => {
             <form @submit.prevent="logIn">
                 <div class="left">
                     <label for="username"><b>Användarnamn</b></label>
-                    <input v-model="username" type="text" id="username" maxlength="50" required />
+                    <input v-model="username" type="text" id="username" maxlength="20" required />
 
                     <label for="password"><b>Lösenord</b></label>
                     <input v-model="password" type="password" id="password" maxlength="255" required />

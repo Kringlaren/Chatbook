@@ -2,11 +2,12 @@
 import { ref, onMounted, watch } from "vue";
 import { useGameStore } from "../stores";
 
+const gameStore = useGameStore();
+
+// Hur lång topplistan ska vara, t.ex top 10
 const props = defineProps({
     top: Number,
 });
-
-const gameStore = useGameStore();
 
 const scores = ref([]);
 const errorMessage = ref("");
@@ -15,20 +16,20 @@ onMounted(async () => {
     reloadBoard();
 });
 
-async function reloadBoard() {
+watch (
+    () => gameStore.scoreboard,
+    (board) => {
+        scores.value = board;
+    }
+);
+
+const reloadBoard = async () => {
     let top = props.top ? props.top : 0;
     const res = await gameStore.fetchScoreboard(top);
     if (res.error) {
         errorMessage.value = res.error;
     }
 }
-
-watch (
-    () => gameStore.scoreboard,
-        (board) => {
-            scores.value = board;
-        }
-)
 </script>
 
 <template>

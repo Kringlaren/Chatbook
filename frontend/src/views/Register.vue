@@ -15,7 +15,7 @@ const passwordError = ref("");
 const username = ref("");
 const password = ref("");
 
-// Registrerar via service om alla fält är giltiga
+// Registrerar om alla fält är giltiga
 const register = async () => {
     if (!checkUserName(username.value) || !checkUserPassword(password.value)) {
         errorMessage.value = "Kontrollera dina uppgifter";
@@ -53,7 +53,7 @@ const checkPassword = () => {
     } else {
         passwordError.value = "";
     }
-}
+};
 </script>
 
 <template>
@@ -66,7 +66,7 @@ const checkPassword = () => {
             <form @submit.prevent="register">
                 <div class="left">
                     <label for="username"><b>Användarnamn</b></label>
-                    <input v-model="username" @blur="checkName" type="text" id="username" maxlength="50" placeholder="ex John Doe" required />
+                    <input v-model="username" @blur="checkName" type="text" id="username" maxlength="20" placeholder="ex John Doe" required />
                     <div v-if="usernameError" class="error">{{ usernameError }}</div>
 
                     <label for="password"><b>Lösenord</b></label>

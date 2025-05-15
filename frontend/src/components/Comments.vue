@@ -2,6 +2,7 @@
 import { ref, onMounted } from "vue";
 import Comment from "./Comment.vue";
 import { usePostStore } from '../stores';
+
 const postStore = usePostStore();
 
 const props = defineProps({
@@ -33,7 +34,6 @@ onMounted(async () => {
             <p>Här finns inga kommentarer än</p>
         </div>
     </div>
-    
 </template>
 
 <style scoped>
