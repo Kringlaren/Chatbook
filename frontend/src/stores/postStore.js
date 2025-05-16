@@ -2,10 +2,10 @@ import { defineStore } from 'pinia';
 import api from '../services/api.js';
 
 export const usePostStore = defineStore('post', {
-  // Sparar alla inlägg i frontend eftersom skalan är liten, kan göra att den laddar ett visst antal åt gången i framtiden, kommentarer på senaste inlägget
+  
     state: () => ({
-        posts: [],
-        comments: [],
+        posts: [], // Sparar alla inlägg i frontend eftersom skalan är liten, kan göra att den laddar ett visst antal åt gången i framtiden
+        comments: [], // Kommentarer på senaste hela inlägget som laddats
         error: null,
         loading: false
     }),

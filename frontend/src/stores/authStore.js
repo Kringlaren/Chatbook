@@ -13,7 +13,7 @@ function getUserFromLocalStorage() {
 
 export const useAuthStore = defineStore('auth', {
     state: () => ({
-        user: getUserFromLocalStorage(),
+        user: getUserFromLocalStorage(), // Endast id och användarnamn, mer användardata i userStore
         error: null,
         loading: false
     }),

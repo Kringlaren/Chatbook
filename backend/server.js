@@ -8,7 +8,6 @@ import gameRoutes from "./routes/gameRoutes.js";
 import path from "path";
 import db from "./db.js";
 
-// Sessioner sparas efter serveromstart
 import MySQLStore from "express-mysql-session";
 const MySQLSessionStore = MySQLStore(session);
 const sessionStore = new MySQLSessionStore({}, db);
@@ -17,7 +16,6 @@ import dotenv from 'dotenv';
 dotenv.config({ path: "../.env" });
 
 const port = process.env.PORT;
-
 
 const app = express();
 
@@ -32,8 +30,9 @@ app.use(session({
     saveUninitialized: false,
     store: sessionStore,
     cookie: {
-        httpOnly: true,         // Skydda mot XSS-attacker
-        sameSite: 'lax'
+        httpOnly: true, // Skydda mot XSS-attacker
+        sameSite: 'lax',
+        maxAge: 30 * 24 * 60 * 60 * 1000 // 30 dagar
     }
 }));
 

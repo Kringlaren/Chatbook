@@ -2,7 +2,6 @@
 import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import { useAuthStore } from "../stores";
-import profileImg from "../assets/images/pp.png";
 
 const authStore = useAuthStore();
 
@@ -34,7 +33,7 @@ onMounted(async () => {
         <h1>Logga in</h1>
         <div class="card form">
             <div>
-                <img class="big-profile-pic" :src="profileImg" alt="profilbild">
+                <img class="big-profile-pic" src="/favicon.png" alt="profilbild">
             </div>
             <form @submit.prevent="logIn">
                 <div class="left">

@@ -11,6 +11,7 @@ const storage = multer.diskStorage({
     }
 });
 
+// Tillåter ändast bildfiler
 const fileFilter = (req, file, callBack) => {
     if (file.mimetype.startsWith("image/")) {
         callBack(null, true);

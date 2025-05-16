@@ -28,7 +28,7 @@ const logOutUser = async () => {
     <div class="navbar">
         <!--Vänster-->
         <div class="nav-left">
-            <a href="/">Hem</a>
+            <a href="/"><img class="big-icon flex-row" src="/favicon.png" alt="Hem"></a>
             <a href="following">Följer</a>
             <a href="game" class="narrow-screen-not-supported">Spel</a>
         </div>

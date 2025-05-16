@@ -3,7 +3,6 @@ import { ref } from "vue";
 import { useRouter } from "vue-router";
 import { checkUserName, checkUserPassword } from "../services/validationService.js";
 import { useAuthStore } from '../stores';
-import profileImg from '../assets/images/pp.png';
 
 const authStore = useAuthStore();
 
@@ -61,7 +60,7 @@ const checkPassword = () => {
         <h1>Registrera dig!</h1>
         <div class="card form">
             <div>
-                <img class="big-profile-pic" :src="profileImg" alt="profilbild">
+                <img class="big-profile-pic" src="/favicon.png" alt="profilbild">
             </div>
             <form @submit.prevent="register">
                 <div class="left">

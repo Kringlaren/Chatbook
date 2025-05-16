@@ -3,7 +3,7 @@ import api from "../services/api.js";
 
 export const useGameStore = defineStore('game', {
     state: () => ({
-        scoreboard: [],
+        scoreboard: [], // Alla användare som spelat eller de bästa x-antal baserat på top i fetchScoreboard
         error: null,
         loading: false
     }),

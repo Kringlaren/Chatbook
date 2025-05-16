@@ -45,6 +45,7 @@ export const getUserByName = async (req, res) => {
 
 //Användarinställningar
 
+// Hämtar info om profilbild, banderoll och färgpreferenser
 export const getUserPreferences = async (req, res) => {
     const userId = req.session.userId;
     if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Ingen användare inloggad" });
@@ -64,7 +65,6 @@ export const getUserPreferences = async (req, res) => {
 export const changeBanner = async (req, res) => {
     changeImage(req, res, "banner");
 };
-
 export const changeProfilePic = async (req, res) => {
     changeImage(req, res, "profile");
 };
@@ -85,7 +85,7 @@ export const changeBio = async (req, res) => {
     }
 };
 
-// Uppdaterar de färger som skickas med i formatet [{ type: "type", color: rgb(r, g, b) }, ...]
+// Uppdaterar de färger som skickas med i formatet [{ type: "type", color: rgb(r, g, b) }, ...], bygger på SQL query beroende på hur många och vilka färger som skickats med
 export const changeColors = async (req, res) => {
     const { colors } = req.body;
     const updates = [];
@@ -123,6 +123,7 @@ export const changeColors = async (req, res) => {
 
 // Följningar
 
+// Börjar följa om man inte redan följer, avföljer annars
 export const changeFollowByName = async (req, res) => {
     let { username } = req.body;
     username = format.formatNameForBackEnd(username);
@@ -157,7 +158,8 @@ export const changeFollowByName = async (req, res) => {
     }
 };
 
-export const getFollowedUsers = async (req, res) => {
+// Hämtar id, namn och profilbild på alla någon följer
+export const getFollowedUsersByName = async (req, res) => {
     let userId;
 
     try {
@@ -176,7 +178,7 @@ export const getFollowedUsers = async (req, res) => {
 };
 
 
-//Byter ut bilder och tar bort de gamla bilderna
+//Byter ut bilder och tar bort de gamla bilderna, typer: banner, profile
 const changeImage = async (req, res, type) => {
     const userId = req.session.userId;
     if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
@@ -194,6 +196,7 @@ const changeImage = async (req, res, type) => {
             column = "profile_pic";
             defaultFile = "/uploads/pp.png";
             errorMessage = "Serverfel vid uppdatering av profilbild";
+            break;
     }
 
     try {

@@ -4,7 +4,6 @@ import { saveHighscore, getAllHighscores, getPersonalBest } from "../controllers
 const router = express.Router();
 
 router.post('/save-score', saveHighscore);
-
 router.get('/scoreboard', getAllHighscores);
 router.get('/pb', getPersonalBest);
 
