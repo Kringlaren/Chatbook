@@ -12,13 +12,11 @@ export const useGameStore = defineStore('game', {
         // Sparar poäng genom att lägga till om användaren inte finns eller byta ut om den finns oavsätt top-antalet, sorterar sedan 
         async saveScore(score) {
             const res = await this.handleGameRequest("post", "save-score", {score});
-            if (res.error) {
-                return { error: "Kunde inte spara poängen" }
-            }
+            if (res.error) return { error: "Kunde inte spara poängen" };
 
             if (this.scoreboard.length === 0) {
                 this.scoreboard.push(res.data.score);
-            } else{
+            } else {
                 const index = this.scoreboard.findIndex(s => s.username === res.data.score.username);
                 if (index !== -1) {
                     if (score > this.scoreboard[index].score) {
@@ -39,9 +37,7 @@ export const useGameStore = defineStore('game', {
             this.top = top;
 
             const res = await this.handleGameRequest("get", "scoreboard");
-            if (res.error) {
-                return { error: "Kunde inte hämta poängdata" }
-            }
+            if (res.error) return { error: "Kunde inte hämta poängdata" };
 
             if (top === 0 || top >= res.data.scores.length) {
                 this.scoreboard = res.data.scores;
@@ -55,9 +51,7 @@ export const useGameStore = defineStore('game', {
 
         async fetchPb() {
             const res = await this.handleGameRequest("get", "pb");
-            if (res.error) {
-                return { error: "Kunde inte hämta personbästa" }
-            }
+            if (res.error) return { error: "Kunde inte hämta personbästa" };
 
             return res.data;
         },
@@ -65,19 +59,19 @@ export const useGameStore = defineStore('game', {
         async handleGameRequest(method, url, data = null) {
             this.loading = true;
             try {
-              let res;
-              if (method === "post") {
-                res = await api.post("/api/game/" + url, data);
-              } else if (method === "get") {
-                res = await api.get("/api/game/" + url);
-              }
-              this.error = null;
-              return res;
+                let res;
+                if (method === "post") {
+                  res = await api.post("/api/game/" + url, data);
+                } else if (method === "get") {
+                  res = await api.get("/api/game/" + url);
+                }
+                this.error = null;
+                return res;
             } catch (error) {
-              this.error = error.response?.data?.message || 'Något gick fel';
-              return { error: this.error, status: error.response?.status }
+                this.error = error.response?.data?.message || 'Något gick fel';
+                return { error: this.error, status: error.response?.status };
             } finally {
-              this.loading = false;
+                this.loading = false;
             }
         }
     }

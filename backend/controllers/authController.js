@@ -33,6 +33,8 @@ export const regUser = async (req, res) => {
 
 // Loggar in användare
 export const logInUser = async (req, res) => {
+
+
     const userInput = checkUserInput(req, res);
     if (!userInput) return;
 

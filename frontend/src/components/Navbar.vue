@@ -41,7 +41,7 @@ const logOutUser = async () => {
                         <p>{{ name }}</p>
                         <div class="flex-row"><img class="profile-pic" :src="urlBase + pp" alt="profilbild"></div>
                     </a>
-                    <a v-else href="login">Logga in</a>
+                    <a v-else href="/login">Logga in</a>
                 </div>
                 <button v-if="authStore.isLoggedIn" @click="logOutUser">Logga ut</button>
             </div>
