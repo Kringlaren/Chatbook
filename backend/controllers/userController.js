@@ -3,7 +3,6 @@ import codes from '../httpCodes.js';
 import format from '../utils/format.js';
 import fileHelper from '../utils/fileHelper.js';
 
-// Id, användarnamn, profilbild, banderoll, om, färgval, tid skapad, följarantal, om den inloggade användaren följer
 const selectUserQuery = `
     SELECT users.id, username, profile_pic, banner_img, bio, text_color, bg_color, detail_color, users.created_at, COUNT(followers.id) AS followers_count,
         CASE 
@@ -19,7 +18,6 @@ const selectUserQuery = `
     LEFT JOIN followers ON users.id = followers.user2_id
 `;
 
-// Id, användarnamn, profilbild
 const selectFollowingByUserId = `
     SELECT users.id, users.username, users.profile_pic 
     FROM users 
@@ -45,8 +43,7 @@ export const getUserByName = async (req, res) => {
     } 
 };
 
-// Användarinställningar //
-///////////////////////////
+//Användarinställningar
 
 // Hämtar info om profilbild, banderoll och färgpreferenser
 export const getUserPreferences = async (req, res) => {
@@ -124,8 +121,7 @@ export const changeColors = async (req, res) => {
 }
 
 
-// Följningar //
-////////////////
+// Följningar
 
 // Börjar följa om man inte redan följer, avföljer annars
 export const changeFollowByName = async (req, res) => {
@@ -182,7 +178,7 @@ export const getFollowedUsersByName = async (req, res) => {
 };
 
 
-// Byter ut bilder och tar bort de gamla bilderna, typer: banner, profile
+//Byter ut bilder och tar bort de gamla bilderna, typer: banner, profile
 const changeImage = async (req, res, type) => {
     const userId = req.session.userId;
     if (!userId) return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });

@@ -19,7 +19,6 @@ export const useAuthStore = defineStore('auth', {
     }),
 
     actions: {
-        // Hämtar den inloggade användarens id och namn
         async fetchUser() {
             const res = await this.handleAuthRequest("get", "me", null, {
                 // Så att cashen inte loggar in utloggad användare
