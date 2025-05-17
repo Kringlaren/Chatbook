@@ -46,7 +46,7 @@ const imageChange = (event) => {
             </form>
         </div>
         <div v-else>
-            <h2><a href="login">Logga in</a> för att skapa inlägg!</h2>
+            <h2><router-link to="/login">Logga in</router-link> för att skapa inlägg!</h2>
         </div>    
 
         

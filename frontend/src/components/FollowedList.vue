@@ -37,16 +37,16 @@ onMounted(async () => {
 <template>
     <div class="scrollable followed-list">
         <div v-if="!props.username">
-            <p v-if="!authStore.isLoggedIn"><a href="/login">Logga in</a> för att följa andra!</p>
+            <p v-if="!authStore.isLoggedIn"><router-link to="/login">Logga in</router-link> för att följa andra!</p>
             <p v-else-if="followingProfiles.length === 0">Börja följa folk för att se dem här!</p>
         </div>
         
         <div class="list flex-column">
             <div v-if="followingProfiles.length !== 0" v-for="profile in followingProfiles" :key="profile.id">
-                <a :href="'user/' + formatNameForBackEnd(profile.username)" class="profile follow">
+                <router-link :to="'/user/' + formatNameForBackEnd(profile.username)" class="profile follow">
                     <img :src="backEndUrlBase + profile.profile_pic" alt="profilbild" class="profile-pic">
                     <span class="name">{{ profile.username }}</span>
-                </a>
+                </router-link>
             </div>
             <p v-else-if="props.username">{{ props.username }} följer ingen</p>
         </div>

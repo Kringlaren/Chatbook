@@ -38,7 +38,7 @@ const expandPost = async () => {
     <div :class="{ 'card' : !modal }" class="post" >
         <div class="profile">
             <img :src="backEndUrlBase + post.profile_pic" alt="Profilbild" class="profile-pic">
-            <h3><a :href="'user/' + usernameNoSpace">{{ post.username }}</a></h3>
+            <h3><router-link :to="'/user/' + usernameNoSpace">{{ post.username }}</router-link></h3>
             <p>-</p>
             <p>{{ post.created_at }}</p>
         </div>
