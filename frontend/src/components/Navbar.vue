@@ -28,7 +28,7 @@ const logOutUser = async () => {
     <div class="navbar">
         <!--Vänster-->
         <div class="nav-left">
-            <a href="/"><img class="big-icon flex-row" src="/favicon.png" alt="Hem"></a>
+            <a href="./"><img class="big-icon flex-row" src="/favicon.png" alt="Hem"></a>
             <a href="following">Följer</a>
             <a href="game" class="narrow-screen-not-supported">Spel</a>
         </div>
@@ -41,7 +41,7 @@ const logOutUser = async () => {
                         <p>{{ name }}</p>
                         <div class="flex-row"><img class="profile-pic" :src="urlBase + pp" alt="profilbild"></div>
                     </a>
-                    <a v-else href="/login">Logga in</a>
+                    <a v-else href="login">Logga in</a>
                 </div>
                 <button v-if="authStore.isLoggedIn" @click="logOutUser">Logga ut</button>
             </div>
