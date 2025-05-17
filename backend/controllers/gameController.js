@@ -10,7 +10,6 @@ const selectAndJoinPartQuery = `
 
 const getAllHighscoresQuery = `
     ${selectAndJoinPartQuery}
-    GROUP BY scoreboard.id
     ORDER BY scoreboard.score DESC
 `;
 

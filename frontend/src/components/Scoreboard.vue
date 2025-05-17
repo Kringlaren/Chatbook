@@ -20,6 +20,7 @@ watch (
     () => gameStore.scoreboard,
     (board) => {
         scores.value = board;
+        console.log(scores.value.length);
     }
 );
 
@@ -35,9 +36,10 @@ const reloadBoard = async () => {
 <template>
     <div>
         <h3>Topplista</h3>
-        <ol v-if="scores.lenght !== 0">
+        <ol v-if="scores.length !== 0">
             <li v-for="score in scores" :key="score.id">{{ score.username }} - {{ score.score }}</li>
         </ol>
         <p v-else-if="errorMessage">{{ errorMessage }}</p>
+        <p v-else>Spela för att vara den första i topplistan!</p>
     </div>
 </template>

@@ -5,6 +5,7 @@ import format from '../utils/format.js';
 ///////////// Inlägg  /////////////
 ///////////////////////////////////
 
+// Användarnamn, profilbild, antal likes, antal kommentarer och om inloggade användaren gillat inlägget
 const selectAndJoinPostQuery = `
     SELECT posts.*, COUNT(DISTINCT likes.id) AS like_count, COUNT(DISTINCT comments.id) AS comment_count, users.username, users.profile_pic, 
         CASE 
@@ -57,11 +58,10 @@ const getCommentById = `
     ${selectAndJoinCommentQuery}
     WHERE comments.id = ?;
 `;
+// Inlägg //
+////////////
 
-// GET //
-/////////
-
-// Hämtar alla inlägg från databasen med användarnamn och likes
+// Hämtar alla inlägg från databasen
 export const getAllPosts = async (req, res) => {
     try {
         let [rows] = await db.query(getAllPostsQuery, [req.session.userId]);
@@ -89,8 +89,6 @@ export const getPostsByUsername = async (req, res) => {
     }
 }
 
-// POST //
-//////////
 
 // Skapar ett inlägg med eller utan bild
 export const createPost = async (req, res) => {
@@ -115,8 +113,8 @@ export const createPost = async (req, res) => {
     }
 };
 
-///////////// Kommentarer  /////////////
-////////////////////////////////////////
+// Kommentarer //
+/////////////////
 
 // Skapar kommentar på ett inlägg med eller utan bild
 export const createComment = async (req, res) => {
@@ -162,8 +160,8 @@ export const getCommentsForPost = async (req, res) => {
     }
 }
 
-////////////// Gillningar //////////////
-////////////////////////////////////////
+// Gillningar //
+////////////////
 
 // Lägger till en like om användare inte likeat, tar bort annars
 export const likeChange = async (req, res) => {
@@ -196,8 +194,8 @@ export const likeChange = async (req, res) => {
     }
 };
 
-/////////// Hjälpfunktioner  ///////////
-////////////////////////////////////////
+// Hjälpfunktioner //
+/////////////////////
 
 const checkTextContent = (req, res) => {
     const { textContent } = req.body;
