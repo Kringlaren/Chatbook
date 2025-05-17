@@ -28,20 +28,20 @@ const logOutUser = async () => {
     <div class="navbar">
         <!--Vänster-->
         <div class="nav-left">
-            <router-link to="/"><img class="big-icon flex-row" src="/favicon.png" alt="Hem"></router-link>
-            <router-link to="/following">Följer</router-link>
-            <router-link to="/game" class="narrow-screen-not-supported">Spel</router-link>
+            <a href="./"><img class="big-icon flex-row" src="/favicon.png" alt="Hem"></a>
+            <a href="following">Följer</a>
+            <a href="game" class="narrow-screen-not-supported">Spel</a>
         </div>
         
         <!--Höger-->
         <div class="nav-right">
             <div class="flex-row">
                 <div>
-                    <router-link :to="'/user/' + nameWithoutSpace" v-if="authStore.isLoggedIn" class="flex-row">
+                    <a :href="'user/' + nameWithoutSpace" v-if="authStore.isLoggedIn" class="flex-row">
                         <p>{{ name }}</p>
                         <div class="flex-row"><img class="profile-pic" :src="urlBase + pp" alt="profilbild"></div>
-                    </router-link>
-                    <router-link v-else to="/login">Logga in</router-link>
+                    </a>
+                    <a v-else href="login">Logga in</a>
                 </div>
                 <button v-if="authStore.isLoggedIn" @click="logOutUser">Logga ut</button>
             </div>

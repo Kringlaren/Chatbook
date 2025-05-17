@@ -77,7 +77,7 @@ const checkPassword = () => {
             </form>
         </div>
         <p>Hur du redan ett konto?</p>
-        <router-link to="/login">Logga in här</router-link>
+        <a href="login">Logga in här</a>
     </div>
 </template>
 

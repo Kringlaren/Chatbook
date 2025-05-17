@@ -14,7 +14,7 @@ const usernameNoSpace = formatNameForBackEnd(props.comment?.username);
         <div class="content-padding">
             <div class="profile">
                 <img :src="urlBase + comment.profile_pic" alt="Profilbild" class="small-profile-pic">
-                <h3><router-link :to="'/user/' + usernameNoSpace">{{ comment.username }}</router-link></h3>
+                <h3><a :href="'user/' + usernameNoSpace">{{ comment.username }}</a></h3>
                 <p>-</p>
                 <p>{{ comment.created_at }}</p>
             </div>
