@@ -74,7 +74,7 @@ export const logOutUser = async (req, res) => {
     });
 };
 
-// Hämtar användarinfo för en inloggad användare
+// Hämtar id och namn för en inloggad användare
 export const getLoggedInUser = async (req, res) => {
     if (!req.session.userId) {
         return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
@@ -94,8 +94,8 @@ export const getLoggedInUser = async (req, res) => {
 };
 
 
-//////////// Hjälpfunktioner ////////////
-////////////////////////////////////////
+// Hjälpfunktioner //
+/////////////////////
 
 // Kontrollerar att användaren skrivit in både användarnamn och lösenord
 const checkUserInput = (req, res) => {
