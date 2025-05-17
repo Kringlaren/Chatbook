@@ -11,7 +11,6 @@ watch(
   () => authStore.user,
   async (user) => {
     if (user) {
-      await authStore.fetchUser();
       await userStore.fetchUserPreferences();
       await userStore.fetchFollowedUsers();
       if (userStore.userPreferences) {

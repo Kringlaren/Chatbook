@@ -35,7 +35,7 @@ const closePost = () => {
             <div class="ads">
                 <img class="ad-img" :src="gameImg">
                 <Scoreboard :top="scoreboardTop"></Scoreboard>
-                <a href="game"><button>Spela Zombielabyrinten!</button></a>
+                <router-link to="/game"><button>Spela Zombielabyrinten!</button></router-link>
             </div>
         </div>
         <PostModal v-if="expandedPost" @close="closePost" :post="expandedPost"></PostModal>

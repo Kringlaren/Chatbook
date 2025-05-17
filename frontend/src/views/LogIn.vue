@@ -50,7 +50,7 @@ onMounted(async () => {
             </form>
         </div>
         <p>Hur du inte ett konto?</p>
-        <a href="register">Registrera dig här</a>
+        <router-link to="/register">Registrera dig här</router-link>
     </div>  
 </template>
 

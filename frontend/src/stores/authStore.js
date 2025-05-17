@@ -19,22 +19,6 @@ export const useAuthStore = defineStore('auth', {
     }),
 
     actions: {
-        async fetchUser() {
-            const res = await this.handleAuthRequest("get", "me", null, {
-                // Så att cashen inte loggar in utloggad användare
-                headers: {
-                  "Cache-Control": "no-cache"
-                }
-            });
-            if (res.error) {
-                this.user = null;
-                localStorage.removeItem("user");
-                return { error: "Kunde inte hämta användardata" }
-            }
-            
-            return res.data;
-        },
-
         async logInUser(username, password) {
             const res = await this.handleAuthRequest("post", "login", { username, password });
             if (res.error) {
@@ -82,7 +66,6 @@ export const useAuthStore = defineStore('auth', {
                 this.error = null;
                 return res;
             } catch (error) {
-                console.log(error);
                 this.error = error.response?.data?.message || 'Något gick fel';
                 return { error: this.error, status: error.response?.status };
             } finally {

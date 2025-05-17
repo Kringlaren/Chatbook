@@ -31,7 +31,7 @@ export const regUser = async (req, res) => {
     }
 };
 
-// Loggar in användare
+// Loggar in användare genom bcrypts compare-funktion
 export const logInUser = async (req, res) => {
 
 
@@ -74,28 +74,9 @@ export const logOutUser = async (req, res) => {
     });
 };
 
-// Hämtar användarinfo för en inloggad användare
-export const getLoggedInUser = async (req, res) => {
-    if (!req.session.userId) {
-        return res.status(codes.UNAUTHORIZED).json({ message: "Inte inloggad" });
-    }
 
-    try {
-        const [rows] = await db.query('SELECT id, username, profile_pic FROM users WHERE id = ?', [req.session.userId]);
-        return res.status(codes.OK).json({
-            id: rows[0].id,
-            username: format.formatNameForFrontEnd(rows[0].username),
-        });
-    } catch (error) {
-        return res.status(codes.SERVER_ERROR).json({ message: "Serverfel", error });
-    }
-
-    
-};
-
-
-//////////// Hjälpfunktioner ////////////
-////////////////////////////////////////
+// Hjälpfunktioner //
+/////////////////////
 
 // Kontrollerar att användaren skrivit in både användarnamn och lösenord
 const checkUserInput = (req, res) => {
