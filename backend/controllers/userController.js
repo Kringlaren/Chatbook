@@ -43,7 +43,8 @@ export const getUserByName = async (req, res) => {
     } 
 };
 
-//Användarinställningar
+// Användarinställningar //
+///////////////////////////
 
 // Hämtar info om profilbild, banderoll och färgpreferenser
 export const getUserPreferences = async (req, res) => {
@@ -121,7 +122,8 @@ export const changeColors = async (req, res) => {
 }
 
 
-// Följningar
+// Följningar //
+////////////////
 
 // Börjar följa om man inte redan följer, avföljer annars
 export const changeFollowByName = async (req, res) => {

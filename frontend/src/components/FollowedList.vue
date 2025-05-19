@@ -25,28 +25,30 @@ watch(
     },
 ); 
 
-// Om det är listan för en annan användare uppdateras följarlistan vid inläsning av sidan
-onMounted(async () => {
-    if (props.username) {
-        const res = await userStore.fetchFollowedUsers(props.username);
+// Om det är listan för en annan användare uppdateras följarlistan vid ändring av props
+watch(
+    () => props.username,
+    async (name) => {
+        const res = await userStore.fetchFollowedUsers(name);
         followingProfiles.value = res.users;
-    }
-});
+    },
+    { immediate: true }
+);
 </script>
 
 <template>
     <div class="scrollable followed-list">
         <div v-if="!props.username">
-            <p v-if="!authStore.isLoggedIn"><a href="/login">Logga in</a> för att följa andra!</p>
+            <p v-if="!authStore.isLoggedIn"><router-link to="/login">Logga in</router-link> för att följa andra!</p>
             <p v-else-if="followingProfiles.length === 0">Börja följa folk för att se dem här!</p>
         </div>
         
         <div class="list flex-column">
             <div v-if="followingProfiles.length !== 0" v-for="profile in followingProfiles" :key="profile.id">
-                <a :href="'user/' + formatNameForBackEnd(profile.username)" class="profile follow">
+                <router-link :to="'/user/' + formatNameForBackEnd(profile.username)" class="profile follow">
                     <img :src="backEndUrlBase + profile.profile_pic" alt="profilbild" class="profile-pic">
                     <span class="name">{{ profile.username }}</span>
-                </a>
+                </router-link>
             </div>
             <p v-else-if="props.username">{{ props.username }} följer ingen</p>
         </div>

@@ -113,24 +113,24 @@ const setSlidersFromComputedColor = () => {
     const text = style.getPropertyValue('--text-color');
     const detail = style.getPropertyValue('--detail-color');
     const link = style.getPropertyValue('--link-color');
-    
+
     const [epr, epg, epb] = extractRGB(primary);
     const [etr, etg, etb] = extractRGB(text);
     const [edr, edg, edb] = extractRGB(detail);
     const [elr, elg, elb] = extractRGB(link);
-    
+
     pr.value = epr;
     pg.value = epg;
     pb.value = epb;
-    
+
     tr.value = etr;
     tg.value = etg;
     tb.value = etb;
-    
+
     dr.value = edr;
     dg.value = edg;
     db.value = edb;
-    
+
     lr.value = elr;
     lg.value = elg;
     lb.value = elb;
@@ -197,11 +197,9 @@ const extractRGB = (rgbStr) => {
             </div>
             
         </div>
-
         <div class="bottom-middle">
             <button @click="saveStyles()">Spara</button>
         </div>
-        
     </div>
 </template>
 

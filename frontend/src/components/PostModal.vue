@@ -11,7 +11,7 @@ const emit = defineEmits(['close']);
 
 const close = () => {
     emit('close');
-}
+};
 </script>
 
 <template>
@@ -29,7 +29,6 @@ const close = () => {
             </div>
         </div>
     </div>
-    
 </template>
 
 <style scoped>

@@ -19,6 +19,7 @@ const getHighscoreFromUserIdQuery = `
     WHERE scoreboard.user_id = ?
 `;
 
+// Sparar rekordet om det är större än användarens förra
 export const saveHighscore = async (req, res) => {
     const userId = req.session.userId;
     if (!userId) {

@@ -12,8 +12,12 @@ import Navbar from "../components/Navbar.vue";
 </template>
 
 <style scoped>
+h3 {
+    margin: 0;
+}
 .box {
     margin: auto;
+    margin-top: var(--default-gap);
     height: var(--height-under-nav);
     width: 40vw;
 }

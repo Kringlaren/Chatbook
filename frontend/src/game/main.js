@@ -22,14 +22,14 @@ let ctx;
 let cellSize = height/10;
 
 let player;
-let zombies = [];
+let zombies;
 let maze;
 let coins = 0;
 let lives = maxlives;
 let points = 0;
 let pointsMultiplyer = 1.0;
 
-let lastTimestamp = 0;
+let lastTimestamp;
 
 let stats;
 let pb = 0;
@@ -46,8 +46,14 @@ const Colors = {
 
 let keys = {};
 
+let end = false;
+export function endGame() {
+    end = true;
+}
+
 //Körs vid uppstart
 export function boot(canvas, bootStats, bootKeys){
+
     canvas.width = width;
     canvas.height = height;
 
@@ -58,6 +64,12 @@ export function boot(canvas, bootStats, bootKeys){
     keys = bootKeys;
 
     pb = stats.pb.value;
+
+    // om saker kvarstår
+    ctx.clearRect(0, 0, width, height);
+    zombies = [];
+    lastTimestamp = 0;
+    end = false;
 
     player = new Player(width/2, height - 1.5 * height/10, Colors, cellSize);
     maze = new Maze(width, height, ctx, player, Colors);
@@ -70,7 +82,12 @@ export function boot(canvas, bootStats, bootKeys){
     requestAnimationFrame(process);
 }
 
+
 function process(timestamp) {
+    if (!lastTimestamp || timestamp - lastTimestamp > 1000) {
+        lastTimestamp = timestamp;
+    }
+
     let delta = timestamp - lastTimestamp;
     lastTimestamp = timestamp;
 
@@ -87,8 +104,9 @@ function process(timestamp) {
         zombie.move(ctx, player, delta);
     });
 
-
-    requestAnimationFrame(process);
+    if (!end) {
+        requestAnimationFrame(process);
+    }
 }
 
 function playerInput(delta){
@@ -120,7 +138,6 @@ function restart() {
         lives--;
     } else {
         if (points > pb) {
-            console.log("ändrar pb i spel", points, pb);
             stats.pb.value = points;
             pb = points;
         }

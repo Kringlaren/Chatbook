@@ -15,10 +15,11 @@ const createPost = async () => {
     const res = await postStore.createPost(textContent.value, img.value);
     textContent.value = "";
     img.value = null;
+    imgName.value = "";
     if (res.error) {
         alert(res.error);
     }
-}
+};
 
 const imageChange = (event) => {
     const file = event.target.files[0];
@@ -26,7 +27,7 @@ const imageChange = (event) => {
         img.value = file;
         imgName.value = file.name || "";
     }
-}
+};
 </script>
 
 <template>
@@ -46,10 +47,8 @@ const imageChange = (event) => {
             </form>
         </div>
         <div v-else>
-            <h2><a href="login">Logga in</a> för att skapa inlägg!</h2>
-        </div>    
-
-        
+            <h2><router-link to="/login">Logga in</router-link> för att skapa inlägg!</h2>
+        </div>
     </div>
 </template>
 

@@ -1,6 +1,6 @@
 <script setup>
 import { ref, onMounted, onUnmounted, watch } from "vue";
-import { boot, resizeGame } from "../game/main.js";
+import { boot, resizeGame, endGame } from "../game/main.js";
 import { useAuthStore, useGameStore } from "../stores";
 import infoImg from "../assets/images/info.png";
 import Navbar from "../components/Navbar.vue";
@@ -26,10 +26,10 @@ const stats = {
 
 function handleKeyDown(e) {
     keys[e.key.toLowerCase()] = true;
-}
+};
 function handleKeyUp(e) {
     keys[e.key.toLowerCase()] = false;
-}
+};
 
 const handleResize = () => resizeGame(canvas.value);
 
@@ -50,8 +50,9 @@ onMounted(async () => {
     }
 });
 
-// Tar bort eventlisteners när sidan ändras för att de inte ska vara kvar på andra delar av webbplatsen
+// Tar bort eventlisteners och stänger av spelet när sidan ändras för att det inte ska vara i bakgrunden på andra delar av webbplatsen
 onUnmounted(() => {
+    endGame();
     document.removeEventListener('keydown', handleKeyDown);
     document.removeEventListener('keyup', handleKeyUp);
     window.removeEventListener('resize', handleResize);

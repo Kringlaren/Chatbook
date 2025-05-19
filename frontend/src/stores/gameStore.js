@@ -3,13 +3,13 @@ import api from "../services/api.js";
 
 export const useGameStore = defineStore('game', {
     state: () => ({
-        scoreboard: [], // Alla användare som spelat eller de bästa x-antal baserat på top i fetchScoreboard
+        scoreboard: [], // Alla användare som spelat
         error: null,
         loading: false
     }),
 
     actions: {
-        // Sparar poäng genom att lägga till om användaren inte finns eller byta ut om den finns oavsätt top-antalet, sorterar sedan 
+        // Sparar poäng genom att lägga till om användaren inte finns eller byta ut om den finns, sorterar sedan 
         async saveScore(score) {
             const res = await this.handleGameRequest("post", "save-score", {score});
             if (res.error) return { error: "Kunde inte spara poängen" };
@@ -32,19 +32,14 @@ export const useGameStore = defineStore('game', {
             return res.data
         },
 
-        // Hämtar alla poäng och antingen sparar top-antalet eller alla
-        async fetchScoreboard(top = 0) {
+        // Hämtar alla poäng
+        async fetchScoreboard() {
             this.top = top;
 
             const res = await this.handleGameRequest("get", "scoreboard");
             if (res.error) return { error: "Kunde inte hämta poängdata" };
 
-            if (top === 0 || top >= res.data.scores.length) {
-                this.scoreboard = res.data.scores;
-            }
-            else {
-                this.scoreboard = res.data.scores.slice(0, top);
-            }
+            this.scoreboard = res.data.scores;
             
             return res.data;
         },

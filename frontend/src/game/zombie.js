@@ -32,7 +32,7 @@ export class Zombie {
     }
 
     move(ctx, player, delta) {
-        //Byter target varje efter ett tag eller vid resize för att inte fastna
+        //Byter target efter ett tag eller vid resize för att inte fastna
         if (this.stepCountSinceTarget >= 30000 * delta/1000) { 
             if (this.state == States.Patrolling) {
                 this.target = this.getPatrollCoord();

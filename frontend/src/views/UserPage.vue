@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, watch } from 'vue';
+import { ref, watch } from 'vue';
 import { useRoute } from 'vue-router';
 import { useUserStore, usePostStore, useAuthStore } from '../stores';
 import Navbar from '../components/Navbar.vue';
@@ -17,7 +17,6 @@ const isLoggedInUser = ref(false);
 
 const backEndUrlBase = import.meta.env.VITE_URL_BASE;
 
-const username = route.params.username;
 const user = ref(null);
 const userPosts = ref([]);
 const bio = ref("");
@@ -33,47 +32,59 @@ const bannerInput = ref(null);
 const profilePicInput = ref(null);
 
 // Hämtar användardata, inlägg, följstatus och om användaren är den inloggade användaren
-onMounted(async () => {
-    const userRes = await userStore.fetchUserByUsername(username);
-    
-    if (userRes.error) {
-        errorMessage.value = userRes.error;
-    } else {
-        user.value = userRes.user;
-    }
-    const postRes = await postStore.fetchPostsByUsername(username);
+watch(
+    () => route.params.username,
+    async (username) => {
+        const userRes = await userStore.fetchUserByUsername(username);
+        
+        if (userRes.error) {
+            errorMessage.value = userRes.error;
+        } else {
+            user.value = userRes.user;
+        }
+        const postRes = await postStore.fetchPostsByUsername(username);
 
-    if (!postRes.error) {
-        userPosts.value = postRes;
-    }
+        if (!postRes.error) {
+            userPosts.value = postRes;
+        }
 
-    if (authStore.isLoggedIn && authStore.user.id === user.value.id) {
-        isLoggedInUser.value = true;
-    }
+        if (authStore.isLoggedIn && authStore.user.id === user.value.id) {
+            isLoggedInUser.value = true;
+        }
 
-    if (user.value.bio) {
-        originalBio.value = user.value.bio;
-        bio.value = user.value.bio;
-    }
+        if (user.value.bio) {
+            originalBio.value = user.value.bio;
+            bio.value = user.value.bio;
+        } else {
+            originalBio.value = "";
+            bio.value = "";
+        }
 
-    if (user.value.followed_by_user === 1) {
-        followOrUnfollow.value = "Avfölj";
-    } else {
-        followOrUnfollow.value = "Följ";
-    }
-});
+        if (user.value.followed_by_user === 1) {
+            followOrUnfollow.value = "Avfölj";
+        } else {
+            followOrUnfollow.value = "Följ";
+        }
+
+        updateIsLoggedInUser();
+    },
+    { immediate: true }
+);
 
 // Uppdaterar isLoggedInUser om man loggar ut/in
 watch(
   () => authStore.isLoggedIn,
-  async () => {
+  () => {
+    updateIsLoggedInUser();
+  },
+);
+const updateIsLoggedInUser = () => {
     if (authStore.isLoggedIn && authStore.user.id === user.value.id) {
         isLoggedInUser.value = true;
     } else {
         isLoggedInUser.value = false;
     }
-  },
-);
+};
 
 const expandPost = (post) => {
     expandedPost.value = post;
@@ -257,7 +268,7 @@ h3, h2 {
 }
 
 .about {
-    height: 15vw;
+    height: 12vw;
 }
 .about textarea {
     resize: none;
@@ -269,7 +280,7 @@ h3, h2 {
 }
 
 .following {
-    height: calc(100vh - var(--navbar-height) - var(--default-gap) - 15vw);
+    height: calc(100vh - var(--navbar-height) - var(--default-gap) - 12vw);
     width: 30vw;
 }
 @media only screen and (max-width: 1100px) {

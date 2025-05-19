@@ -19,8 +19,6 @@ export const regUser = async (req, res) => {
         const newId = result.insertId;
 
         req.session.userId = newId;
-
-        const [rows] = await db.query("SELECT profile_pic FROM users WHERE id = ?", [newId]);
         
         res.status(codes.CREATED).json({
             id: newId,
@@ -33,8 +31,6 @@ export const regUser = async (req, res) => {
 
 // Loggar in användare
 export const logInUser = async (req, res) => {
-
-
     const userInput = checkUserInput(req, res);
     if (!userInput) return;
 
@@ -94,8 +90,8 @@ export const getLoggedInUser = async (req, res) => {
 };
 
 
-//////////// Hjälpfunktioner ////////////
-////////////////////////////////////////
+// Hjälpfunktioner //
+/////////////////////
 
 // Kontrollerar att användaren skrivit in både användarnamn och lösenord
 const checkUserInput = (req, res) => {

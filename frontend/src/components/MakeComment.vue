@@ -30,7 +30,7 @@ const imageChange = (event) => {
         img.value = file;
         imgName.value = file.name || "";
     }
-}
+};
 </script>
 
 <template>
@@ -41,7 +41,7 @@ const imageChange = (event) => {
                     <input type="text" v-model="textContent" name="textContent" placeholder="Sprid dina åsikter!" required/>
                     <div class="img-upload">
                         <img class="icon" :src="selectImg" alt="Välj bild" @click="imageInput.click()">
-                        <input type="file" ref="imageInput" @change="imageChange" accept="image/*">
+                        <input type="file" ref="imageInput" @change="imageChange" accept="image/*" id="imgUpload">
                         <label for="imgUpload" class="img-label">{{ imgName }}</label>
                     </div>
                     <button type="submit">Kommentera!</button>
@@ -49,7 +49,7 @@ const imageChange = (event) => {
             </form>
         </div>
         <div v-else>
-            <h2><a href="login">Logga in</a> för att kommentera!</h2>
+            <h2><router-link to="/login">Logga in</router-link> för att kommentera!</h2>
         </div>    
     </div>
 </template>
