@@ -112,7 +112,7 @@ h3 {
 }
 
 .stats {
-    margin:  var(--default-gap) calc(var(--default-gap)*4) 0 calc(var(--default-gap)*4);
+    margin:  var(--default-gap) calc(var(--default-gap)*2) 0 calc(var(--default-gap)*2);
 }
 
 .layout {
