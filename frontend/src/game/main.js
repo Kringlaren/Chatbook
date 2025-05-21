@@ -4,8 +4,9 @@ import {Maze} from "./maze.js";
 
 const maxlives = 3;
 const multiplierAddage = 0.2;
-const speedIncrease = 1.1;
+const speedIncrease = 1.05;
 const startingZomieCount = 3;
+const coinsUntilIntense = 8;
 
 const Feature = {
     Floor: 0,
@@ -34,7 +35,7 @@ let lastTimestamp;
 let stats;
 let pb = 0;
 
-let zombieChance = 60;
+let zombieChance = 40;
 
 const Colors = {
     wall: "#333",
@@ -215,7 +216,7 @@ function checkCoinCollision() {
                 pointsMultiplyer += multiplierAddage;
             }
 
-            if (coins % 16 == 0){  //Lägger till ett mynt och ökar hastigheten varje 16 mynt
+            if (coins % coinsUntilIntense == 0){  //Lägger till ett mynt och ökar hastigheten
                 maze.updateCoins(coin[0], coin[1], 2);
                 player.speed = player.speed * speedIncrease;
                 zombies.forEach(zombie => {
